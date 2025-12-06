@@ -38,24 +38,31 @@ export default function zapis_wyjasnien() {
       {/* FORM */}
       <div className="w-full max-w-2xl">
         {renderPage()}
-        { /* GO NEXT BUTTON */}
-        <div className="flex justify-between">
-        {page > 1 &&(
-           <button
+        {/* BUTTONS: Cofnij (lewo), Dalej (prawo), Prześlij (prawo, tylko na ostatniej stronie) */}
+        <div className="flex flex-row-reverse justify-between">
+          {/* Dalej lub Prześlij po prawej */}
+          {page === 3 ? (
+            <button
+              className="px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer"
+            >
+              Prześlij
+            </button>
+          ) : (
+            <button
+              onClick={() => setPage((p) => Math.min(3, p + 1))}
+              className="px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer"
+            >
+              Dalej
+            </button>
+          )}
+          {/* Cofnij po lewej, zawsze widoczny, ale nieaktywny na 1 stronie */}
+          <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className="px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer"
+            className={`px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer ${page === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={page === 1}
           >
             Cofnij
           </button>
-        )}        
-        {page < 6 &&(
-           <button
-            onClick={() => setPage((p) => Math.min(6, p + 1))}
-            className="px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer"
-          >
-            Dalej
-          </button>
-        )}
         </div>
       </div>
     </div>

@@ -18,6 +18,11 @@ export default function Strona3() {
   const simpleClassName = `px-2 py-1 border border-gray-300 rounded`
   const buttonClassName = `px-2 py-1 border border-gray-400 rounded hover:bg-gray-200 transition-colors`
   const separatorClassName = `mx-1 text-gray-600`
+  
+  const getButtonClass = (value, selected) => {
+    const isNotSelected = value && value !== selected;
+    return `${buttonClassName} ${selected === value ? 'bg-cyan-100' : ''} ${isNotSelected ? 'line-through text-gray-500' : ''}`;
+  }
 
   return (
     <div className="bg-gray-50/60 w-full max-w-2xl p-4 rounded-xl flex flex-col space-y-4 mb-4">
@@ -52,10 +57,10 @@ export default function Strona3() {
         <div className="space-y-2">
           <label className="block text-sm">- w dacie wypadku</label>
           <div className="flex items-center gap-2">
-            <button className={`${buttonClassName} ${zwolnienieLekarskie === 'tak' ? 'bg-cyan-100' : ''}`} onClick={() => setZwolnienieLekarskie('tak')}>przebywałem/am</button>
+            <button className={getButtonClass('tak', zwolnienieLekarskie)} onClick={() => setZwolnienieLekarskie('tak')}>przebywałem/am</button>
             <span className={separatorClassName}>/</span>
-            <button className={`${buttonClassName} ${zwolnienieLekarskie === 'nie' ? 'bg-cyan-100' : ''}`} onClick={() => setZwolnienieLekarskie('nie')}>nie przebywałem/am</button>
-            <span className="text-red-600 text-lg ml-2">*</span><label className="text-red-600">na zwolnieniu lekarskim</label>
+            <button className={getButtonClass('nie', zwolnienieLekarskie)} onClick={() => setZwolnienieLekarskie('nie')}>nie przebywałem/am</button>
+            <span className="text-red-600 text-lg ml-2">*</span><label>na zwolnieniu lekarskim</label>
           </div>
         </div>
       </div>

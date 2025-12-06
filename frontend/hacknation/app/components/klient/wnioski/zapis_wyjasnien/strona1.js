@@ -43,7 +43,7 @@
             <input className={inputSmallClassName} placeholder='........' value={ulica} onChange={(e) => setUlica(e.target.value)}></input>
           </div>
           <div className='inline-flex items-center gap-1 flex-wrap'>
-            <label>,zatrudniony/a w...</label>
+            <label>zatrudniony/a w...</label>
             <input className={inputSmallClassName} placeholder='........' value={zatrudnionyW} onChange={(e) => setZatrudnionyW(e.target.value)}></input>
           </div>
         </div>
@@ -77,6 +77,9 @@
             <label className='block font-medium'>3. Podanie okoliczności i przyczyn wypadku (opis. przyczyny techniczne, ludzkie, organizacyjne) - należy uzupełnić, jeżeli w zawiadomieniu o wypadku nie zostały szczegółowo opisane okoliczności i przyczyny wypadku:</label>
             <textarea className="w-full border border-gray-300 rounded p-2" placeholder='........' value={opisOkolicznosci} onChange={(e) => setOpisOkolicznosci(e.target.value)}></textarea>
           </div>
+        </div>
+        <div className='mt-8'>
+          <label className='text-sm text-gray-600'><span className='text-lg text-red-600'>*</span> niepotrzebne skreślić</label>
         </div>
       </div>
     );

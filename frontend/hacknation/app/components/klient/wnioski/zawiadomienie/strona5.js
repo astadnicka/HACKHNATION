@@ -276,17 +276,17 @@ export default function Strona5() {
         <h1 className="font-semibold mb-2">ZAŁĄCZNIKI</h1>
         <hr className="bg-gray-100 mb-2"></hr>
       </div>
-      <div className="grid grid-cols-5 gap-2">
-        <input className="h-4 w-4 rounded border-gray-300 text-cyan-500 focus:ring-cyan-500" type="checkbox" checked={kartaInformacyjna} onChange={(e) => setKartaInformacyjna(e.target.checked)} />
-        <label className="col-span-4">kserokopia karty informacyjnej ze szpitala/zaświadczenia o udzieleniu pierwszej pomocy z pogotowia ratunkowego wraz z wywiadem</label>
+      <div className="flex items-center justify-center gap-3">
+        <input className="h-6 w-6 rounded border-gray-300 text-cyan-500 focus:ring-cyan-500 shrink-0" type="checkbox" checked={kartaInformacyjna} onChange={(e) => setKartaInformacyjna(e.target.checked)} />
+        <label className="text-sm">kserokopia karty informacyjnej ze szpitala/zaświadczenia o udzieleniu pierwszej pomocy z pogotowia ratunkowego wraz z wywiadem</label>
       </div>
-      <div className="grid grid-cols-5 gap-2">
-        <input className="h-4 w-4 rounded border-gray-300 text-cyan-500 focus:ring-cyan-500" type="checkbox" checked={postanowienieProkuratury} onChange={(e) => setPostanowienieProkuratury(e.target.checked)} />
-        <label className="col-span-4">kserokopia postanowienia prokuratury o wszczęciu postępowania karnego lub zawieszeniu/umorzeniu postępowania</label>
+      <div className="flex items-center justify-center gap-3">
+        <input className="h-6 w-6 rounded border-gray-300 text-cyan-500 focus:ring-cyan-500 shrink-0" type="checkbox" checked={postanowienieProkuratury} onChange={(e) => setPostanowienieProkuratury(e.target.checked)} />
+        <label className="text-sm">kserokopia postanowienia prokuratury o wszczęciu postępowania karnego lub zawieszeniu/umorzeniu postępowania</label>
       </div>
-      <div className="grid grid-cols-5 gap-2">
-        <input className="h-4 w-4 rounded border-gray-300 text-cyan-500 focus:ring-cyan-500" type="checkbox" checked={aktZgonu} onChange={(e) => setAktZgonu(e.target.checked)} />
-        <label className="col-span-4">kserokopia statystycznej karty zgonu lub zaświadczenie lekarskie stwierdzające przyczynę zgonu, skrócony odpis aktu zgonu (w przypadku wypadku ze skutkiem śmiertelnym)</label>
+      <div className="flex items-center justify-center gap-3">
+        <input className="h-6 w-6 rounded border-gray-300 text-cyan-500 focus:ring-cyan-500 shrink-0" type="checkbox" checked={aktZgonu} onChange={(e) => setAktZgonu(e.target.checked)} />
+        <label className="text-sm">kserokopia statystycznej karty zgonu lub zaświadczenie lekarskie stwierdzające przyczynę zgonu, skrócony odpis aktu zgonu (w przypadku wypadku ze skutkiem śmiertelnym)</label>
       </div>
     </div>
   );
