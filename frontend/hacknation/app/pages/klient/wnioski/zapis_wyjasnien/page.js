@@ -10,17 +10,64 @@ import { useState } from 'react';
 export default function zapis_wyjasnien() {
   const [page, setPage] = useState(1);
 
+  const [formData, setFormData] = useState({
+    osoba: {
+      imie1: "",
+      imie2: "",
+      dataUrodzenia: "",
+      miejsceUrodzenia: "",
+      miejsceZamieszkania: "",
+      ulica: "",
+      zatrudnionyW: "",
+    },
+    wypadek: {
+      dataWypadku: "",
+      dataWypadkuSzczegoly: "",
+      miejsceWypadku: "",
+      godzinaWypadku: "",
+      godzinaRozpoczecia: "",
+      godzinaZakonczenia: "",
+      rodzajCzynnosci: "",
+      opisOkolicznosci: "",
+    },
+    maszyny: {
+      wypadekMaszyna: "",
+      nazwaMaszyny: "",
+      sprawnosc: "",
+      zabezpieczenia: "",
+      rodzajSrodkow: "",
+      sprawnoscSrodkow: "",
+      asekuracja: "",
+      obowiazekDwochOsob: "",
+      bhp: "",
+      przygotowanie: "",
+      szkolenie: "",
+      ocenaRyzyka: "",
+      srodkiZmniejszenia: "",
+      stanNietrzezwosci: "",
+      badanieTrzezwosci: "",
+      czynnosciWyjasniajace: "",
+      opisCzynnosci: "",
+    },
+  });
+
   const renderPage = () => {
     switch (page) {
       case 1:
-        return <Strona1 />;
+        return <Strona1 formData={formData} setFormData={setFormData} />;
       case 2:
-        return <Strona2 />;
+        return <Strona2 formData={formData} setFormData={setFormData} />;
       case 3:
-        return <Strona3 />;
+        return <Strona3 formData={formData} setFormData={setFormData} />;
       default:
-        return <Strona1 />;
+        return <Strona1 formData={formData} setFormData={setFormData} />;
     }
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Form submitted with data:', formData);
+    // Add form submission logic here
   }
 
   return (
@@ -28,7 +75,7 @@ export default function zapis_wyjasnien() {
       {/* GO BACK BUTTON */}
       <div className="absolute top-4 left-4">
         <Link href="/">
-            <button className="px-2 py-1 bg-white cursor-pointer rounded-md hover:bg-gray-100">
+            <button type="button" className="px-2 py-1 bg-white cursor-pointer rounded-md hover:bg-gray-100">
               Powrót do panelu klienta
             </button>
         </Link>
@@ -36,19 +83,21 @@ export default function zapis_wyjasnien() {
       {/* title */}
       <h1 className="text-4xl font-bold mb-4">Zapis Wyjaśnień</h1>
       {/* FORM */}
-      <div className="w-full max-w-2xl">
+      <form onSubmit={handleSubmit} className="w-full max-w-2xl">
         {renderPage()}
         {/* BUTTONS: Cofnij (lewo), Dalej (prawo), Prześlij (prawo, tylko na ostatniej stronie) */}
         <div className="flex flex-row-reverse justify-between">
           {/* Dalej lub Prześlij po prawej */}
           {page === 3 ? (
             <button
+              type="submit"
               className="px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer"
             >
               Prześlij
             </button>
           ) : (
             <button
+              type="submit"
               onClick={() => setPage((p) => Math.min(3, p + 1))}
               className="px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer"
             >
@@ -57,6 +106,7 @@ export default function zapis_wyjasnien() {
           )}
           {/* Cofnij po lewej, zawsze widoczny, ale nieaktywny na 1 stronie */}
           <button
+            type="button"
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             className={`px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer ${page === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
             disabled={page === 1}
@@ -64,7 +114,7 @@ export default function zapis_wyjasnien() {
             Cofnij
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

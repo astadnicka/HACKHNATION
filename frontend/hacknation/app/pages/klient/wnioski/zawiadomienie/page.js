@@ -13,23 +13,101 @@ import { useState } from 'react';
 export default function Zawiadomienie() {
   const [page, setPage] = useState(1);
 
+  const [formData, setFormData] = useState({
+    poszkodowany: {
+      pesel: "",
+      dokument: {
+        rodzaj: "",
+        seria: "",
+        numer: "",
+      },
+      imie: "",
+      nazwisko: "",
+      dataUrodzenia: "",
+      plec: "",
+      adresZamieszkania: {
+        ulica: "",
+        numerDomu: "",
+        numerLokalu: "",
+        kodPocztowy: "",
+        miejscowosc: "",
+        gmina: "",
+        panstwo: "",
+      },
+      adresKorespondencji: {
+        ulica: "",
+        numerDomu: "",
+        numerLokalu: "",
+        kodPocztowy: "",
+        miejscowosc: "",
+        gmina: "",
+        panstwo: "",
+      },
+    },
+    zawiadamiajacy: {
+      pesel: "",
+      dokument: {
+        rodzaj: "",
+        seria: "",
+        numer: "",
+      },
+      imie: "",
+      nazwisko: "",
+      dzienUrodzenia: "",
+      miesiacUrodzenia: "",
+      rokUrodzenia: "",
+      plec: "",
+      adresZamieszkania: {
+        ulica: "",
+        numerDomu: "",
+        numerLokalu: "",
+        kodPocztowy: "",
+        miejscowosc: "",
+        gmina: "",
+        panstwo: "",
+      },
+    },
+    miejscaDzialalnosci: {
+      ulica: "",
+      numerDomu: "",
+      numerLokalu: "",
+      kodPocztowy: "",
+      miejscowosc: "",
+      gmina: "",
+      numerTelefonu: "",
+    },
+    opieka: {
+      ulica: "",
+      numerDomu: "",
+      numerLokalu: "",
+      kodPocztowy: "",
+      miejscowosc: "",
+    },
+  });
+
   const renderPage = () => {
     switch (page) {
       case 1:
-        return <Strona1 />;
+        return <Strona1 formData={formData} setFormData={setFormData} />;
       case 2:
-        return <Strona2 />;
+        return <Strona2 formData={formData} setFormData={setFormData} />;
       case 3:
-        return <Strona3 />;
+        return <Strona3 formData={formData} setFormData={setFormData} />;
       case 4:
-        return <Strona4 />;
+        return <Strona4 formData={formData} setFormData={setFormData} />;
       case 5:
-        return <Strona5 />;
+        return <Strona5 formData={formData} setFormData={setFormData} />;
       case 6:
-        return <Strona6 />;
+        return <Strona6 formData={formData} setFormData={setFormData} />;
       default:
-        return <Strona1 />;
+        return <Strona1 formData={formData} setFormData={setFormData} />;
     }
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Form submitted with data:', formData);
+    // Add form submission logic here
   }
 
   return (
@@ -37,7 +115,7 @@ export default function Zawiadomienie() {
       {/* GO BACK BUTTON */}
       <div className="absolute top-4 left-4">
         <Link href="/">
-            <button className="px-2 py-1 bg-white cursor-pointer rounded-md hover:bg-gray-100">
+            <button type="button" className="px-2 py-1 bg-white cursor-pointer rounded-md hover:bg-gray-100">
               Powrót do panelu klienta
             </button>
         </Link>
@@ -45,19 +123,21 @@ export default function Zawiadomienie() {
       {/* title */}
       <h1 className="text-4xl font-bold mb-4">Zawiadomienie o Wypadku</h1>
       {/* FORM */}
-      <div className="w-full max-w-2xl">
+      <form onSubmit={handleSubmit} className="w-full max-w-2xl">
         {renderPage()}
         {/* BUTTONS: Cofnij (lewo), Dalej (prawo), Prześlij (prawo, tylko na ostatniej stronie) */}
         <div className="flex flex-row-reverse justify-between">
           {/* Dalej lub Prześlij po prawej */}
           {page === 6 ? (
             <button
+              type="submit"
               className="px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer"
             >
               Prześlij
             </button>
           ) : (
             <button
+              type="submit"
               onClick={() => setPage((p) => Math.min(6, p + 1))}
               className="px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer"
             >
@@ -66,6 +146,7 @@ export default function Zawiadomienie() {
           )}
           {/* Cofnij po lewej, zawsze widoczny, ale nieaktywny na 1 stronie */}
           <button
+            type="button"
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             className={`px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer ${page === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
             disabled={page === 1}
@@ -73,7 +154,7 @@ export default function Zawiadomienie() {
             Cofnij
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

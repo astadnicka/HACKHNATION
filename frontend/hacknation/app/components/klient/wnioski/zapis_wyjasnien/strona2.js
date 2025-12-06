@@ -34,9 +34,9 @@ export default function Strona2() {
       <div className="space-y-2">
         <label className="block font-medium">4. Wypadek powstał pod czas obsługi maszyn i/lub urządzenia:</label>
         <div className="flex items-center gap-2">
-          <button className={getButtonClass('tak', wypadekMaszyna)} onClick={() => setWypadekMaszyna('tak')}>tak</button>
+          <button className={getButtonClass('tak', wypadekMaszyna)} type='button' onClick={() => setWypadekMaszyna('tak')}>tak</button>
           <span className={separatorClassName}>/</span>
-          <button className={getButtonClass('nie', wypadekMaszyna)} onClick={() => setWypadekMaszyna('nie')}>Nie</button>
+          <button className={getButtonClass('nie', wypadekMaszyna)} type='button' onClick={() => setWypadekMaszyna('nie')}>Nie</button>
           <span className="text-red-600 text-lg ml-2">*</span>
         </div>
       </div>
@@ -49,11 +49,11 @@ export default function Strona2() {
       <div className="space-y-2">
         <label className="block font-medium">5. Czy były stosowane zabezpieczenia przed wypadkiem:</label>
         <div className="flex items-center gap-2 flex-wrap">
-          <button className={getButtonClass('tak', zabezpieczenia)} onClick={() => setZabezpieczenia('tak')}>tak</button>
+          <button className={getButtonClass('tak', zabezpieczenia)} type='button' onClick={() => setZabezpieczenia('tak')}>tak</button>
           <span className={separatorClassName}>/</span>
-          <button className={getButtonClass('nie', zabezpieczenia)} onClick={() => setZabezpieczenia('nie')}>Nie</button>
+          <button className={getButtonClass('nie', zabezpieczenia)} type='button' onClick={() => setZabezpieczenia('nie')}>Nie</button>
           <span className={separatorClassName}>/</span>
-          <button className={getButtonClass('nie dotyczy', zabezpieczenia)} onClick={() => setZabezpieczenia('nie dotyczy')}>Nie dotyczy</button>
+          <button className={getButtonClass('nie dotyczy', zabezpieczenia)} type='button' onClick={() => setZabezpieczenia('nie dotyczy')}>Nie dotyczy</button>
           <span className="text-red-600 text-lg ml-2">*</span>
         </div>
       </div>
@@ -66,11 +66,11 @@ export default function Strona2() {
       <div className="space-y-2">
         <label className="block font-medium">6. Czy była stosowana asekuracja podczas pracy:</label>
         <div className="flex items-center gap-2 flex-wrap">
-          <button className={getButtonClass('tak', asekuracja)} onClick={() => setAsekuracja('tak')}>tak</button>
+          <button className={getButtonClass('tak', asekuracja)} type='button' onClick={() => setAsekuracja('tak')}>tak</button>
           <span className={separatorClassName}>/</span>
-          <button className={getButtonClass('nie', asekuracja)} onClick={() => setAsekuracja('nie')}>Nie</button>
+          <button className={getButtonClass('nie', asekuracja)} type='button' onClick={() => setAsekuracja('nie')}>Nie</button>
           <span className={separatorClassName}>/</span>
-          <button className={getButtonClass('nie dotyczy', asekuracja)} onClick={() => setAsekuracja('nie dotyczy')}>Nie dotyczy</button>
+          <button className={getButtonClass('nie dotyczy', asekuracja)} type='button' onClick={() => setAsekuracja('nie dotyczy')}>Nie dotyczy</button>
           <span className="text-red-600 text-lg ml-2">*</span>
         </div>
       </div>
@@ -81,36 +81,36 @@ export default function Strona2() {
       <div className="space-y-2">
         <label className="block font-medium">7. W trakcie pracy przestrzegałem/am zasad BHP:</label>
         <div className="flex items-center gap-2">
-          <button className={getButtonClass('tak', bhp)} onClick={() => setBhp('tak')}>tak</button>
+          <button className={getButtonClass('tak', bhp)} type='button' onClick={() => setBhp('tak')}>tak</button>
           <span className={separatorClassName}>/</span>
-          <button className={getButtonClass('nie', bhp)} onClick={() => setBhp('nie')}>Nie</button>
+          <button className={getButtonClass('nie', bhp)} type='button' onClick={() => setBhp('nie')}>Nie</button>
           <span className="text-red-600 text-lg ml-2">*</span>
         </div>
       </div>
       <div className="space-y-2">
         <label className="block font-medium">8. Posiadam przygotowanie do wykonywania zakresu przedmiotowego zadań związanych z prowadzeniem działalności:</label>
         <div className="flex items-center gap-2">
-          <button className={getButtonClass('tak', przygotowanie)} onClick={() => setPrzygotowanie('tak')}>tak</button>
+          <button className={getButtonClass('tak', przygotowanie)} type='button' onClick={() => setPrzygotowanie('tak')}>tak</button>
           <span className={separatorClassName}>/</span>
-          <button className={getButtonClass('nie', przygotowanie)} onClick={() => setPrzygotowanie('nie')}>Nie</button>
+          <button className={getButtonClass('nie', przygotowanie)} type='button' onClick={() => setPrzygotowanie('nie')}>Nie</button>
           <span className="text-red-600 text-lg ml-2">*</span>
         </div>
       </div>
       <div className="space-y-2">
         <label className="block font-medium">9. Odbyłem/am stosowane szkolenie z BHP dla pracodawców</label>
         <div className="flex items-center gap-2">
-          <button className={getButtonClass('tak', szkolenie)} onClick={() => setSzkolenie('tak')}>tak</button>
+          <button className={getButtonClass('tak', szkolenie)} type='button' onClick={() => setSzkolenie('tak')}>tak</button>
           <span className={separatorClassName}>/</span>
-          <button className={getButtonClass('nie', szkolenie)} onClick={() => setSzkolenie('nie')}>Nie</button>
+          <button className={getButtonClass('nie', szkolenie)} type='button' onClick={() => setSzkolenie('nie')}>Nie</button>
           <span className="text-red-600 text-lg ml-2">*</span>
         </div>
       </div>
       <div className="space-y-2">
         <label className="block text-sm">- posiadam opracowaną ocenę ryzyka zawodowego:</label>
         <div className="flex items-center gap-2">
-          <button className={getButtonClass('tak', ocenaRyzyka)} onClick={() => setOcenaRyzyka('tak')}>tak</button>
+          <button className={getButtonClass('tak', ocenaRyzyka)} type='button' onClick={() => setOcenaRyzyka('tak')}>tak</button>
           <span className={separatorClassName}>/</span>
-          <button className={getButtonClass('nie', ocenaRyzyka)} onClick={() => setOcenaRyzyka('nie')}>Nie</button>
+          <button className={getButtonClass('nie', ocenaRyzyka)} type='button' onClick={() => setOcenaRyzyka('nie')}>Nie</button>
           <span className="text-red-600 text-lg ml-2">*</span>
         </div>
       </div>
@@ -121,29 +121,29 @@ export default function Strona2() {
       <div className="space-y-2">
         <label className="block font-medium">10. W chwili wypadku</label>
         <div className="flex items-center gap-2 flex-wrap">
-          <button className={getButtonClass('tak', stanNietrzezwosci)} onClick={() => setStanNietrzezwosci('tak')}>byłem/am</button>
+          <button className={getButtonClass('tak', stanNietrzezwosci)} type='button' onClick={() => setStanNietrzezwosci('tak')}>byłem/am</button>
           <span className={separatorClassName}>/</span>
-          <button className={getButtonClass('nie', stanNietrzezwosci)} onClick={() => setStanNietrzezwosci('nie')}>nie byłem/am</button>
+          <button className={getButtonClass('nie', stanNietrzezwosci)} type='button' onClick={() => setStanNietrzezwosci('nie')}>nie byłem/am</button>
           <span className="text-red-600 text-lg">*</span><label>w stanie nietrzeźwości lub pod wpływem środków odurzających lub psychotropowych.</label>
         </div>
       </div>
       <div className="space-y-2">
         <label className="block font-medium">Stan trzeźwości w dacie wypadku:</label>
         <div className="flex items-center gap-2 flex-wrap">
-          <button className={getButtonClass('policja', badanieTrzezwosci)} onClick={() => setBadanieTrzezwosci('policja')}>badany przez organ policji</button>
+          <button className={getButtonClass('policja', badanieTrzezwosci)} type='button' onClick={() => setBadanieTrzezwosci('policja')}>badany przez organ policji</button>
           <span className={separatorClassName}>/</span>
-          <button className={getButtonClass('pomoc', badanieTrzezwosci)} onClick={() => setBadanieTrzezwosci('pomoc')}>badany w czasie udzielania pierwszej pomocy lekarskiej</button>
+          <button className={getButtonClass('pomoc', badanieTrzezwosci)} type='button' onClick={() => setBadanieTrzezwosci('pomoc')}>badany w czasie udzielania pierwszej pomocy lekarskiej</button>
           <span className={separatorClassName}>/</span>
-          <button className={getButtonClass('nie', badanieTrzezwosci)} onClick={() => setBadanieTrzezwosci('nie')}>nie był badany</button>
+          <button className={getButtonClass('nie', badanieTrzezwosci)} type='button' onClick={() => setBadanieTrzezwosci('nie')}>nie był badany</button>
           <span className="text-red-600 text-lg ml-2">*</span>
         </div>
       </div>
       <div className="space-y-2">
         <label className="block font-medium">11. W sprawie</label>
         <div className="flex items-center gap-2">
-          <button className={getButtonClass('tak', czynnosciWyjasniajace)} onClick={() => setCzynnosciWyjasniajace('tak')}>były</button>
+          <button className={getButtonClass('tak', czynnosciWyjasniajace)} type='button' onClick={() => setCzynnosciWyjasniajace('tak')}>były</button>
           <span className={separatorClassName}>/</span>
-          <button className={getButtonClass('nie', czynnosciWyjasniajace)} onClick={() => setCzynnosciWyjasniajace('nie')}>nie były</button>
+          <button className={getButtonClass('nie', czynnosciWyjasniajace)} type='button' onClick={() => setCzynnosciWyjasniajace('nie')}>nie były</button>
           <span className="text-red-600 text-lg ml-2">*</span><label>podjęte czynności wyjaśniające przez organ kontroli państwowej - tj. policji, prokuratury, inspekcji pracy, dozoru technicznego, inspekcji sanitarnej, straży pożarnej (jeżeli tak, należy podać przez jakie - adres, nr sprawy / decyzji, stan sprawy - zakończony / w trakcie / umorzone itp.)</label>
         </div>
         <textarea className="w-full border border-gray-300 rounded p-2" placeholder='........' value={opisCzynnosci} onChange={(e) => setOpisCzynnosci(e.target.value)}></textarea>

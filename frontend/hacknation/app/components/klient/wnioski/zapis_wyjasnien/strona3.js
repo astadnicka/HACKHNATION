@@ -57,9 +57,9 @@ export default function Strona3() {
         <div className="space-y-2">
           <label className="block text-sm">- w dacie wypadku</label>
           <div className="flex items-center gap-2">
-            <button className={getButtonClass('tak', zwolnienieLekarskie)} onClick={() => setZwolnienieLekarskie('tak')}>przebywałem/am</button>
+            <button className={getButtonClass('tak', zwolnienieLekarskie)} type='button' onClick={() => setZwolnienieLekarskie('tak')}>przebywałem/am</button>
             <span className={separatorClassName}>/</span>
-            <button className={getButtonClass('nie', zwolnienieLekarskie)} onClick={() => setZwolnienieLekarskie('nie')}>nie przebywałem/am</button>
+            <button className={getButtonClass('nie', zwolnienieLekarskie)} type='button' onClick={() => setZwolnienieLekarskie('nie')}>nie przebywałem/am</button>
             <span className="text-red-600 text-lg ml-2">*</span><label>na zwolnieniu lekarskim</label>
           </div>
         </div>
