@@ -1,6 +1,6 @@
 .env
 node_modules
-
+dataset/karty wypadku*
 # Python
 __pycache__/
 *.py[cod]
