@@ -1,6 +1,4 @@
 .env
-node_modules
-
 # Python
 __pycache__/
 *.py[cod]
@@ -19,3 +17,4 @@ htmlcov/
 dist/
 build/
 *.egg-info/
+ZUS_ACCIDENT_NOTIFICATION_TOOL.pdf
