@@ -7,20 +7,20 @@ assistant = Blueprint("assistant", __name__)
 def batch_check():
     data = request.get_json()
 
-    if not data or "forms" not in data:
-        return jsonify({"error": "Missing 'forms' array"}), 400
+    if not data:
+        return jsonify({"error": "No forms provided"}), 400
 
     results = []
 
-    for form in data["forms"]:
-        form_id = form.get("id")
-        fields = form.get("fields")
+    # for form in data["forms"]:
+    #     form_id = form.get("id")
+    #     fields = form.get("fields")
 
-        llm_result = llm.analyze_form(fields)
+    #     llm_result = llm.analyze_form(fields)
 
-        results.append({
-            "id": form_id,
-            "result": llm_result
-        })
+    #     results.append({
+    #         "id": form_id,
+    #         "result": llm_result
+    #     })
 
     return jsonify({"results": results})

@@ -7,3 +7,4 @@ class LLMClient:
 	#         # zapytanie do modelu OpenAI / Azure / Ollama / cokolwiek
 	#         response = ...
 	#         return response
+	#womp womp llm
