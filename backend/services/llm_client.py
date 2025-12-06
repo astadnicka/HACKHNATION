@@ -1,59 +1,71 @@
 import os
-import json
 from typing import Dict, Any, Optional
+
+import requests
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 
 class LLMClient:
-    """
-    Basic LLM Client for form analysis.
-    The actual LLM implementation will be added by the team.
-    """
-    
-    def __init__(self, api_key: Optional[str] = None):
+    """Client for calling Hugging Face Inference API."""
+
+    def __init__(
+        self,
+        api_token: Optional[str] = None,
+        model_id: Optional[str] = None,
+        timeout: int = 30,
+    ):
         """
-        Initialize the LLM client.
-        
+        Initialize the client.
+
         Args:
-            api_key: API key for the LLM service (optional, can be set via environment)
+            api_token: HF token; falls back to HF_TOKEN env
+            model_id: HF model id; falls back to HF_MODEL_ID env or gemma-2b
+            timeout: request timeout in seconds
         """
-        self.api_key = api_key or os.getenv("LLM_API_KEY")
-        self.base_url = os.getenv("LLM_BASE_URL", "https://api.example.com")
-        self.model = os.getenv("LLM_MODEL", "default-model")
-        
-    def _send(self, prompt: str) -> Dict[str, Any]:
-        """
-        Send a prompt to the LLM service.
-        This method should be implemented by the team with actual LLM API calls.
-        
-        Args:
-            prompt: The prompt to send to the LLM
-            
-        Returns:
-            Dict containing the LLM response
-        """
-        # TODO: Implement actual LLM API call here
-        # Example implementation structure:
-        # headers = {
-        #     "Authorization": f"Bearer {self.api_key}",
-        #     "Content-Type": "application/json"
-        # }
-        # payload = {
-        #     "model": self.model,
-        #     "prompt": prompt,
-        #     "temperature": 0.7,
-        #     "max_tokens": 500
-        # }
-        # response = requests.post(f"{self.base_url}/completions", 
-        #                         headers=headers, 
-        #                         json=payload)
-        # return response.json()
-        
-        # Placeholder response for development
-        return {
-            "status": "success",
-            "message": "LLM processing complete",
-            "analysis": "Form validation pending - LLM not yet configured"
+
+        self.api_token = api_token or os.getenv("HF_TOKEN")
+        self.model_id = model_id or os.getenv("HF_MODEL_ID", "google/gemma-2b")
+        self.base_url = f"https://router.huggingface.co/hf-inference/{self.model_id}"
+        self.timeout = timeout
+
+        if not self.api_token:
+            raise ValueError("HF_TOKEN is required to call the Hugging Face API.")
+
+    def _send(self, prompt: str) -> Any:
+        """Send a prompt to the Hugging Face Inference API."""
+
+        headers = {
+            "Authorization": f"Bearer {self.api_token}",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
         }
+
+        payload = {
+            "inputs": prompt,
+            "parameters": {
+                "max_new_tokens": 512,
+                "temperature": 0.2,
+                "return_full_text": False,
+            },
+        }
+
+        response = requests.post(
+            self.base_url, headers=headers, json=payload, timeout=self.timeout
+        )
+
+        if response.status_code == 503:
+            # HF returns 503 when the model is loading; surface a clear error
+            data = response.json()
+            estimated = data.get("estimated_time")
+            raise RuntimeError(
+                f"Model loading, retry after {estimated} seconds" if estimated else "Model loading, retry shortly"
+            )
+
+        response.raise_for_status()
+        return response.json()
     
     def analyze_form(self, fields: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -93,7 +105,7 @@ class LLMClient:
         
         return prompt
     
-    def _parse_response(self, response: Dict[str, Any]) -> Dict[str, Any]:
+    def _parse_response(self, response: Any) -> Dict[str, Any]:
         """
         Parse the LLM response into a structured format.
         
@@ -103,12 +115,28 @@ class LLMClient:
         Returns:
             Parsed and structured response
         """
-        # TODO: Customize parsing based on actual LLM response format
+        if isinstance(response, dict) and response.get("error"):
+            raise RuntimeError(response.get("error"))
+
+        generated_parts = []
+
+        if isinstance(response, list):
+            for item in response:
+                if isinstance(item, dict):
+                    if "generated_text" in item:
+                        generated_parts.append(item["generated_text"])
+                    elif "summary_text" in item:
+                        generated_parts.append(item["summary_text"])
+        elif isinstance(response, dict) and "generated_text" in response:
+            generated_parts.append(response["generated_text"])
+
+        analysis_text = "\n".join(generated_parts).strip() if generated_parts else str(response)
+
         return {
             "valid": True,
             "suggestions": [],
-            "analysis": response.get("analysis", "No analysis available"),
-            "raw_response": response
+            "analysis": analysis_text,
+            "raw_response": response,
         }
 
 
