@@ -1,9 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+export default function Strona1({ formData, setFormData }) {
+  const handleChange = (section, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [field]: value
+      }
+    }));
+  };
 
-export default function Strona1() {
-  const [plec, setPlec] = useState('');
+  const handleNestedChange = (section, subsection, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [subsection]: {
+          ...prev[section][subsection],
+          [field]: value
+        }
+      }
+    }));
+  };
+
+  const poszkodowany = formData.poszkodowany;
 
   return (
     <div className="bg-gray-50/60 w-full max-w-2xl p-4 rounded-xl flex flex-col space-y-4 mb-4">
@@ -15,6 +36,8 @@ export default function Strona1() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź PESEL"
+          value={poszkodowany.pesel}
+          onChange={(e) => handleChange('poszkodowany', 'pesel', e.target.value)}
         />
       </div>    
       <div className="grid grid-cols-3 gap-2">
@@ -24,16 +47,22 @@ export default function Strona1() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Rodzaj"
+          value={poszkodowany.dokument.rodzaj}
+          onChange={(e) => handleNestedChange('poszkodowany', 'dokument', 'rodzaj', e.target.value)}
         />
         <input
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Seria"
+          value={poszkodowany.dokument.seria}
+          onChange={(e) => handleNestedChange('poszkodowany', 'dokument', 'seria', e.target.value)}
         />      
         <input
           type="number"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Numer"
+          value={poszkodowany.dokument.numer}
+          onChange={(e) => handleNestedChange('poszkodowany', 'dokument', 'numer', e.target.value)}
         />
       </div>
       <div className="grid grid-cols-2 gap-2">
@@ -42,11 +71,15 @@ export default function Strona1() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź imię"
+          value={poszkodowany.imie}
+          onChange={(e) => handleChange('poszkodowany', 'imie', e.target.value)}
         /> 
         <input
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź nazwisko"
+          value={poszkodowany.nazwisko}
+          onChange={(e) => handleChange('poszkodowany', 'nazwisko', e.target.value)}
         />
       </div>
       <div className="grid grid-cols-3 gap-2">
@@ -54,6 +87,8 @@ export default function Strona1() {
         <input
           type="date"
           className="col-span-3 mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          value={poszkodowany.dataUrodzenia}
+          onChange={(e) => handleChange('poszkodowany', 'dataUrodzenia', e.target.value)}
         />
       </div>
         <div className="grid grid-cols-2 gap-2">
@@ -64,8 +99,8 @@ export default function Strona1() {
             id="mezczyzna"
             name="plec"
             value="mezczyzna"
-            checked={plec === 'mezczyzna'}
-            onChange={(e) => setPlec(e.target.value)}
+            checked={poszkodowany.plec === 'mezczyzna'}
+            onChange={(e) => handleChange('poszkodowany', 'plec', e.target.value)}
             className="w-4 h-4 text-cyan-500 focus:ring-cyan-500 cursor-pointer"
           />
           <label htmlFor="mezczyzna" className="ml-2 text-sm text-gray-700 cursor-pointer">
@@ -78,8 +113,8 @@ export default function Strona1() {
             id="kobieta"
             name="plec"
             value="kobieta"
-            checked={plec === 'kobieta'}
-            onChange={(e) => setPlec(e.target.value)}
+            checked={poszkodowany.plec === 'kobieta'}
+            onChange={(e) => handleChange('poszkodowany', 'plec', e.target.value)}
             className="w-4 h-4 text-cyan-500 focus:ring-cyan-500 cursor-pointer"
           />
           <label htmlFor="kobieta" className="ml-2 text-sm text-gray-700 cursor-pointer">
@@ -95,6 +130,8 @@ export default function Strona1() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź nazwę ulicy"
+          value={poszkodowany.adresZamieszkania.ulica}
+          onChange={(e) => handleNestedChange('poszkodowany', 'adresZamieszkania', 'ulica', e.target.value)}
         />
       </div>
       <div className="grid grid-cols-2 gap-2">
@@ -103,11 +140,15 @@ export default function Strona1() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź numer domu"
+          value={poszkodowany.adresZamieszkania.numerDomu}
+          onChange={(e) => handleNestedChange('poszkodowany', 'adresZamieszkania', 'numerDomu', e.target.value)}
         /> 
         <input
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź numer lokalu"
+          value={poszkodowany.adresZamieszkania.numerLokalu}
+          onChange={(e) => handleNestedChange('poszkodowany', 'adresZamieszkania', 'numerLokalu', e.target.value)}
         />
       </div>
       <div className="grid grid-cols-2 gap-2">
@@ -116,11 +157,15 @@ export default function Strona1() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź kod pocztowy"
+          value={poszkodowany.adresZamieszkania.kodPocztowy}
+          onChange={(e) => handleNestedChange('poszkodowany', 'adresZamieszkania', 'kodPocztowy', e.target.value)}
         /> 
         <input
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź miejscowość"
+          value={poszkodowany.adresZamieszkania.miejscowosc}
+          onChange={(e) => handleNestedChange('poszkodowany', 'adresZamieszkania', 'miejscowosc', e.target.value)}
         />
       </div>
       <div>
@@ -129,6 +174,8 @@ export default function Strona1() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź nazwę gminy lub dzielnicy"
+          value={poszkodowany.adresZamieszkania.gmina}
+          onChange={(e) => handleNestedChange('poszkodowany', 'adresZamieszkania', 'gmina', e.target.value)}
         />
       </div>
       <div>
@@ -138,6 +185,8 @@ export default function Strona1() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź państwo"
+          value={poszkodowany.adresZamieszkania.panstwo}
+          onChange={(e) => handleNestedChange('poszkodowany', 'adresZamieszkania', 'panstwo', e.target.value)}
         />
       </div>
       <div>
@@ -149,6 +198,8 @@ export default function Strona1() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź nazwę ulicy"
+          value={poszkodowany.adresKorespondencji.ulica}
+          onChange={(e) => handleNestedChange('poszkodowany', 'adresKorespondencji', 'ulica', e.target.value)}
         />
       </div>
       <div className="grid grid-cols-2 gap-2">
@@ -157,11 +208,15 @@ export default function Strona1() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź numer domu"
+          value={poszkodowany.adresKorespondencji.numerDomu}
+          onChange={(e) => handleNestedChange('poszkodowany', 'adresKorespondencji', 'numerDomu', e.target.value)}
         /> 
         <input
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź numer lokalu"
+          value={poszkodowany.adresKorespondencji.numerLokalu}
+          onChange={(e) => handleNestedChange('poszkodowany', 'adresKorespondencji', 'numerLokalu', e.target.value)}
         />
       </div>
       <div className="grid grid-cols-2 gap-2">
@@ -170,11 +225,15 @@ export default function Strona1() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź kod pocztowy"
+          value={poszkodowany.adresKorespondencji.kodPocztowy}
+          onChange={(e) => handleNestedChange('poszkodowany', 'adresKorespondencji', 'kodPocztowy', e.target.value)}
         /> 
         <input
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź miejscowość"
+          value={poszkodowany.adresKorespondencji.miejscowosc}
+          onChange={(e) => handleNestedChange('poszkodowany', 'adresKorespondencji', 'miejscowosc', e.target.value)}
         />
       </div>
       <div>
@@ -183,6 +242,8 @@ export default function Strona1() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź nazwę gminy lub dzielnicy"
+          value={poszkodowany.adresKorespondencji.gmina}
+          onChange={(e) => handleNestedChange('poszkodowany', 'adresKorespondencji', 'gmina', e.target.value)}
         />
       </div>
       <div>
@@ -192,6 +253,8 @@ export default function Strona1() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź państwo"
+          value={poszkodowany.adresKorespondencji.panstwo}
+          onChange={(e) => handleNestedChange('poszkodowany', 'adresKorespondencji', 'panstwo', e.target.value)}
         />
       </div>   
     </div>
