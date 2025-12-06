@@ -2,6 +2,7 @@ import pandas as pd
 import torch
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, f1_score
+import os 
 
 from datasets import Dataset
 from transformers import (
@@ -12,13 +13,15 @@ from transformers import (
     pipeline
 )
 
-# ============================
-# 1. WCZYTANIE DANYCH
-# ============================
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-CSV_PATH = "../../dataset/training_data_roberta.csv"   # <-- TU PODAJ SWOJĄ ŚCIEŻKĘ
 
-df = pd.read_csv(CSV_PATH)
+JSON_PATH = os.path.join(BASE_DIR, "../../dataset/training_data_roberta.json")
+
+print(f"Wczytywanie danych z: {os.path.abspath(JSON_PATH)}")
+
+
+df = pd.read_json(JSON_PATH)
 df = df[["text", "label"]]
 df["label"] = df["label"].astype(int)
 
@@ -26,7 +29,9 @@ train_texts, test_texts, train_labels, test_labels = train_test_split(
     df["text"].tolist(),
     df["label"].tolist(),
     test_size=0.2,
-    random_state=42
+    random_state=42,
+    shuffle=True,
+    stratify=df["label"]
 )
 
 train_df = pd.DataFrame({"text": train_texts, "label": train_labels})
@@ -35,11 +40,15 @@ test_df  = pd.DataFrame({"text": test_texts,  "label": test_labels})
 train_ds = Dataset.from_pandas(train_df)
 test_ds  = Dataset.from_pandas(test_df)
 
-# ============================
-# 2. TOKENIZER + MODEL (POLSKI)
-# ============================
+# DEBUG PRINTS
 
-MODEL_NAME = "allegro/herbert-base-cased"  # najlepszy do PL
+print("TRAIN label distribution:")
+print(pd.Series(train_labels).value_counts(normalize=True))
+
+print("\nTEST label distribution:")
+print(pd.Series(test_labels).value_counts(normalize=True))
+
+MODEL_NAME = "allegro/herbert-base-cased"  
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 model = AutoModelForSequenceClassification.from_pretrained(
@@ -61,9 +70,7 @@ test_ds  = test_ds.map(tokenize, batched=True)
 train_ds.set_format("torch", columns=["input_ids", "attention_mask", "label"])
 test_ds.set_format("torch", columns=["input_ids", "attention_mask", "label"])
 
-# ============================
-# 3. METRYKI
-# ============================
+
 
 def compute_metrics(pred):
     labels = pred.label_ids
@@ -77,18 +84,15 @@ def compute_metrics(pred):
         "f1": f1
     }
 
-# ============================
-# 4. PARAMETRY TRENINGU
-# ============================
 
 training_args = TrainingArguments(
     output_dir="./wyniki",
-    evaluation_strategy="epoch",
+    eval_strategy="epoch",
     save_strategy="epoch",
     learning_rate=2e-5,
     per_device_train_batch_size=8,
     per_device_eval_batch_size=8,
-    num_train_epochs=4,
+    num_train_epochs=8,
     weight_decay=0.01,
     logging_dir="./logi",
     logging_steps=20,
@@ -96,9 +100,7 @@ training_args = TrainingArguments(
     metric_for_best_model="f1"
 )
 
-# ============================
-# 5. TRENER
-# ============================
+
 
 trainer = Trainer(
     model=model,
@@ -109,22 +111,15 @@ trainer = Trainer(
     compute_metrics=compute_metrics
 )
 
-# ============================
-# 6. START TRENINGU
-# ============================
+
 
 trainer.train()
 
-# ============================
-# 7. EWALUACJA
-# ============================
+
 
 print("\n=== WYNIKI NA ZBIORZE TESTOWYM ===")
 trainer.evaluate()
 
-# ============================
-# 8. ZAPIS MODELU
-# ============================
 
 SAVE_PATH = "./model_zus"
 trainer.save_model(SAVE_PATH)
@@ -132,9 +127,7 @@ tokenizer.save_pretrained(SAVE_PATH)
 
 print(f"\nModel zapisany w: {SAVE_PATH}")
 
-# ============================
-# 9. TESTOWA PREDYKCJA (OD RAZU)
-# ============================
+
 
 clf = pipeline(
     "text-classification",
