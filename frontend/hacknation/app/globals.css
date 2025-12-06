@@ -12,15 +12,25 @@
   --font-mono: var(--font-geist-mono);
 }
 
+@font-face {
+  font-family: "HandNote";
+  src: url("/Hand%20Note.otf") format("opentype");
+  font-display: swap;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground: #e6e5d7;
   }
 }
+html,body{
+    height: 100vh;
+    width: 100vw;
 
+}
 body {
-  background: var(--background);
+  background: #fefefe;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   /* background: radial-gradient(1q, #00923f 40px, transparent 0 )0 0/150px 150px, radial-gradient(1q, #00923f 40px, transparent 0 )75px 75px/150px 150px; */
@@ -93,6 +103,66 @@ body {
   gap:30px;
 }
 
+.Wnioski {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 160px);
+}
+
+.PaperWrapper {
+  position: relative;
+  display: inline-block;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  margin: 0 20px;
+  transition: transform 0.18s ease, filter 0.18s ease;
+  transform-origin: center center;
+}
+
+.PaperButtonOverlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: transparent;
+  border: none;
+  color: #5c4616;
+  font-size: 24px;
+  font-weight: 600;
+  font-family: "HandNote", Arial, sans-serif;
+  cursor: pointer;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  transition: color 0.2s ease;
+  pointer-events: none;
+}
+
+
+.PaperWrapper:not(:disabled):hover {
+  transform: scale(0.98);
+}
+
+.PaperWrapper:focus-visible {
+  outline: 2px solid #06b150;
+  outline-offset: 2px;
+}
+
+.PaperWrapper:disabled {
+  cursor: not-allowed;
+  transform: scale(0.96);
+}
+
+.PaperWrapper:disabled .PaperButtonOverlay {
+  color: #ead7a2;
+}
+
+.PaperWrapper:not(:disabled):active {
+  transform: scale(0.96);
+}
+
 .interactiveBubbleContainer {
   position: fixed;
   top: 0;
@@ -112,4 +182,10 @@ body {
   background: radial-gradient(circle, rgba(38, 222, 129, 0.3) 0%, rgba(38, 222, 129, 0.1) 100%);
   box-shadow: 0 0 30px rgba(38, 222, 129, 0.5);
   z-index: -1;
+}
+
+.paper{
+  height: 260px;
+  width: auto;
+  display: block;
 }

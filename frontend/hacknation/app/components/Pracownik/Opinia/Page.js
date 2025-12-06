@@ -64,7 +64,7 @@ export default function Opinia() {
       {renderPage()}
 
       <div className="absolute top-4 left-4">
-        <Link href="/">
+        <Link href="/PracownikWniosek">
           <button className="px-2 py-1 bg-[#00923f] cursor-pointer rounded-md hover:bg-[#007a33] transition-colors text-white">
             Wróć
           </button>
