@@ -24,3 +24,54 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+.DashBoardTitle{
+  width: 100%;
+  margin:150px auto;
+  text-align: center;
+  font-size: 50px;
+}
+.RoleButtons{
+  width: 100%;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap:50px;
+}
+
+.DashboardButton {
+  padding:20px;
+  height: 100px;
+  width: 300px;
+  border-radius: 20px;
+}
+
+.ClientButton {
+  background: rgb(44, 105, 219);
+
+
+}
+
+.WorkerButton {
+  background: rgb(67, 146, 78);
+
+
+}
+
+.WniosekButton{
+  height:60px;
+  width: 200px;
+  padding:20px;
+  background: rgb(0, 179, 255);
+  border-radius: 30px;
+}
+
+.WniosekButtonsWrapper{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  width: 100%;
+  margin: 0 auto;
+  gap:30px;
+}
