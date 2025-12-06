@@ -3,3 +3,6 @@ pdf2image
 Pillow
 opencv-python
 numpy
+matplotlib
+seaborn
+scikit-learn
