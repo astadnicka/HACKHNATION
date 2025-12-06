@@ -37,8 +37,8 @@ export default function Zawiadomienie() {
       {/* GO BACK BUTTON */}
       <div className="absolute top-4 left-4">
         <Link href="/">
-            <button className="px-2 py-1 bg-cyan-300 cursor-pointer rounded-md hover:bg-cyan-400 transition-colors">
-              Fuck, Go Back
+            <button className="px-2 py-1 bg-white cursor-pointer rounded-md hover:bg-gray-100">
+              Powrót do panelu klienta
             </button>
         </Link>
       </div>
@@ -52,15 +52,15 @@ export default function Zawiadomienie() {
         {page > 1 &&(
            <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className="px-2 py-1 bg-gray-300 rounded-md hover:bg-gray-400"
+            className="px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer"
           >
             Cofnij
           </button>
         )}        
         {page < 6 &&(
            <button
-            onClick={() => setPage((p) => Math.max(1, p + 1))}
-            className="px-2 py-1 bg-gray-300 rounded-md hover:bg-gray-400"
+            onClick={() => setPage((p) => Math.min(6, p + 1))}
+            className="px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer"
           >
             Dalej
           </button>
