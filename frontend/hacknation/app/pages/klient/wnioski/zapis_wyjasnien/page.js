@@ -68,52 +68,52 @@ export default function zapis_wyjasnien() {
     osobaImiona: {
       title: 'Dane personalne',
       body: 'Uzupełnij oba imiona zgodnie z dokumentem tożsamości.',
-      changed: true
+      changed: false
     },
     osobaUrodzenie: {
       title: 'Data i miejsce urodzenia',
       body: 'Podaj pełną datę urodzenia oraz miejscowość.',
-      changed: true
+      changed: false
     },
     osobaAdres: {
       title: 'Adres zamieszkania',
       body: 'Adres musi zawierać miejscowość i ulicę wraz z numerem.',
-      changed: true
+      changed: false
     },
     osobaZatrudnienie: {
       title: 'Miejsce zatrudnienia',
       body: 'Wpisz nazwę firmy lub pełną nazwę prowadzonej działalności.',
-      changed: true
+      changed: false
     },
     wypadekData: {
       title: 'Data wypadku',
       body: 'Data powinna odpowiadać dacie z oficjalnego zgłoszenia.',
-      changed: true
+      changed: false
     },
     wypadekSzczegoly: {
       title: 'Okoliczności wypadku',
       body: 'Uzupełnij datę, miejsce i dokładną godzinę zdarzenia.',
-      changed: true
+      changed: false
     },
     wypadekStart: {
       title: 'Planowana godzina rozpoczęcia',
       body: 'Podaj godzinę rozpoczęcia pracy w dniu zdarzenia.',
-      changed: true
+      changed: false
     },
     wypadekEnd: {
       title: 'Planowana godzina zakończenia',
       body: 'Podaj planowaną godzinę zakończenia pracy w tym dniu.',
-      changed: true
+      changed: false
     },
     wypadekCzynnosci: {
       title: 'Wykonywane czynności',
       body: 'Opisz czynności wykonywane tuż przed wypadkiem.',
-      changed: true
+      changed: false
     },
     wypadekOkolicznosci: {
       title: 'Opis okoliczności',
       body: 'Podaj szczegółowy opis przyczyn i przebiegu wypadku.',
-      changed: true
+      changed: false
     }
   };
 
@@ -121,87 +121,87 @@ export default function zapis_wyjasnien() {
     wypadekMaszyna: {
       title: 'Obsługa maszyn',
       body: 'Wskaż czy wypadek powstał podczas obsługi urządzenia.',
-      changed: true
+      changed: false
     },
     nazwaMaszyny: {
       title: 'Opis urządzenia',
       body: 'Podaj nazwę, typ oraz rok produkcji urządzenia.',
-      changed: true
+      changed: false
     },
     sprawnosc: {
       title: 'Sprawność urządzenia',
       body: 'Wyjaśnij czy urządzenie było sprawne i używane zgodnie z instrukcją.',
-      changed: true
+      changed: false
     },
     zabezpieczenia: {
       title: 'Zabezpieczenia',
       body: 'Oznacz czy były stosowane zabezpieczenia przed wypadkiem.',
-      changed: true
+      changed: false
     },
     rodzajSrodkow: {
       title: 'Środki ochronne',
       body: 'Wymień środki ochronne stosowane podczas pracy (np. buty, kask).',
-      changed: true
+      changed: false
     },
     sprawnoscSrodkow: {
       title: 'Sprawność środków ochrony',
       body: 'Opisz czy środki ochronne były właściwe i sprawne.',
-      changed: true
+      changed: false
     },
     asekuracja: {
       title: 'Asekuracja',
       body: 'Wskaż czy stosowana była asekuracja podczas pracy.',
-      changed: true
+      changed: false
     },
     obowiazekDwochOsob: {
       title: 'Praca w zespole',
       body: 'Ustal czy prace wymagały obecności co najmniej dwóch osób.',
-      changed: true
+      changed: false
     },
     bhp: {
       title: 'Zasady BHP',
       body: 'Potwierdź czy przestrzegałeś/aś zasad bezpieczeństwa i higieny pracy.',
-      changed: true
+      changed: false
     },
     przygotowanie: {
       title: 'Przygotowanie',
       body: 'Wskaż czy posiadasz przygotowanie do wykonywania swoich zadań.',
-      changed: true
+      changed: false
     },
     szkolenie: {
       title: 'Szkolenie z BHP',
       body: 'Potwierdź czy odbyłeś/aś obowiązkowe szkolenie z BHP.',
-      changed: true
+      changed: false
     },
     ocenaRyzyka: {
       title: 'Ocena ryzyka zawodowego',
       body: 'Potwierdź, czy posiadasz opracowaną ocenę ryzyka zawodowego.',
-      changed: true
+      changed: false
     },
     stanNietrzezwosci: {
       title: 'Stan trzeźwości',
       body: 'Wskaż czy w chwili wypadku byłeś/aś w stanie trzeźwości.',
-      changed: true
+      changed: false
     },
     badanieTrzezwosci: {
       title: 'Badanie trzeźwości',
       body: 'Wskaż czy badanie stanu trzeźwości zostało przeprowadzone.',
-      changed: true
+      changed: false
     },
     czynnosciWyjasniajace: {
       title: 'Czynności wyjaśniające',
       body: 'Wskaż czy były podjęte czynności wyjaśniające przez organy.',
-      changed: true
+      changed: false
     },
     srodkiZmniejszenia: {
       title: 'Środki ograniczające ryzyko',
       body: 'Opisz środki zastosowane w celu zmniejszenia ryzyka.',
-      changed: true
+      changed: false
     },
     opisCzynnosci: {
       title: 'Opis czynności wyjaśniających',
       body: 'Podaj szczegóły czynności podjętych przez organy: kto, numer sprawy/decyzji, status.',
-      changed: true
+      changed: false
     }
   };
 
@@ -209,42 +209,42 @@ export default function zapis_wyjasnien() {
     dataPomoc: {
       title: 'Data pierwszej pomocy',
       body: 'Podaj datę udzielenia pierwszej pomocy poszkodowanemu.',
-      changed: true
+      changed: false
     },
     zwolnienieLekarskie: {
       title: 'Zwolnienie lekarskie',
       body: 'Wskaż czy w dacie wypadku przebywałeś/aś na zwolnieniu lekarskim.',
-      changed: true
+      changed: false
     },
     nazwaPlacowki: {
       title: 'Placówka medyczna',
       body: 'Wpisz nazwę placówki służby zdrowia, w której udzielono pomocy.',
-      changed: true
+      changed: false
     },
     okresHospitalizacji: {
       title: 'Hospitalizacja',
       body: 'Podaj okres i miejsce hospitalizacji związanej z wypadkiem.',
-      changed: true
+      changed: false
     },
     rozpoznanyUraz: {
       title: 'Rozpoznany uraz',
       body: 'Opisz uraz na podstawie dostępnej dokumentacji lekarskiej.',
-      changed: true
+      changed: false
     },
     podpisPoszkodowanego: {
       title: 'Podpis poszkodowanego',
       body: 'Potwierdź własnoręczny podpis poszkodowanego lub pozostaw notatkę.',
-      changed: true
+      changed: false
     },
     protokolanci: {
       title: 'Protokół podpisów',
       body: 'Wpisz osoby, które protokołowały i potwierdziły podpis.',
-      changed: true
+      changed: false
     },
     niezdolnoscDo: {
       title: 'Niezdolność do pracy',
       body: 'Podaj datę zakończenia niezdolności do świadczenia pracy.',
-      changed: true
+      changed: false
     }
   };
 
