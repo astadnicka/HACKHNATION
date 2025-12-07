@@ -26,7 +26,6 @@ export default function Bounce({ labelRef: externalRef }) {
       pause.current =
         width.current <= rect.width || height.current <= rect.height;
 
-      // Ustaw na pozycję startową (pośrodek ekranu)
       const startX = (width.current - rect.width) / 2;
       const startY = (height.current - rect.height) / 2;
       labelRef.current.style.left = startX + "px";

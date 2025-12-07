@@ -1,18 +1,32 @@
 import React from "react";
 
-export default function Strona2({ formData, setFormData }) {
+export default function Strona2({ formData, setFormData, errors }) {
   const handleInputChange = (path, value) => {
     setFormData((prev) => {
       const updated = JSON.parse(JSON.stringify(prev));
       const keys = path.split(".");
-      let obj = updated;
+      let ref = updated;
       for (let i = 0; i < keys.length - 1; i++) {
-        if (!obj[keys[i]]) obj[keys[i]] = {};
-        obj = obj[keys[i]];
+        if (ref[keys[i]] === undefined || ref[keys[i]] === null) {
+          ref[keys[i]] = {};
+        }
+        ref = ref[keys[i]];
       }
-      obj[keys[keys.length - 1]] = value;
+      ref[keys[keys.length - 1]] = value;
       return updated;
     });
+  };
+
+  const getNested = (path, fallback = "") => {
+    const keys = path.split(".");
+    let ref = formData;
+    for (const key of keys) {
+      if (ref == null || typeof ref !== "object") {
+        return fallback;
+      }
+      ref = ref[key];
+    }
+    return ref ?? fallback;
   };
 
   return (
@@ -21,11 +35,11 @@ export default function Strona2({ formData, setFormData }) {
         <label className="block text-sm font-medium text-gray-700">
           Opinia osoby uprawnionej do aprobaty
         </label>
-        <textarea
-          id="zatwierdzenie_aprotata_opinia"
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 h-20"
+        <input
+          type="text"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź opinię"
-          value={formData.zatwierdzenie?.opiniaUprawnionegoDoAproby || ""}
+          value={getNested("zatwierdzenie.opiniaUprawnionegoDoAproby")}
           onChange={(e) =>
             handleInputChange(
               "zatwierdzenie.opiniaUprawnionegoDoAproby",
@@ -33,29 +47,66 @@ export default function Strona2({ formData, setFormData }) {
             )
           }
         />
-        <textarea
-          id="zatwierdzenie_aprotata_podpis"
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 h-20"
-          placeholder="Data, pieczątka i podpis osoby opracowującej"
-          value={formData.zatwierdzenie?.dataPieczatkaAproby || ""}
+        {errors.opiniaUprawnionegoDoAproby && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.opiniaUprawnionegoDoAproby}
+          </p>
+        )}
+        <label className="block text-sm font-medium text-gray-700 mt-2">
+          Data
+        </label>
+        <input
+          type="date"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          value={getNested("zatwierdzenie.dataAproby")}
           onChange={(e) =>
-            handleInputChange(
-              "zatwierdzenie.dataPieczatkaAproby",
-              e.target.value
-            )
+            handleInputChange("zatwierdzenie.dataAproby", e.target.value)
           }
         />
+        {errors.dataAproby && (
+          <p className="text-red-500 text-sm mt-1">{errors.dataAproby}</p>
+        )}
+        <label className="block text-sm font-medium text-gray-700 mt-2">
+          Pieczątka
+        </label>
+        <input
+          type="text"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          placeholder="Pieczątka"
+          value={getNested("zatwierdzenie.pieczatkaAproby")}
+          onChange={(e) =>
+            handleInputChange("zatwierdzenie.pieczatkaAproby", e.target.value)
+          }
+        />
+        {errors.pieczatkaAproby && (
+          <p className="text-red-500 text-sm mt-1">{errors.pieczatkaAproby}</p>
+        )}
+        <label className="block text-sm font-medium text-gray-700 mt-2">
+          Podpis
+        </label>
+        <input
+          type="text"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          placeholder="Podpis"
+          value={getNested("zatwierdzenie.podpisAproby")}
+          onChange={(e) =>
+            handleInputChange("zatwierdzenie.podpisAproby", e.target.value)
+          }
+        />
+        {errors.podpisAproby && (
+          <p className="text-red-500 text-sm mt-1">{errors.podpisAproby}</p>
+        )}
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700">
           Uzasadnienie
         </label>
-        <textarea
-          id="zatwierdzenie_aprotata_uzasadnienie"
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 h-20"
+        <input
+          type="text"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź uzasadnienie"
-          value={formData.zatwierdzenie?.uzasadnienieAproby || ""}
+          value={getNested("zatwierdzenie.uzasadnienieAproby")}
           onChange={(e) =>
             handleInputChange(
               "zatwierdzenie.uzasadnienieAproby",
@@ -63,46 +114,61 @@ export default function Strona2({ formData, setFormData }) {
             )
           }
         />
-      </div>
-
-      <div>
-        <textarea
-          id="zatwierdzenie_superaprotata_podpis"
-          className="h-20 mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          placeholder="Data, pieczątka i podpis osoby aprobującej"
-          value={formData.zatwierdzenie?.dataPieczatkaSuperaproby || ""}
-          onChange={(e) =>
-            handleInputChange(
-              "zatwierdzenie.dataPieczatkaSuperaproby",
-              e.target.value
-            )
-          }
-        />
+        {errors.uzasadnienieAproby && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.uzasadnienieAproby}
+          </p>
+        )}
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700">
           Opinia osoby uprawnionej do superaprobaty
         </label>
-        <textarea
-          id="zatwierdzenie_superaprotata_opinia"
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 h-20"
-          placeholder="Wprowadź opinię"
-          value={formData.zatwierdzenie?.opiniaSuperaproby || ""}
+        <input
+          type="text"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          value={getNested("zatwierdzenie.opiniaSuperaproby")}
           onChange={(e) =>
             handleInputChange("zatwierdzenie.opiniaSuperaproby", e.target.value)
           }
         />
-        <textarea
-          id="zatwierdzenie_superaprotata_osoba_podpis"
-          className="h-20 mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          placeholder="Data, pieczątka i podpis osoby uprawnionej do superaprobaty"
-          value={formData.zatwierdzenie?.dataPieczatkaSuperaprobyOsoba || ""}
+        <label className="block text-sm font-medium text-gray-700 mt-2">
+          Data
+        </label>
+        <input
+          type="date"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          value={getNested("zatwierdzenie.dataSuperaproby")}
+          onChange={(e) =>
+            handleInputChange("zatwierdzenie.dataSuperaproby", e.target.value)
+          }
+        />
+        <label className="block text-sm font-medium text-gray-700 mt-2">
+          Pieczątka
+        </label>
+        <input
+          type="text"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          placeholder="Pieczątka"
+          value={getNested("zatwierdzenie.pieczatkaSuperaproby")}
           onChange={(e) =>
             handleInputChange(
-              "zatwierdzenie.dataPieczatkaSuperaprobyOsoba",
+              "zatwierdzenie.pieczatkaSuperaproby",
               e.target.value
             )
+          }
+        />
+        <label className="block text-sm font-medium text-gray-700 mt-2">
+          Podpis
+        </label>
+        <input
+          type="text"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          placeholder="Podpis"
+          value={getNested("zatwierdzenie.podpisSuperaproby")}
+          onChange={(e) =>
+            handleInputChange("zatwierdzenie.podpisSuperaproby", e.target.value)
           }
         />
       </div>
@@ -111,25 +177,50 @@ export default function Strona2({ formData, setFormData }) {
         <label className="block text-sm font-medium text-gray-700">
           Opinia Konsultanta
         </label>
-        <textarea
-          id="zatwierdzenie_konsultanta_opinia"
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 h-20"
-          placeholder="Wprowadź opinię"
-          value={formData.zatwierdzenie?.opiniaKonsultanta || ""}
+        <input
+          type="text"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          value={getNested("zatwierdzenie.opiniaKonsultanta")}
           onChange={(e) =>
             handleInputChange("zatwierdzenie.opiniaKonsultanta", e.target.value)
           }
         />
-        <textarea
-          id="zatwierdzenie_konsultanta_podpis"
-          className="h-20 mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          placeholder="Data, pieczątka i podpis konsultanta"
-          value={formData.zatwierdzenie?.dataPieczatkaKonsultanta || ""}
+        <label className="block text-sm font-medium text-gray-700 mt-2">
+          Data
+        </label>
+        <input
+          type="date"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          value={getNested("zatwierdzenie.dataKonsultanta")}
+          onChange={(e) =>
+            handleInputChange("zatwierdzenie.dataKonsultanta", e.target.value)
+          }
+        />
+        <label className="block text-sm font-medium text-gray-700 mt-2">
+          Pieczątka
+        </label>
+        <input
+          type="text"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          placeholder="Pieczątka"
+          value={getNested("zatwierdzenie.pieczatkaKonsultanta")}
           onChange={(e) =>
             handleInputChange(
-              "zatwierdzenie.dataPieczatkaKonsultanta",
+              "zatwierdzenie.pieczatkaKonsultanta",
               e.target.value
             )
+          }
+        />
+        <label className="block text-sm font-medium text-gray-700 mt-2">
+          Podpis
+        </label>
+        <input
+          type="text"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          placeholder="Podpis"
+          value={getNested("zatwierdzenie.podpisKonsultanta")}
+          onChange={(e) =>
+            handleInputChange("zatwierdzenie.podpisKonsultanta", e.target.value)
           }
         />
       </div>
@@ -138,11 +229,10 @@ export default function Strona2({ formData, setFormData }) {
         <label className="block text-sm font-medium text-gray-700">
           Opinia Z-cy Dyrektora ds. Świadczeń
         </label>
-        <textarea
-          id="zatwierdzenie_dyrektor_opinia"
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 h-20"
-          placeholder="Wprowadź opinię"
-          value={formData.zatwierdzenie?.opiniaZcyDyrektora || ""}
+        <input
+          type="text"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          value={getNested("zatwierdzenie.opiniaZcyDyrektora")}
           onChange={(e) =>
             handleInputChange(
               "zatwierdzenie.opiniaZcyDyrektora",
@@ -150,14 +240,43 @@ export default function Strona2({ formData, setFormData }) {
             )
           }
         />
-        <textarea
-          id="zatwierdzenie_dyrektor_podpis"
-          className="h-20 mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          placeholder="Data, pieczątka i podpis Z-cy Dyrektora ds. Świadczeń"
-          value={formData.zatwierdzenie?.dataPieczatkaZcyDyrektora || ""}
+        <label className="block text-sm font-medium text-gray-700 mt-2">
+          Data
+        </label>
+        <input
+          type="date"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          value={getNested("zatwierdzenie.dataZcyDyrektora")}
+          onChange={(e) =>
+            handleInputChange("zatwierdzenie.dataZcyDyrektora", e.target.value)
+          }
+        />
+        <label className="block text-sm font-medium text-gray-700 mt-2">
+          Pieczątka
+        </label>
+        <input
+          type="text"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          placeholder="Pieczątka"
+          value={getNested("zatwierdzenie.pieczatkaZcyDyrektora")}
           onChange={(e) =>
             handleInputChange(
-              "zatwierdzenie.dataPieczatkaZcyDyrektora",
+              "zatwierdzenie.pieczatkaZcyDyrektora",
+              e.target.value
+            )
+          }
+        />
+        <label className="block text-sm font-medium text-gray-700 mt-2">
+          Podpis
+        </label>
+        <input
+          type="text"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          placeholder="Podpis"
+          value={getNested("zatwierdzenie.podpisZcyDyrektora")}
+          onChange={(e) =>
+            handleInputChange(
+              "zatwierdzenie.podpisZcyDyrektora",
               e.target.value
             )
           }
@@ -168,11 +287,10 @@ export default function Strona2({ formData, setFormData }) {
         <label className="block text-sm font-medium text-gray-700">
           Decyzja osoby uprawnionej do superaprobaty
         </label>
-        <textarea
-          id="zatwierdzenie_decyzja_opinia"
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 h-20"
-          placeholder="Wprowadź decyzję"
-          value={formData.zatwierdzenie?.decyzjaSuperaproby || ""}
+        <input
+          type="text"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          value={getNested("zatwierdzenie.decyzjaSuperaproby")}
           onChange={(e) =>
             handleInputChange(
               "zatwierdzenie.decyzjaSuperaproby",
@@ -180,16 +298,39 @@ export default function Strona2({ formData, setFormData }) {
             )
           }
         />
-        <textarea
-          id="zatwierdzenie_decyzja_podpis"
-          className="h-20 mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          placeholder="Data, pieczątka i podpis osoby uprawnionej do superaprobaty"
-          value={formData.zatwierdzenie?.dataPieczatkaDecyzja || ""}
+        <label className="block text-sm font-medium text-gray-700 mt-2">
+          Data
+        </label>
+        <input
+          type="date"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          value={getNested("zatwierdzenie.dataDecyzja")}
           onChange={(e) =>
-            handleInputChange(
-              "zatwierdzenie.dataPieczatkaDecyzja",
-              e.target.value
-            )
+            handleInputChange("zatwierdzenie.dataDecyzja", e.target.value)
+          }
+        />
+        <label className="block text-sm font-medium text-gray-700 mt-2">
+          Pieczątka
+        </label>
+        <input
+          type="text"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          placeholder="Pieczątka"
+          value={getNested("zatwierdzenie.pieczatkaDecyzja")}
+          onChange={(e) =>
+            handleInputChange("zatwierdzenie.pieczatkaDecyzja", e.target.value)
+          }
+        />
+        <label className="block text-sm font-medium text-gray-700 mt-2">
+          Podpis
+        </label>
+        <input
+          type="text"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          placeholder="Podpis"
+          value={getNested("zatwierdzenie.podpisDecyzja")}
+          onChange={(e) =>
+            handleInputChange("zatwierdzenie.podpisDecyzja", e.target.value)
           }
         />
       </div>

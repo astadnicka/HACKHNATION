@@ -2,60 +2,40 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-// ...existing code...
+import Link from "next/link";
 
 export default function KlientWniosek() {
   const router = useRouter();
-  const fileInputRef = useRef(null);
-
-  function handlePdfUpload() {
-    fileInputRef.current.click();
-  }
-
-  function handleFileChange(event) {
-    const file = event.target.files[0];
-    if (file) {
-      const fileName = file.name.toLowerCase();
-      if (fileName.slice(-3) === 'pdf') {
-        // File is a PDF, handle upload logic here
-        console.log('PDF file selected:', file);
-      } else {
-        alert('Please select a PDF file.');
-      }
-    }
-  }
-
-  const [uploadedFile, setUploadedFile] = useState(false);
-
-  function handleFileChange(event) {
-    const file = event.target.files[0];
-    if (file) {
-      const fileName = file.name.toLowerCase();
-      if (fileName.slice(-3) === 'pdf') {
-        console.log('PDF file selected:', file);
-        setUploadedFile(true);
-        setTimeout(() => setUploadedFile(false), 3000);
-      } else {
-        alert('Please select a PDF file.');
-      }
-    }
-  }
+  const handleClick = (route) => {
+    router.push(route);
+  };
 
   return (
-    <div className="KlientWniosekContainer"> 
+        <main className="m-4">
+
+     <Link href="/">
+          <button className="px-2 py-1 bg-[#00923f] cursor-pointer rounded-md hover:bg-[#007a33] transition-colors text-white">
+            Wróć
+          </button>
+       </Link>
+    <div className="KlientWniosek Wnioski">
+              <h2 className="WniosekHeading">Który wniosek chcesz złożyć?</h2>
+
       <div className="WniosekButtonsWrapper">
-        <button className={"Wniosek3 WniosekButton"} onClick={() => router.push('/Wniosek3')}>Zapis Wyjaśniający</button>
-        <button className={"Wniosek4 WniosekButton"} onClick={() => router.push('/Wniosek4')}>Zawiadomienie</button>
-      </div>  
-      <div className="WniosekButtonsWrapper">
-        <button className={"Wniosek5 WniosekButton"} onClick={handlePdfUpload}>Prześlij Wniosek PDF</button>
-        <input
-          type="file"
-          accept="application/pdf"
-          ref={fileInputRef}
-          style={{ display: "none" }}
-          onChange={handleFileChange}
-        />
+        <button
+          type="button"
+          className="WniosekButton"
+          onClick={() => handleClick("/pages/klient/wnioski/zapis_wyjasnien")}
+        >
+          Zapis Wyjaśnień
+        </button>
+        <button
+          type="button"
+          className="WniosekButton"
+          onClick={() => handleClick("/pages/klient/wnioski/zawiadomienie")}
+        >
+          Zawiadomienie
+        </button>
       </div>
       {uploadedFile && (
         <div className="WniosekButtonsWrapper">
@@ -63,5 +43,6 @@ export default function KlientWniosek() {
         </div>
       )}
     </div>
+    </main>
   );
 }
