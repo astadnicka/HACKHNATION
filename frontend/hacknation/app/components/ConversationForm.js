@@ -22,14 +22,25 @@ export const ConversationForm = ({ formType, onBack, onComplete }) => {
   const [mounted, setMounted] = useState(false);
 
   React.useEffect(() => {
+    console.log('ConversationForm mounted, formType:', formType);
     setMounted(true);
     if (formType) {
+      console.log('Starting conversation with type:', formType);
       startConversation(formType);
     }
-  }, [formType, startConversation]);
+  }, [formType]);
+
+  React.useEffect(() => {
+    if (completed && onComplete) {
+      console.log('Conversation completed, calling onComplete with:', responses);
+      onComplete(responses);
+    }
+  }, [completed, onComplete, responses]);
 
   const handleSubmitAnswer = async (e) => {
     e.preventDefault();
+    
+    console.log('handleSubmitAnswer called, currentAnswer:', currentAnswer);
     
     if (!currentAnswer.trim()) {
       alert('Proszę wpisać odpowiedź');
@@ -42,6 +53,8 @@ export const ConversationForm = ({ formType, onBack, onComplete }) => {
     };
 
     const currentFieldName = fieldNames[formType]?.[step - 1] || `field_${step}`;
+    console.log('Current field name:', currentFieldName, 'step:', step, 'formType:', formType);
+    
     await sendAnswer(currentFieldName, currentAnswer);
     setCurrentAnswer('');
   };
@@ -69,12 +82,6 @@ export const ConversationForm = ({ formType, onBack, onComplete }) => {
   }
 
   if (completed) {
-    React.useEffect(() => {
-      if (onComplete) {
-        onComplete(responses);
-      }
-    }, [completed, onComplete, responses]);
-
     return (
       <div className="conversation-form completion-screen">
         <div className="container">

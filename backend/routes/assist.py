@@ -278,19 +278,27 @@ def start_conversation():
         "form_type": "accident_report" | "explanation" | "opinion"
     }
     """
+    print("=" * 50)
+    print("START-CONVERSATION endpoint called")
+    
     data = request.get_json()
+    print(f"Received data: {data}")
     
     if not data or not data.get("session_id") or not data.get("form_type"):
+        print("ERROR: Missing session_id or form_type")
         return jsonify({
             "status": "error",
             "message": "Missing session_id or form_type"
         }), 400
     
     try:
+        print(f"Starting conversation for session: {data['session_id']}, type: {data['form_type']}")
         result = conversation_manager.start_conversation(
             session_id=data["session_id"],
             form_type=data["form_type"]
         )
+        print(f"Conversation started successfully: {result}")
+        print("=" * 50)
         
         return jsonify({
             "status": "success",
@@ -299,6 +307,9 @@ def start_conversation():
         
     except Exception as e:
         print(f"Error starting conversation: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        print("=" * 50)
         return jsonify({
             "status": "error",
             "error": str(e)
@@ -317,20 +328,28 @@ def process_answer():
         "answer": "Jan Kowalski"
     }
     """
+    print("=" * 50)
+    print("ANSWER endpoint called")
+    
     data = request.get_json()
+    print(f"Received data: {data}")
     
     if not data or not data.get("session_id") or not data.get("field_name") or not data.get("answer"):
+        print("ERROR: Missing required fields")
         return jsonify({
             "status": "error",
             "message": "Missing session_id, field_name, or answer"
         }), 400
     
     try:
+        print(f"Processing answer for session: {data['session_id']}, field: {data['field_name']}")
         result = conversation_manager.process_answer(
             session_id=data["session_id"],
             field_name=data["field_name"],
             answer=data["answer"]
         )
+        print(f"Answer processed successfully: {result}")
+        print("=" * 50)
         
         return jsonify({
             "status": "success",
@@ -339,6 +358,9 @@ def process_answer():
         
     except Exception as e:
         print(f"Error processing answer: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        print("=" * 50)
         return jsonify({
             "status": "error",
             "error": str(e)

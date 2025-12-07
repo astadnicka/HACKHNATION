@@ -7,10 +7,12 @@ import Strona3 from "@/app/components/klient/wnioski/zawiadomienie/strona3";
 import Strona4 from "@/app/components/klient/wnioski/zawiadomienie/strona4";
 import Strona5 from "@/app/components/klient/wnioski/zawiadomienie/strona5";
 import Strona6 from "@/app/components/klient/wnioski/zawiadomienie/strona6";
+import { ConversationForm } from "@/app/components/ConversationForm";
 
 import { useState } from 'react';
 
 export default function Zawiadomienie() {
+  const [mode, setMode] = useState(null); // null (choose), 'conditional', 'traditional'
   const [page, setPage] = useState(1);
 
   const [formData, setFormData] = useState({
@@ -416,7 +418,7 @@ export default function Zawiadomienie() {
   const renderPage = () => {
     switch (page) {
       case 1:
-        return <Strona1 formData={formData} setFormData={setFormData} alertContent={alertContent} />;
+        return <Strona1 formData={formData} setFormData={setFormData} alertContent={alertContent} onConversationMode={setMode} />;
       case 2:
         return <Strona2 formData={formData} setFormData={setFormData} alertContent={alertContentPage2} />;
       case 3:
@@ -428,7 +430,7 @@ export default function Zawiadomienie() {
       case 6:
         return <Strona6 formData={formData} setFormData={setFormData} alertContent={alertContentPage6} />;
       default:
-        return <Strona1 formData={formData} setFormData={setFormData} alertContent={alertContent} />;
+        return <Strona1 formData={formData} setFormData={setFormData} alertContent={alertContent} onConversationMode={setMode} />;
     }
   }
 
@@ -450,6 +452,33 @@ export default function Zawiadomienie() {
     // Add form submission logic here
   }
 
+  // Tryb warunkowy - ConversationForm
+  if (mode === 'conditional') {
+    return (
+      <div className="relative min-h-screen">
+        <div className="absolute top-4 left-4">
+          <button 
+            type="button" 
+            onClick={() => setMode(null)}
+            className="px-2 py-1 bg-white cursor-pointer rounded-md hover:bg-gray-100"
+          >
+            Powrót do zawiadomienia
+          </button>
+        </div>
+        <ConversationForm 
+          formType="accident_report"
+          onBack={() => setMode(null)}
+          onComplete={(responses) => {
+            console.log('Conversation completed:', responses);
+            setFormData(prev => ({ ...prev, conversationResponses: responses }));
+            setMode('traditional');
+          }}
+        />
+      </div>
+    );
+  }
+
+  // Tradycyjny formularz wielostronicowy
   return (
     <div className="flex flex-col items-center min-h-screen pt-16">    
       {/* GO BACK BUTTON */}
@@ -466,13 +495,13 @@ export default function Zawiadomienie() {
       <form onSubmit={(e) => e.preventDefault()} className="w-full max-w-2xl">
         {renderPage()}
         {/* BUTTONS: Cofnij (lewo), Dalej (prawo), Prześlij (prawo, tylko na ostatniej stronie) */}
-        <div className="flex flex-row-reverse justify-between">
+        <div className="flex flex-row-reverse justify-between gap-4 mt-6">
           {/* Dalej lub Prześlij po prawej */}
           {page === 6 ? (
             <button
               type="button"
               onClick={handleSubmit}
-              className="px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer"
+              className="px-6 py-2 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer font-medium whitespace-nowrap"
             >
               Prześlij
             </button>
@@ -480,7 +509,7 @@ export default function Zawiadomienie() {
             <button
               type="button"
               onClick={handleNextPage}
-              className="px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer"
+              className="px-6 py-2 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer font-medium whitespace-nowrap"
             >
               Dalej
             </button>
@@ -489,7 +518,7 @@ export default function Zawiadomienie() {
           <button
             type="button"
             onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className={`px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer ${page === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`px-6 py-2 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer font-medium whitespace-nowrap ${page === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
             disabled={page === 1}
           >
             Cofnij

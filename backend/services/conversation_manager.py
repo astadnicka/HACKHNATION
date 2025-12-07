@@ -14,6 +14,8 @@ class ConversationManager:
         Rozpoczyna nową konwersację
         form_type: "accident_report" | "explanation" | "opinion"
         """
+        print(f"ConversationManager.start_conversation called: session_id={session_id}, form_type={form_type}")
+        
         self.conversations[session_id] = {
             "form_type": form_type,
             "responses": {},
@@ -24,27 +26,35 @@ class ConversationManager:
         
         # Pierwsze pytanie na podstawie typu formularza
         first_question = self._get_initial_question(form_type)
+        print(f"First question: {first_question}")
         
-        return {
+        result = {
             "session_id": session_id,
             "question": first_question,
             "step": 1,
             "total_steps": 8,
             "form_type": form_type
         }
+        print(f"Returning result: {result}")
+        return result
     
     def process_answer(self, session_id: str, field_name: str, answer: str) -> Dict[str, Any]:
         """
         Przetwarza odpowiedź i zwraca następne pytanie
         """
+        print(f"ConversationManager.process_answer called: session_id={session_id}, field_name={field_name}, answer={answer}")
+        
         if session_id not in self.conversations:
+            print(f"ERROR: Session {session_id} not found")
             raise ValueError("Nieznana sesja")
         
         conversation = self.conversations[session_id]
+        print(f"Current conversation state: {conversation}")
         
         # Zapisz odpowiedź
         conversation["responses"][field_name] = answer
         conversation["step"] += 1
+        print(f"Updated step to: {conversation['step']}")
         
         # Przeanalizuj odpowiedź (jeśli LLM jest dostępny)
         analysis = {}
@@ -179,4 +189,9 @@ class ConversationManager:
 
 
 # Globalna instancja
+print("========================================")
+print("Creating global ConversationManager instance...")
 conversation_manager = ConversationManager()
+print(f"conversation_manager created: {conversation_manager}")
+print(f"conversation_manager.conversations: {conversation_manager.conversations}")
+print("========================================")

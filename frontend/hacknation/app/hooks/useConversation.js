@@ -15,6 +15,9 @@ export const useConversation = () => {
   const [analysis, setAnalysis] = useState(null);
 
   const startConversation = useCallback(async (form_type) => {
+    console.log('startConversation called with:', form_type);
+    console.log('API URL:', API_BASE_URL);
+    
     setLoading(true);
     setError(null);
     setResponses({});
@@ -22,7 +25,10 @@ export const useConversation = () => {
     setAnalysis(null);
     
     try {
-      const response = await fetch(`${API_BASE_URL}/api/assistant/start-conversation`, {
+      const url = `${API_BASE_URL}/api/assistant/start-conversation`;
+      console.log('Fetching:', url);
+      
+      const response = await fetch(url, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -33,15 +39,19 @@ export const useConversation = () => {
         })
       });
 
+      console.log('Response status:', response.status);
       const data = await response.json();
+      console.log('Response data:', data);
       
       if (data.status === 'success') {
         setCurrentQuestion(data.data.question);
         setStep(data.data.step);
         setTotalSteps(data.data.total_steps);
         setFormType(data.data.form_type);
+        console.log('Conversation started successfully, first question:', data.data.question);
       } else {
         setError(data.message || 'Błąd przy rozpoczynaniu rozmowy');
+        console.error('Failed to start conversation:', data);
       }
     } catch (error) {
       console.error('Error starting conversation:', error);
@@ -52,11 +62,16 @@ export const useConversation = () => {
   }, [sessionId]);
 
   const sendAnswer = useCallback(async (fieldName, answer) => {
+    console.log('sendAnswer called with:', { fieldName, answer });
+    
     setLoading(true);
     setError(null);
     
     try {
-      const response = await fetch(`${API_BASE_URL}/api/assistant/answer`, {
+      const url = `${API_BASE_URL}/api/assistant/answer`;
+      console.log('Fetching:', url);
+      
+      const response = await fetch(url, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -68,22 +83,27 @@ export const useConversation = () => {
         })
       });
 
+      console.log('Response status:', response.status);
       const data = await response.json();
+      console.log('Response data:', data);
       
       if (data.status === 'success') {
         setResponses(prev => ({ ...prev, [fieldName]: answer }));
         setAnalysis(data.data.analysis || null);
         
         if (data.data.status === 'completed') {
+          console.log('Conversation completed');
           setCompleted(true);
           setCurrentQuestion(null);
         } else {
+          console.log('Next question:', data.data.question);
           setCurrentQuestion(data.data.question);
           setStep(data.data.step);
           setTotalSteps(data.data.total_steps);
         }
       } else {
         setError(data.error || 'Błąd przy przetwarzaniu odpowiedzi');
+        console.error('Failed to send answer:', data);
       }
     } catch (error) {
       console.error('Error sending answer:', error);
