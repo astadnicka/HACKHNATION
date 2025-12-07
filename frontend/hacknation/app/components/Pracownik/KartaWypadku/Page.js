@@ -34,7 +34,8 @@ export default function KartaWypadku() {
         seria: "",
         numer: "",
       },
-      dataMiejsceUrodzenia: "",
+      dataUrodzenia: "",
+      miejsceUrodzenia: "",
       adresZamieszkania: "",
       tytulUbezpieczenia: "",
     },
@@ -179,9 +180,13 @@ export default function KartaWypadku() {
       newErrors.poszkodowanyDokumentNumer = "Numer dokumentu jest wymagany";
     }
 
-    if (!formData.poszkodowany.dataMiejsceUrodzenia.trim()) {
-      newErrors.poszkodowanyDataMiejsceUrodzenia =
-        "Data i miejsce urodzenia są wymagane";
+    if (!formData.poszkodowany.dataUrodzenia) {
+      newErrors.poszkodowanyDataUrodzenia = "Data urodzenia jest wymagana";
+    }
+
+    if (!formData.poszkodowany.miejsceUrodzenia.trim()) {
+      newErrors.poszkodowanyMiejsceUrodzenia =
+        "Miejsce urodzenia jest wymagane";
     }
 
     if (!formData.poszkodowany.adresZamieszkania.trim()) {
@@ -220,26 +225,24 @@ export default function KartaWypadku() {
     }
 
     if (
-      !formData.status.naruszenie &&
+      formData.status.naruszenie &&
       !formData.status.powodyNaruszenia.trim()
     ) {
-      newErrors.powodyNaruszenia =
-        "Podaj powody naruszenia (lub zaznacz 'Nie stwierdzono')";
+      newErrors.powodyNaruszenia = "Podaj powody naruszenia";
     }
 
     if (
-      !formData.status.badanoNietrz &&
+      formData.status.badanoNietrz &&
       !formData.status.uzasadnienieBadania.trim()
     ) {
-      newErrors.uzasadnienieBadania =
-        "Podaj uzasadnienie (lub zaznacz 'Nie badano')";
+      newErrors.uzasadnienieBadania = "Podaj uzasadnienie badania";
     }
 
     if (
-      !formData.pozostale.przeszkody &&
+      formData.pozostale.przeszkody &&
       !formData.pozostale.opisPrzeszkod.trim()
     ) {
-      newErrors.opisPrzeszkod = "Podaj opis przeszkód (lub zaznacz 'Brak')";
+      newErrors.opisPrzeszkod = "Podaj opis przeszkód";
     }
 
     if (formData.status.czyWypadek === null) {
@@ -294,8 +297,18 @@ export default function KartaWypadku() {
     const validationErrors = validatePage1();
     setErrors(validationErrors);
 
+    // DODAJ TO DO DEBUGOWANIA:
+    console.log("Błędy walidacji:", validationErrors);
+    console.log("Liczba błędów:", Object.keys(validationErrors).length);
+
     if (Object.keys(validationErrors).length === 0) {
       setPage((p) => Math.min(2, p + 1));
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (page > 1) {
+      setPage(page - 1);
     }
   };
 
@@ -340,7 +353,7 @@ export default function KartaWypadku() {
   };
 
   return (
-    <div className="flex flex-col items-center min-h-screen pt-16 m-4">
+    <div className="flex flex-col items-center min-h-screen pt-16 m-4 p-4">
       <h1 className="text-4xl font-bold mb-4">Karta Wypadku</h1>
 
       {renderPage()}

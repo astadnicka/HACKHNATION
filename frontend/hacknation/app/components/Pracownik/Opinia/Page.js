@@ -249,7 +249,7 @@ export default function Opinia() {
   };
 
   return (
-    <div className="flex flex-col items-center min-h-screen pt-16 m-6 relative">
+    <div className="flex flex-col items-center min-h-screen pt-16 p-4 relative">
       {/* Główny formularz wycentrowany */}
       <div className="flex flex-col items-center w-full max-w-2xl">
         <h1 className="text-4xl font-bold mb-4">Opinia w sprawie wypadku</h1>
@@ -346,7 +346,7 @@ export default function Opinia() {
               onClick={handleFileSelect}
               className="w-full px-3 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-md text-xs"
             >
-             Dodaj pliki PDF
+              Dodaj pliki PDF
             </button>
 
             <button
@@ -354,7 +354,7 @@ export default function Opinia() {
               disabled={selectedFiles.length === 0}
               className="w-full px-3 py-2.5 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-colors shadow-md disabled:bg-gray-400  text-xs"
             >
-             Poproś o opinię
+              Poproś o opinię
             </button>
           </div>
 

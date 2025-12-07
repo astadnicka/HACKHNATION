@@ -63,9 +63,8 @@ export default function Strona1({ formData, setFormData, errors }) {
         <label className="block text-sm font-medium text-gray-700">
           Kwestia do rozstrzygnięcia:
         </label>
-        <input
-          type="text"
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        <textarea
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 min-h-[60px] resize-y"
           placeholder="Opisz kwestię do rozstrzygnięcia"
           value={getNested("podstawowe.kwestiaDoRozstrzygniecza")}
           onChange={(e) =>
@@ -74,6 +73,7 @@ export default function Strona1({ formData, setFormData, errors }) {
               e.target.value
             )
           }
+          rows={3}
         />
         {errors.kwestiaDoRozstrzygniecza && (
           <p className="text-red-500 text-sm mt-1">
@@ -219,14 +219,14 @@ export default function Strona1({ formData, setFormData, errors }) {
         <label className="block text-sm font-medium text-gray-700">
           Opinia o uznaniu
         </label>
-        <input
-          type="text"
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        <textarea
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 min-h-[60px] resize-y"
           placeholder="Wprowadź opinię"
           value={getNested("opinia.opiniaOUznaniu")}
           onChange={(e) =>
             handleInputChange("opinia.opiniaOUznaniu", e.target.value)
           }
+          rows={3}
         />
         {errors.opiniaOUznaniu && (
           <p className="text-red-500 text-sm mt-1">{errors.opiniaOUznaniu}</p>
@@ -237,14 +237,14 @@ export default function Strona1({ formData, setFormData, errors }) {
         <label className="block text-sm font-medium text-gray-700">
           Uzasadnienie:
         </label>
-        <input
-          type="text"
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        <textarea
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 min-h-[100px] resize-y"
           placeholder="Wprowadź uzasadnienie"
           value={getNested("opinia.uzasadnienie")}
           onChange={(e) =>
             handleInputChange("opinia.uzasadnienie", e.target.value)
           }
+          rows={5}
         />
         {errors.uzasadnienie && (
           <p className="text-red-500 text-sm mt-1">{errors.uzasadnienie}</p>

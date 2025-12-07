@@ -35,9 +35,8 @@ export default function Strona2({ formData, setFormData, errors }) {
         <label className="block text-sm font-medium text-gray-700">
           Opinia osoby uprawnionej do aprobaty
         </label>
-        <input
-          type="text"
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        <textarea
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 min-h-[60px] resize-y"
           placeholder="Wprowadź opinię"
           value={getNested("zatwierdzenie.opiniaUprawnionegoDoAproby")}
           onChange={(e) =>
@@ -46,6 +45,7 @@ export default function Strona2({ formData, setFormData, errors }) {
               e.target.value
             )
           }
+          rows={3}
         />
         {errors.opiniaUprawnionegoDoAproby && (
           <p className="text-red-500 text-sm mt-1">
@@ -102,9 +102,8 @@ export default function Strona2({ formData, setFormData, errors }) {
         <label className="block text-sm font-medium text-gray-700">
           Uzasadnienie
         </label>
-        <input
-          type="text"
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        <textarea
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 min-h-[100px] resize-y"
           placeholder="Wprowadź uzasadnienie"
           value={getNested("zatwierdzenie.uzasadnienieAproby")}
           onChange={(e) =>
@@ -113,6 +112,7 @@ export default function Strona2({ formData, setFormData, errors }) {
               e.target.value
             )
           }
+          rows={5}
         />
         {errors.uzasadnienieAproby && (
           <p className="text-red-500 text-sm mt-1">
@@ -125,13 +125,13 @@ export default function Strona2({ formData, setFormData, errors }) {
         <label className="block text-sm font-medium text-gray-700">
           Opinia osoby uprawnionej do superaprobaty
         </label>
-        <input
-          type="text"
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        <textarea
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 min-h-[60px] resize-y"
           value={getNested("zatwierdzenie.opiniaSuperaproby")}
           onChange={(e) =>
             handleInputChange("zatwierdzenie.opiniaSuperaproby", e.target.value)
           }
+          rows={3}
         />
         <label className="block text-sm font-medium text-gray-700 mt-2">
           Data
@@ -177,13 +177,13 @@ export default function Strona2({ formData, setFormData, errors }) {
         <label className="block text-sm font-medium text-gray-700">
           Opinia Konsultanta
         </label>
-        <input
-          type="text"
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        <textarea
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 min-h-[60px] resize-y"
           value={getNested("zatwierdzenie.opiniaKonsultanta")}
           onChange={(e) =>
             handleInputChange("zatwierdzenie.opiniaKonsultanta", e.target.value)
           }
+          rows={3}
         />
         <label className="block text-sm font-medium text-gray-700 mt-2">
           Data
@@ -229,9 +229,8 @@ export default function Strona2({ formData, setFormData, errors }) {
         <label className="block text-sm font-medium text-gray-700">
           Opinia Z-cy Dyrektora ds. Świadczeń
         </label>
-        <input
-          type="text"
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        <textarea
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 min-h-[60px] resize-y"
           value={getNested("zatwierdzenie.opiniaZcyDyrektora")}
           onChange={(e) =>
             handleInputChange(
@@ -239,6 +238,7 @@ export default function Strona2({ formData, setFormData, errors }) {
               e.target.value
             )
           }
+          rows={3}
         />
         <label className="block text-sm font-medium text-gray-700 mt-2">
           Data
@@ -287,9 +287,8 @@ export default function Strona2({ formData, setFormData, errors }) {
         <label className="block text-sm font-medium text-gray-700">
           Decyzja osoby uprawnionej do superaprobaty
         </label>
-        <input
-          type="text"
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        <textarea
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 min-h-[60px] resize-y"
           value={getNested("zatwierdzenie.decyzjaSuperaproby")}
           onChange={(e) =>
             handleInputChange(
@@ -297,6 +296,7 @@ export default function Strona2({ formData, setFormData, errors }) {
               e.target.value
             )
           }
+          rows={3}
         />
         <label className="block text-sm font-medium text-gray-700 mt-2">
           Data
