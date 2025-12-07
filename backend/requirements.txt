@@ -3,3 +3,10 @@ pdf2image
 Pillow
 opencv-python
 numpy
+matplotlib
+seaborn
+scikit-learn
+flask_cors
+dotenv
+llama_cpp_python
+fitz

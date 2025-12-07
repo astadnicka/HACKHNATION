@@ -1,13 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useState } from 'react'; // This line remains unchanged
 
-export default function Strona4() {
-  const [organPostepowanie, setOrganPostepowanie] = useState('');
-  const [maszynaWypadek, setMaszynaWypadek] = useState(null);
-  const [opisMaszyny, setOpisMaszyny] = useState('');
-  const [atest, setAtest] = useState(null);
-  const [ewidencjaSrodkowTrwalych, setEwidencjaSrodkowTrwalych] = useState(null);
+export default function Strona4({ formData, setFormData }) {
+  // Helpers for updating formData
+  const handleChange = (section, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [field]: value
+      }
+    }));
+  };
+  // Destructure needed data from formData
+  const organy = formData.organy;
 
   return (
     <div className="bg-gray-50/60 w-full max-w-2xl p-4 rounded-xl flex flex-col space-y-4 mb-4">
