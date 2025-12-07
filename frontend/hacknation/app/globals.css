@@ -81,16 +81,22 @@ body {
   padding:20px;
   background: rgb(42, 143, 220);
   border-radius: 30px;
+  cursor: pointer;
+}
+
+.WniosekButton:hover {
+  background: rgb(45, 132, 208);
 }
 
 .WniosekButtonsWrapper{
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
-  height: 300px;
+  flex-wrap: wrap;
   width: 100%;
   margin: 0 auto;
-  gap:30px;
+  gap: 30px;
+  padding: 20px 0;
 }
 
 .interactiveBubbleContainer {
@@ -112,4 +118,8 @@ body {
   background: radial-gradient(circle, rgba(38, 222, 129, 0.3) 0%, rgba(38, 222, 129, 0.1) 100%);
   box-shadow: 0 0 30px rgba(38, 222, 129, 0.5);
   z-index: -1;
+}
+
+.KlientWniosekContainer {
+  margin-top: 250px;
 }

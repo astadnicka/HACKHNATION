@@ -91,8 +91,8 @@ export default function Strona4({ formData, setFormData, alertContent = {} }) {
         <textarea
           className="mt-1 block w-full min-h-20 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Opisz stan maszyny, sposób jej użytkowania oraz zabezpieczenia"
-          value={opisMaszyny}
-          onChange={(e) => setOpisMaszyny(e.target.value)}
+          value={organy.opisMaszyny}
+          onChange={(e) => handleChange('organy', 'opisMaszyny', e.target.value)}
         />        
         <label className="col-span-3 block text-xs font-medium text-gray-500 mb-1">Jeśli TAK, podaj czy maszyna/urządzenie były sprawne i użytkowane zgodnie z zasadami producenta oraz w jaki sposób</label>
       </div>
@@ -104,8 +104,8 @@ export default function Strona4({ formData, setFormData, alertContent = {} }) {
             id="atest_TAK"
             name="atest"
             value="TAK"
-            checked={atest === true}
-            onChange={() => setAtest(true)}
+            checked={organy.atest === true}
+            onChange={() => handleChange('organy', 'atest', true)}
             className="w-4 h-4 text-cyan-500 focus:ring-cyan-500 cursor-pointer"
           />
           <label htmlFor="atest_TAK" className="ml-2 text-sm text-gray-700 cursor-pointer">
@@ -118,8 +118,8 @@ export default function Strona4({ formData, setFormData, alertContent = {} }) {
             id="atest_NIE"
             name="atest"
             value="NIE"
-            checked={atest === false}
-            onChange={() => setAtest(false)}
+            checked={organy.atest === false}
+            onChange={() => handleChange('organy', 'atest', false)}
             className="w-4 h-4 text-cyan-500 focus:ring-cyan-500 cursor-pointer"
           />
           <label htmlFor="atest_NIE" className="ml-2 text-sm text-gray-700 cursor-pointer">
@@ -135,8 +135,8 @@ export default function Strona4({ formData, setFormData, alertContent = {} }) {
             id="ewidencja_srodkow_trwalych_TAK"
             name="ewidencja_srodkow_trwalych"
             value="TAK"
-            checked={ewidencjaSrodkowTrwalych === true}
-            onChange={() => setEwidencjaSrodkowTrwalych(true)}
+            checked={organy.ewidencjaSrodkowTrwalych === true}
+            onChange={() => handleChange('organy', 'ewidencjaSrodkowTrwalych', true)}
             className="w-4 h-4 text-cyan-500 focus:ring-cyan-500 cursor-pointer"
           />
           <label htmlFor="ewidencja_srodkow_trwalych_TAK" className="ml-2 text-sm text-gray-700 cursor-pointer">
@@ -149,8 +149,8 @@ export default function Strona4({ formData, setFormData, alertContent = {} }) {
             id="ewidencja_srodkow_trwalych_NIE"
             name="ewidencja_srodkow_trwalych"
             value="NIE"
-            checked={ewidencjaSrodkowTrwalych === false}
-            onChange={() => setEwidencjaSrodkowTrwalych(false)}
+            checked={organy.ewidencjaSrodkowTrwalych === false}
+            onChange={() => handleChange('organy', 'ewidencjaSrodkowTrwalych', false)}
             className="w-4 h-4 text-cyan-500 focus:ring-cyan-500 cursor-pointer"
           />
           <label htmlFor="ewidencja_srodkow_trwalych_NIE" className="ml-2 text-sm text-gray-700 cursor-pointer">

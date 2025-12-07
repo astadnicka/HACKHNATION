@@ -335,8 +335,7 @@ export default function zapis_wyjasnien() {
     }
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     const errors = validatePage3();
 
     if (errors.length > 0) {
@@ -361,14 +360,15 @@ export default function zapis_wyjasnien() {
       {/* title */}
       <h1 className="text-4xl font-bold mb-4">Zapis Wyjaśnień</h1>
       {/* FORM */}
-      <form onSubmit={handleSubmit} className="w-full max-w-2xl">
+      <form onSubmit={(e) => e.preventDefault()} className="w-full max-w-2xl">
         {renderPage()}
         {/* BUTTONS: Cofnij (lewo), Dalej (prawo), Prześlij (prawo, tylko na ostatniej stronie) */}
         <div className="flex flex-row-reverse justify-between">
           {/* Dalej lub Prześlij po prawej */}
           {page === 3 ? (
             <button
-              type="submit"
+              type="button"
+              onClick={handleSubmit}
               className="px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer"
             >
               Prześlij

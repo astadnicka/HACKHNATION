@@ -82,17 +82,80 @@ export default function Zawiadomienie() {
         miejscowosc: "",
         gmina: "",
         panstwo: "",
+      },      
+      adresKorespondencji: {
+        ulica: "",
+        numerDomu: "",
+        numerLokalu: "",
+        kodPocztowy: "",
+        miejscowosc: "",
+        gmina: "",
+        panstwo: "",
       },
     },
     organy: {
       organPostepowanie: "",
       maszynaWypadek: null,
+      opisMaszyny: "",
+      atest: null,
+      ewidencjaSrodkowTrwalych: null,
+    },
+    wypadek: {
+      dataWypadku: "",
+      godzinaWypadku: "",
+      miejsceWypadku: "",
+      godzinaPoczatkuPracy: "",
+      godzinaKoncaPracy: "",
+      rodzajUrazow: "",
+      opisOkolicznosci: "",
+      pierwszaPomoc: null,
+      opisPierwszejPomocy: "",
+    },
+    swiadkowie: {
+      swiadek1: {
+        imie: "",
+        nazwisko: "",
+        numerDomu: "",
+        numerLokalu: "",
+        kodPocztowy: "",
+        miejscowosc: "",
+        gmina: "",
+        panstwo: "",
+      },
+      swiadek2: {
+        imie: "",
+        nazwisko: "",
+        numerDomu: "",
+        numerLokalu: "",
+        kodPocztowy: "",
+        miejscowosc: "",
+        gmina: "",
+        panstwo: "",
+      },
+      swiadek3: {
+        imie: "",
+        nazwisko: "",
+        numerDomu: "",
+        numerLokalu: "",
+        kodPocztowy: "",
+        miejscowosc: "",
+        gmina: "",
+        panstwo: "",
+      },
     },
     zalaczniki: {
       dokumenty: Array(8).fill(""),
       inne: "",
       dataDostarczenia: "",
       sposobOdbioru: "",
+      kartaInformacyjna: false,
+      postanowienieProkuratury: false,
+      aktZgonu: false,
+      odbiorPlacowka: false,
+      odbiorPoczta: false,
+      odbiorPUE: false,
+      dataPodpisu: "",
+      podpis: "",
     },
   });
 
@@ -200,7 +263,7 @@ export default function Zawiadomienie() {
   };
 
   const validatePage1 = () => {
-    const { poszkodowany, miejscaDzialalnosci, opieka, zawiadamiajacy } = formData;
+    const { poszkodowany } = formData;
     const errors = [];
 
     // Dane poszkodowanego
@@ -228,7 +291,15 @@ export default function Zawiadomienie() {
     if (!poszkodowany.adresKorespondencji.gmina?.trim()) errors.push('Podaj gminę do korespondencji');
     
     // Miejsce pracy
-    if (!miejscaDzialalnosci.ulica?.trim()) errors.push('Podaj ulicę miejsca pracy');
+
+    return errors;
+  };
+
+  const validatePage2 = () => {
+    const { miejscaDzialalnosci, opieka } = formData;
+    const errors = [];
+
+if (!miejscaDzialalnosci.ulica?.trim()) errors.push('Podaj ulicę miejsca pracy');
     if (!miejscaDzialalnosci.numerDomu?.trim()) errors.push('Podaj numer domu miejsca pracy');
     if (!miejscaDzialalnosci.kodPocztowy?.trim()) errors.push('Podaj kod pocztowy miejsca pracy');
     if (!miejscaDzialalnosci.miejscowosc?.trim()) errors.push('Podaj miejscowość pracy');
@@ -241,6 +312,15 @@ export default function Zawiadomienie() {
     if (!opieka.kodPocztowy?.trim()) errors.push('Podaj kod pocztowy opieki');
     if (!opieka.miejscowosc?.trim()) errors.push('Podaj miejscowość opieki');
     if (!opieka.gmina?.trim()) errors.push('Podaj gminę opieki');
+
+    return errors;
+  };
+
+  const validatePage3 = () => {
+    
+    const { zawiadamiajacy } = formData;
+    const errors = [];
+
     
     // Zawiadamiający
     if (!zawiadamiajacy.pesel?.trim()) errors.push('Podaj PESEL zawiadamiającego');
@@ -258,37 +338,36 @@ export default function Zawiadomienie() {
     if (!zawiadamiajacy.adresZamieszkania.kodPocztowy?.trim()) errors.push('Podaj kod pocztowy zawiadamiającego');
     if (!zawiadamiajacy.adresZamieszkania.miejscowosc?.trim()) errors.push('Podaj miejscowość zawiadamiającego');
     if (!zawiadamiajacy.adresZamieszkania.gmina?.trim()) errors.push('Podaj gminę zawiadamiającego');
+    
+    // Organy   
 
+    // Strona 3 uses local state, validation can be added when migrating to formData
     return errors;
   };
 
-  const validatePage2 = () => {
+  const validatePage4 = () => {
     const { organy } = formData;
     const errors = [];
 
     if (!organy.organPostepowanie?.trim()) errors.push('Podaj nazwę organu prowadzącego postępowanie');
     if (organy.maszynaWypadek === null) errors.push('Zaznacz czy wypadek powstał podczas obsługi maszyn lub urządzeń');
 
-    return errors;
-  };
-
-  const validatePage3 = () => {
-    const errors = [];
-    // Strona 3 uses local state, validation can be added when migrating to formData
-    return errors;
-  };
-
-  const validatePage4 = () => {
-    const errors = [];
     // Strona 4 uses local state, validation can be added when migrating to formData
     return errors;
   };
 
   const validatePage5 = () => {
     const errors = [];
-    // Strona 5 uses local state, validation can be added when migrating to formData
+    
     return errors;
   };
+
+  const validatePage6 = () => {
+    const errors = [];  
+
+
+    return errors;
+  }
 
   const handleNextPage = () => {
     let errors = [];
@@ -297,6 +376,7 @@ export default function Zawiadomienie() {
     else if (page === 3) errors = validatePage3();
     else if (page === 4) errors = validatePage4();
     else if (page === 5) errors = validatePage5();
+    else if (page === 6) errors = validatePage6();
 
     if (errors.length > 0) {
       alert('Proszę uzupełnić następujące pola:\n\n' + errors.join('\n'));
@@ -325,9 +405,7 @@ export default function Zawiadomienie() {
     }
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
+  const handleSubmit = () => {
     // Validate all pages before submission
     let errors = [];
     errors = errors.concat(validatePage1());
@@ -358,14 +436,15 @@ export default function Zawiadomienie() {
       {/* title */}
       <h1 className="text-4xl font-bold mb-4">Zawiadomienie o Wypadku</h1>
       {/* FORM */}
-      <form onSubmit={handleSubmit} className="w-full max-w-2xl">
+      <form onSubmit={(e) => e.preventDefault()} className="w-full max-w-2xl">
         {renderPage()}
         {/* BUTTONS: Cofnij (lewo), Dalej (prawo), Prześlij (prawo, tylko na ostatniej stronie) */}
         <div className="flex flex-row-reverse justify-between">
           {/* Dalej lub Prześlij po prawej */}
           {page === 6 ? (
             <button
-              type="submit"
+              type="button"
+              onClick={handleSubmit}
               className="px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer"
             >
               Prześlij
