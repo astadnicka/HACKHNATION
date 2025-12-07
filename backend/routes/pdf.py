@@ -160,7 +160,7 @@ def getZawiadomienieData():
     try:
         import uuid
         filename = f"ZUS_EWYP_{uuid.uuid4().hex[:8]}.pdf"
-        pdf_path = convertJsonToPdf(data, filename, "ZAWIADOMIENIE")
+        pdf_path = convertJsonToPdf(data, filename)
         
         return send_file(
             pdf_path,

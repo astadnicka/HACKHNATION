@@ -7,7 +7,7 @@ OUTPUT_PDF = "EWYP_WYPELNIONY_I_SPLASZCZONY.pdf"  # Bezpośrednio spłaszczony p
 
 
 
-MAPPING_ZAWIADOMIENIE = {
+MAPPING = {
     "pesel": "topmostSubform[0].Page1[0].PESEL[0]",
     "dokument": "topmostSubform[0].Page1[0].Rodzajseriainumerdokumentu[0]",
     "imie": "topmostSubform[0].Page1[0].Imię[0]",
@@ -139,7 +139,7 @@ MAPPING_ZAWIADOMIENIE = {
     "dokument8": "topmostSubform[0].Page6[0].Inne8[0]",
 }
 
-CHECKBOXY_ZAWIADOMIENIE = {
+CHECKBOXY = {
     "pierwsza_pomoc": "topmostSubform[0].Page4[0].TAK6[0]",
     "maszyna_wypadek": "topmostSubform[0].Page4[0].TAK8[0]",
     "czy_atest": "topmostSubform[0].Page4[0].TAK9[0]",
@@ -152,16 +152,11 @@ CHECKBOXY_ZAWIADOMIENIE = {
     
 }
 
-# MAPPING_WYJASNIENIE= 
-
-# CHECKBOXY_WYJASNIENIE=
 
 
-def convertJsonToPdf(data, filename, flag):
+
+def convertJsonToPdf(data, filename):
     doc = fitz.open(PDF_TEMPLATE)
-    if flag == "zawiadomienie":
-        MAPPING = MAPPING_ZAWIADOMIENIE
-        CHECKBOXY = CHECKBOXY_ZAWIADOMIENIE
 
     filled_count = 0
     for page in doc:
