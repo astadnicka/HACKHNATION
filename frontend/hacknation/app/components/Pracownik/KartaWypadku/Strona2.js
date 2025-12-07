@@ -1,24 +1,42 @@
 import React from "react";
 
-export default function Strona2({ formData, setFormData }) {
+export default function Strona2({ formData, setFormData, errors }) {
   const handleInputChange = (path, value) => {
     setFormData((prev) => {
       const updated = JSON.parse(JSON.stringify(prev));
       const keys = path.split(".");
-      let obj = updated;
+      let ref = updated;
       for (let i = 0; i < keys.length - 1; i++) {
-        if (!obj[keys[i]]) obj[keys[i]] = {};
-        obj = obj[keys[i]];
+        if (ref[keys[i]] === undefined || ref[keys[i]] === null) {
+          ref[keys[i]] = {};
+        }
+        ref = ref[keys[i]];
       }
-      obj[keys[keys.length - 1]] = value;
+      ref[keys[keys.length - 1]] = value;
       return updated;
     });
   };
 
+  const getNested = (path, fallback = "") => {
+    const keys = path.split(".");
+    let ref = formData;
+    for (const key of keys) {
+      if (ref == null || typeof ref !== "object") {
+        return fallback;
+      }
+      ref = ref[key];
+    }
+    return ref ?? fallback;
+  };
+
+  const getBoolean = (path) => Boolean(getNested(path, false));
+
   return (
     <div className="bg-gray-50/60 w-full max-w-2xl p-4 rounded-xl flex flex-col space-y-4 mb-4">
       <div>
-        <h1 className="font-semibold mb-2">III. ŚWIADKOWIE WYPADKU</h1>
+        <h1 className="font-semibold mb-2">
+          I. DANE IDENTYFIKACYJNE PŁATNIKA SKŁADEK
+        </h1>
 
         <label className="block text-sm font-medium text-gray-700">
           3. Świadkowie wypadku
@@ -26,62 +44,72 @@ export default function Strona2({ formData, setFormData }) {
 
         <div className="flex items-center space-x-2 mt-1">
           <input
-            id="swiadkowie_brak"
             type="checkbox"
-            checked={formData.swiadkowie?.brak || false}
+            id="brakSwiadkow"
+            checked={getBoolean("swiadkowie.brak")}
             onChange={(e) =>
               handleInputChange("swiadkowie.brak", e.target.checked)
             }
           />
-          <label htmlFor="swiadkowie_brak">Brak świadków</label>
+          <label htmlFor="brakSwiadkow">Brak świadków</label>
         </div>
 
         <input
-          id="swiadkowie_imie_nazwisko"
           type="text"
-          disabled={formData.swiadkowie?.brak}
+          disabled={getBoolean("swiadkowie.brak")}
           className={`mt-2 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 ${
-            formData.swiadkowie?.brak ? "bg-gray-200" : ""
+            getBoolean("swiadkowie.brak") ? "bg-gray-200" : ""
           }`}
           placeholder="Imię i nazwisko"
-          value={formData.swiadkowie?.imieNazwisko || ""}
+          value={getNested("swiadkowie.imieNazwisko")}
           onChange={(e) =>
             handleInputChange("swiadkowie.imieNazwisko", e.target.value)
           }
         />
+        {errors.swiadkowieImieNazwisko && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.swiadkowieImieNazwisko}
+          </p>
+        )}
         <input
-          id="swiadkowie_miejsce_zamieszkania"
           type="text"
-          disabled={formData.swiadkowie?.brak}
+          disabled={getBoolean("swiadkowie.brak")}
           className={`mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 ${
-            formData.swiadkowie?.brak ? "bg-gray-200" : ""
+            getBoolean("swiadkowie.brak") ? "bg-gray-200" : ""
           }`}
           placeholder="Miejsce zamieszkania"
-          value={formData.swiadkowie?.miejsceZamieszkania || ""}
+          value={getNested("swiadkowie.miejsceZamieszkania")}
           onChange={(e) =>
             handleInputChange("swiadkowie.miejsceZamieszkania", e.target.value)
           }
         />
+        {errors.swiadkowieMiejsceZamieszkania && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.swiadkowieMiejsceZamieszkania}
+          </p>
+        )}
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          4. Wypadek jest / nie jest wypadkiem przy pracy
+          4. Wypadek jest / nie jest wypadkiem przy pracy określonym w art. 3
+          ust. 3 pkt 8 ustawy z dnia 30 października 2002r. o ubezpieczeniu
+          społecznym z tytułu wypadków przy pracy i chorób zawodowych (Dz. U. z
+          2019r. poz. 1205 z późn. zm.) (uzasadnić, jeżeli zdarzenia nie uznano
+          za wypadek przy pracy)
         </label>
 
         <div className="flex items-center space-x-4">
           <label className="flex items-center space-x-2 cursor-pointer">
             <input
-              id="status_czy_wypadek_tak"
               type="radio"
-              name="czyWypadek"
-              value="true"
-              checked={formData.status?.czyWypadek === true}
+              name="status_czy_wypadek"
+              checked={getNested("status.czyWypadek") === true}
               onChange={() => handleInputChange("status.czyWypadek", true)}
             />
             <span
               className={
-                formData.status?.czyWypadek === false ? "line-through" : ""
+                getNested("status.czyWypadek") === false ? "line-through" : ""
               }
             >
               jest
@@ -90,80 +118,90 @@ export default function Strona2({ formData, setFormData }) {
 
           <label className="flex items-center space-x-2 cursor-pointer">
             <input
-              id="status_czy_wypadek_nie"
               type="radio"
-              name="czyWypadek"
-              value="false"
-              checked={formData.status?.czyWypadek === false}
+              name="status_czy_wypadek"
+              checked={getNested("status.czyWypadek") === false}
               onChange={() => handleInputChange("status.czyWypadek", false)}
             />
             <span
               className={
-                formData.status?.czyWypadek === true ? "line-through" : ""
+                getNested("status.czyWypadek") === true ? "line-through" : ""
               }
             >
               nie jest
             </span>
           </label>
         </div>
+        {errors.czyWypadek && (
+          <p className="text-red-500 text-sm mt-1">{errors.czyWypadek}</p>
+        )}
 
-        <textarea
-          id="status_uzasadnienie"
+        <input
           type="text"
-          disabled={formData.status?.czyWypadek === true}
-          className={`mt-2 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 h-20 ${
-            formData.status?.czyWypadek === true ? "bg-gray-200" : ""
+          disabled={getNested("status.czyWypadek") === true}
+          className={`mt-2 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 ${
+            getNested("status.czyWypadek") === true ? "bg-gray-200" : ""
           }`}
           placeholder="Uzasadnienie"
-          value={formData.status?.uzasadnienie || ""}
+          value={getNested("status.uzasadnienie")}
           onChange={(e) =>
             handleInputChange("status.uzasadnienie", e.target.value)
           }
         />
+        {errors.statusUzasadnienie && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.statusUzasadnienie}
+          </p>
+        )}
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700">
-          5. Naruszenie przepisów ochrony życia i zdrowia
+          5. Stwierdzono, że wyłączną przyczyną wypadku było udowodnione
+          naruszenie przez poszkodowanego przepisów dotyczących ochrony życia i
+          zdrowia, spowodowane przez niego umyślnie lub wskutek rażącego
+          niedbalstwa
         </label>
-        <label className="flex items-center space-x-2 cursor-pointer mt-2">
+        <label className="flex items-center space-x-2 cursor-pointer">
           <input
-            id="status_naruszenie"
             type="checkbox"
-            checked={formData.status?.naruszenie || false}
+            checked={getBoolean("status.naruszenie")}
             onChange={(e) =>
               handleInputChange("status.naruszenie", e.target.checked)
             }
           />
-          <span>Nie stwierdzono naruszenia</span>
+          <span>Nie stwierdzono</span>
         </label>
 
-        <textarea
-          id="status_powody_naruszenia"
+        <input
           type="text"
-          disabled={formData.status?.naruszenie}
-          className={`mt-2 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 h-20 ${
-            formData.status?.naruszenie ? "bg-gray-200" : ""
+          disabled={getBoolean("status.naruszenie")}
+          className={`mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 ${
+            getBoolean("status.naruszenie") ? "bg-gray-200" : ""
           }`}
           placeholder="podaj powody"
-          value={formData.status?.powodyNaruszenia || ""}
+          value={getNested("status.powodyNaruszenia")}
           onChange={(e) =>
             handleInputChange("status.powodyNaruszenia", e.target.value)
           }
         />
+        {errors.powodyNaruszenia && (
+          <p className="text-red-500 text-sm mt-1">{errors.powodyNaruszenia}</p>
+        )}
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          6. Stan nietrzeźwości lub substancji psychotropowych
+          6. Stwierdzono, że poszkodowany będąc w stanie nietrzeźwości lub pod
+          wpływem środków odurzających lub substancji psychotropowych,
+          przyczynił się w znacznym stopniu do spowodowania wypadku
         </label>
 
         <div className="flex items-center space-x-4">
           <label className="flex items-center space-x-2 cursor-pointer">
             <input
-              id="status_badano_nie"
               type="checkbox"
-              checked={formData.status?.badanoNietrz || false}
+              checked={getBoolean("status.badanoNietrz")}
               onChange={(e) =>
                 handleInputChange("status.badanoNietrz", e.target.checked)
               }
@@ -172,56 +210,70 @@ export default function Strona2({ formData, setFormData }) {
           </label>
         </div>
 
-        <textarea
-          id="status_uzasadnienie_badania"
+        <input
           type="text"
-          disabled={formData.status?.badanoNietrz}
-          className={`mt-2 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 h-20 ${
-            formData.status?.badanoNietrz ? "bg-gray-200" : ""
+          disabled={getBoolean("status.badanoNietrz")}
+          className={`mt-2 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 ${
+            getBoolean("status.badanoNietrz") ? "bg-gray-200" : ""
           }`}
           placeholder="Uzasadnienie"
-          value={formData.status?.uzasadnienieBadania || ""}
+          value={getNested("status.uzasadnienieBadania")}
           onChange={(e) =>
             handleInputChange("status.uzasadnienieBadania", e.target.value)
           }
         />
+        {errors.uzasadnienieBadania && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.uzasadnienieBadania}
+          </p>
+        )}
       </div>
 
       <h1 className="font-semibold mb-2">IV. POZOSTAŁE INFORMACJE</h1>
 
       <div>
         <label className="block text-sm font-medium text-gray-700">
-          1. Poszkodowanego zapoznano z treścią karty wypadku
+          1. Poszkodowanego (członka rodziny) zapoznano z treścią karty wypadku
+          i pouczono o prawie zgłaszania uwag i zastrzeżeń do ustaleń zawartych
+          w karcie wypadku
         </label>
         <input
-          id="pozostale_zapoznano_imie_nazwisko"
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          placeholder="Imię i nazwisko poszkodowanego"
-          value={formData.pozostale?.zapoznanoImieNazwisko || ""}
+          placeholder="Imię i nazwisko poszkodowanego (członka rodziny)"
+          value={getNested("pozostale.zapoznanoImieNazwisko")}
           onChange={(e) =>
             handleInputChange("pozostale.zapoznanoImieNazwisko", e.target.value)
           }
         />
+        {errors.zapoznanoImieNazwisko && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.zapoznanoImieNazwisko}
+          </p>
+        )}
         <input
-          id="pozostale_zapoznano_data"
           type="date"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          value={formData.pozostale?.zapoznanoData || ""}
+          value={getNested("pozostale.zapoznanoData")}
           onChange={(e) =>
             handleInputChange("pozostale.zapoznanoData", e.target.value)
           }
         />
+        {errors.zapoznanoData && (
+          <p className="text-red-500 text-sm mt-1">{errors.zapoznanoData}</p>
+        )}
         <input
-          id="pozostale_zapoznano_podpis"
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="podpis"
-          value={formData.pozostale?.zapoznanoPodpis || ""}
+          value={getNested("pozostale.zapoznanoPodpis")}
           onChange={(e) =>
             handleInputChange("pozostale.zapoznanoPodpis", e.target.value)
           }
         />
+        {errors.zapoznanoPodpis && (
+          <p className="text-red-500 text-sm mt-1">{errors.zapoznanoPodpis}</p>
+        )}
       </div>
 
       <div>
@@ -229,75 +281,86 @@ export default function Strona2({ formData, setFormData }) {
           2. Kartę sporządzono w dniu
         </label>
         <input
-          id="pozostale_karta_sporządzona"
           type="date"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          value={formData.pozostale?.kartaSporządzona || ""}
+          value={getNested("pozostale.kartaSporządzona")}
           onChange={(e) =>
             handleInputChange("pozostale.kartaSporządzona", e.target.value)
           }
         />
+        {errors.kartaSporządzona && (
+          <p className="text-red-500 text-sm mt-1">{errors.kartaSporządzona}</p>
+        )}
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700">
           2a. Zakład Ubezpieczeń Społecznych
         </label>
+        <label className="block text-xs font-medium text-gray-700">
+          nazwa podmiotu zobowiązanego do sporządzenia karty
+        </label>
         <input
-          id="pozostale_zus"
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          placeholder="nazwa ZUS / pieczątka"
-          value={formData.pozostale?.zus || ""}
+          placeholder="pieczątka"
+          value={getNested("pozostale.zus")}
           onChange={(e) => handleInputChange("pozostale.zus", e.target.value)}
         />
+        {errors.zus && (
+          <p className="text-red-500 text-sm mt-1">{errors.zus}</p>
+        )}
       </div>
 
       <div>
         <label className="block text-xs font-medium text-gray-700">
-          2b. Imię i nazwisko sporządzającego
+          imię i nazwisko sporządzającego
         </label>
         <input
-          id="pozostale_sporadzajacy"
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="podpis"
-          value={formData.pozostale?.sporadzajacy || ""}
+          value={getNested("pozostale.sporadzajacy")}
           onChange={(e) =>
             handleInputChange("pozostale.sporadzajacy", e.target.value)
           }
         />
+        {errors.sporadzajacy && (
+          <p className="text-red-500 text-sm mt-1">{errors.sporadzajacy}</p>
+        )}
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700">
-          3. Przeszkody uniemożliwiające sporządzenie karty w terminie
+          3. Przeszkody i trudności uniemożliwiające sporządzenie karty wypadku
+          w wymaganym terminie 14 dni
         </label>
-        <label className="flex items-center space-x-2 cursor-pointer mt-2">
+        <div className="flex items-center space-x-2 mt-1">
           <input
-            id="pozostale_przeszkody"
             type="checkbox"
-            checked={formData.pozostale?.przeszkody || false}
+            id="przeszkody_brak"
+            checked={getBoolean("pozostale.przeszkody")}
             onChange={(e) =>
               handleInputChange("pozostale.przeszkody", e.target.checked)
             }
           />
-          <span>Brak przeszkód</span>
-        </label>
-
-        <textarea
-          id="pozostale_opis_przeszkod"
+          <label htmlFor="przeszkody_brak">Brak</label>
+        </div>
+        <input
           type="text"
-          disabled={formData.pozostale?.przeszkody}
-          className={`mt-2 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 h-20 ${
-            formData.pozostale?.przeszkody ? "bg-gray-200" : ""
+          disabled={getBoolean("pozostale.przeszkody")}
+          className={`mt-2 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 ${
+            getBoolean("pozostale.przeszkody") ? "bg-gray-200" : ""
           }`}
           placeholder="proszę podać"
-          value={formData.pozostale?.opisPrzeszkod || ""}
+          value={getNested("pozostale.opisPrzeszkod")}
           onChange={(e) =>
             handleInputChange("pozostale.opisPrzeszkod", e.target.value)
           }
         />
+        {errors.opisPrzeszkod && (
+          <p className="text-red-500 text-sm mt-1">{errors.opisPrzeszkod}</p>
+        )}
       </div>
 
       <div>
@@ -305,24 +368,30 @@ export default function Strona2({ formData, setFormData }) {
           4. Kartę odebrano w dniu
         </label>
         <input
-          id="pozostale_karta_odebrana"
           type="date"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          value={formData.pozostale?.kartaOdebrana || ""}
+          value={getNested("pozostale.kartaOdebrana")}
           onChange={(e) =>
             handleInputChange("pozostale.kartaOdebrana", e.target.value)
           }
         />
+        {errors.kartaOdebrana && (
+          <p className="text-red-500 text-sm mt-1">{errors.kartaOdebrana}</p>
+        )}
         <input
-          id="pozostale_podpis_przyjmujacego"
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="podpis uprawnionego"
-          value={formData.pozostale?.podpisPrzyjmujacego || ""}
+          value={getNested("pozostale.podpisPrzyjmujacego")}
           onChange={(e) =>
             handleInputChange("pozostale.podpisPrzyjmujacego", e.target.value)
           }
         />
+        {errors.podpisPrzyjmujacego && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.podpisPrzyjmujacego}
+          </p>
+        )}
       </div>
 
       <div>
@@ -330,11 +399,10 @@ export default function Strona2({ formData, setFormData }) {
           5. Załączniki
         </label>
 
-        <div className="flex items-center space-x-2 mt-2">
+        <div className="flex items-center space-x-2 mt-1">
           <input
-            id="zalaczniki_zawiadomienie"
             type="checkbox"
-            checked={formData.pozostale?.zalaczniki?.zawiadomienie || false}
+            checked={getBoolean("pozostale.zalaczniki.zawiadomienie")}
             onChange={(e) =>
               handleInputChange(
                 "pozostale.zalaczniki.zawiadomienie",
@@ -342,16 +410,13 @@ export default function Strona2({ formData, setFormData }) {
               )
             }
           />
-          <label htmlFor="zalaczniki_zawiadomienie">
-            1. Zawiadomienie o wypadku
-          </label>
+          <label>1. Zawiadomienie o wypadku</label>
         </div>
 
         <div className="flex items-center space-x-2 mt-1">
           <input
-            id="zalaczniki_wyjasnienia"
             type="checkbox"
-            checked={formData.pozostale?.zalaczniki?.wyjasnienia || false}
+            checked={getBoolean("pozostale.zalaczniki.wyjasnienia")}
             onChange={(e) =>
               handleInputChange(
                 "pozostale.zalaczniki.wyjasnienia",
@@ -359,16 +424,13 @@ export default function Strona2({ formData, setFormData }) {
               )
             }
           />
-          <label htmlFor="zalaczniki_wyjasnienia">
-            2. Zapis wyjaśnień poszkodowanego
-          </label>
+          <label>2. Zapis wyjaśnień poszkodowanego</label>
         </div>
 
         <div className="flex items-center space-x-2 mt-1">
           <input
-            id="zalaczniki_oswiadczenie"
             type="checkbox"
-            checked={formData.pozostale?.zalaczniki?.oswiadczenie || false}
+            checked={getBoolean("pozostale.zalaczniki.oswiadczenie")}
             onChange={(e) =>
               handleInputChange(
                 "pozostale.zalaczniki.oswiadczenie",
@@ -376,40 +438,38 @@ export default function Strona2({ formData, setFormData }) {
               )
             }
           />
-          <label htmlFor="zalaczniki_oswiadczenie">
-            3. Oświadczenie poszkodowanego
-          </label>
+          <label>3. Oświadczenie poszkodowanego</label>
         </div>
 
         <div className="flex items-center space-x-2 mt-1">
           <input
-            id="zalaczniki_faktura"
             type="checkbox"
-            checked={formData.pozostale?.zalaczniki?.faktura || false}
+            checked={getBoolean("pozostale.zalaczniki.faktura")}
             onChange={(e) =>
-              handleInputChange("pozostale.zalaczniki.faktura", e.target.checked)
+              handleInputChange(
+                "pozostale.zalaczniki.faktura",
+                e.target.checked
+              )
             }
           />
-          <label htmlFor="zalaczniki_faktura">4. Faktura VAT</label>
+          <label>4. Faktura VAT</label>
         </div>
 
         <div className="flex items-center space-x-2 mt-1">
           <input
-            id="zalaczniki_ceidg"
             type="checkbox"
-            checked={formData.pozostale?.zalaczniki?.ceidg || false}
+            checked={getBoolean("pozostale.zalaczniki.ceidg")}
             onChange={(e) =>
               handleInputChange("pozostale.zalaczniki.ceidg", e.target.checked)
             }
           />
-          <label htmlFor="zalaczniki_ceidg">5. Wydrug z CEiDG</label>
+          <label>5. Wydruk z CEIDG</label>
         </div>
 
         <div className="flex items-center space-x-2 mt-1">
           <input
-            id="zalaczniki_ortopedia"
             type="checkbox"
-            checked={formData.pozostale?.zalaczniki?.ortopedia || false}
+            checked={getBoolean("pozostale.zalaczniki.ortopedia")}
             onChange={(e) =>
               handleInputChange(
                 "pozostale.zalaczniki.ortopedia",
@@ -417,16 +477,13 @@ export default function Strona2({ formData, setFormData }) {
               )
             }
           />
-          <label htmlFor="zalaczniki_ortopedia">
-            6. Odpis historii choroby z Poradni Ortopedycznej
-          </label>
+          <label>6. Odpis historii choroby z Poradni Ortopedycznej</label>
         </div>
 
         <div className="flex items-center space-x-2 mt-1">
           <input
-            id="zalaczniki_badanie"
             type="checkbox"
-            checked={formData.pozostale?.zalaczniki?.badanie || false}
+            checked={getBoolean("pozostale.zalaczniki.badanie")}
             onChange={(e) =>
               handleInputChange(
                 "pozostale.zalaczniki.badanie",
@@ -434,7 +491,7 @@ export default function Strona2({ formData, setFormData }) {
               )
             }
           />
-          <label htmlFor="zalaczniki_badanie">7. Wynik badania</label>
+          <label>7. Wynik badania</label>
         </div>
       </div>
     </div>

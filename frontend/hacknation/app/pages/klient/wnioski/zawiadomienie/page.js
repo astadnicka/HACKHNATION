@@ -16,15 +16,15 @@ export default function Zawiadomienie() {
   const [formData, setFormData] = useState({
     poszkodowany: {
       pesel: "",
+      imie: "",
+      nazwisko: "",
+      dataUrodzenia: "",
+      plec: "",
       dokument: {
         rodzaj: "",
         seria: "",
         numer: "",
       },
-      imie: "",
-      nazwisko: "",
-      dataUrodzenia: "",
-      plec: "",
       adresZamieszkania: {
         ulica: "",
         numerDomu: "",
@@ -35,29 +35,6 @@ export default function Zawiadomienie() {
         panstwo: "",
       },
       adresKorespondencji: {
-        ulica: "",
-        numerDomu: "",
-        numerLokalu: "",
-        kodPocztowy: "",
-        miejscowosc: "",
-        gmina: "",
-        panstwo: "",
-      },
-    },
-    zawiadamiajacy: {
-      pesel: "",
-      dokument: {
-        rodzaj: "",
-        seria: "",
-        numer: "",
-      },
-      imie: "",
-      nazwisko: "",
-      dzienUrodzenia: "",
-      miesiacUrodzenia: "",
-      rokUrodzenia: "",
-      plec: "",
-      adresZamieszkania: {
         ulica: "",
         numerDomu: "",
         numerLokalu: "",
@@ -82,30 +59,288 @@ export default function Zawiadomienie() {
       numerLokalu: "",
       kodPocztowy: "",
       miejscowosc: "",
+      gmina: "",
+    },
+    zawiadamiajacy: {
+      pesel: "",
+      imie: "",
+      nazwisko: "",
+      dzienUrodzenia: "",
+      miesiacUrodzenia: "",
+      rokUrodzenia: "",
+      plec: "",
+      dokument: {
+        rodzaj: "",
+        seria: "",
+        numer: "",
+      },
+      adresZamieszkania: {
+        ulica: "",
+        numerDomu: "",
+        numerLokalu: "",
+        kodPocztowy: "",
+        miejscowosc: "",
+        gmina: "",
+        panstwo: "",
+      },
+    },
+    organy: {
+      organPostepowanie: "",
+      maszynaWypadek: null,
+    },
+    zalaczniki: {
+      dokumenty: Array(8).fill(""),
+      inne: "",
+      dataDostarczenia: "",
+      sposobOdbioru: "",
     },
   });
+
+  const alertContent = {
+    poszkodowanyPesel: {
+      title: 'Numer PESEL',
+      body: 'Podaj PESEL poszkodowanego lub dokument potwierdzający tożsamość.',
+      changed: true
+    },
+    poszkodowanyDokument: {
+      title: 'Dokument tożsamości',
+      body: 'Uzupełnij serię i numer dokumentu.',
+      changed: true
+    },
+    miejscaPracy: {
+      title: 'Miejsce pracy',
+      body: 'Podaj nazwę, adres i rodzaj prowadzonej działalności.',
+      changed: true
+    },
+    pracownikOpieka: {
+      title: 'Osoba opiekująca się',
+      body: 'Uzupełnij dane pracownika odpowiedzialnego za opiekę.',
+      changed: true
+    },
+    zawiadamiajacy: {
+      title: 'Zawiadamiający',
+      body: 'Podaj dane osoby zawiadamiającej o wypadku.',
+      changed: true
+    },
+  };
+
+  const alertContentPage2 = {
+    organPostepowanie: {
+      title: 'Organ prowadzący postępowanie',
+      body: 'Wpisz nazwę i adres organu prowadzącego postępowanie w sprawie wypadku.',
+      changed: true
+    },
+    maszyny: {
+      title: 'Obsługa maszyn',
+      body: 'Wskaż czy wypadek powstał podczas obsługi urządzenia i opisz stan maszyny.',
+      changed: true
+    },
+    atest: {
+      title: 'Atest maszyny',
+      body: 'Wskaż czy maszyna posiada atest/deklarację zgodności.',
+      changed: true
+    },
+  };
+
+  const alertContentPage3 = {
+    korespondencja: {
+      title: 'Adres korespondencji',
+      body: 'Uzupełnij pełny adres do korespondencji.',
+      changed: true
+    },
+    wypadek: {
+      title: 'Dane wypadku',
+      body: 'Podaj datę, godzinę, miejsce wypadku oraz godziny pracy.',
+      changed: true
+    },
+    uraz: {
+      title: 'Uraz i obrażenia',
+      body: 'Opisz rodzaj urazów i okoliczności wypadku.',
+      changed: true
+    },
+  };
+
+  const alertContentPage4 = {
+    organPostepowanie: {
+      title: 'Organ prowadzący postępowanie',
+      body: 'Wpisz nazwę i adres organu prowadzącego postępowanie.',
+      changed: true
+    },
+    maszyny: {
+      title: 'Obsługa maszyn',
+      body: 'Wskaż czy wypadek powstał podczas obsługi urządzenia.',
+      changed: true
+    },
+  };
+
+  const alertContentPage5 = {
+    swiadek1: {
+      title: 'Świadek 1',
+      body: 'Uzupełnij dane pierwszego świadka wypadku.',
+      changed: true
+    },
+    swiadek2: {
+      title: 'Świadek 2',
+      body: 'Uzupełnij dane drugiego świadka wypadku.',
+      changed: true
+    },
+  };
+
+  const alertContentPage6 = {
+    zalaczniki: {
+      title: 'Załączniki',
+      body: 'Podaj listę dokumentów dołączanych do zawiadomienia.',
+      changed: true
+    },
+    sposObOdbioru: {
+      title: 'Sposób odbioru odpowiedzi',
+      body: 'Wskaż preferowany sposób odbioru odpowiedzi.',
+      changed: true
+    },
+  };
+
+  const validatePage1 = () => {
+    const { poszkodowany, miejscaDzialalnosci, opieka, zawiadamiajacy } = formData;
+    const errors = [];
+
+    // Dane poszkodowanego
+    if (!poszkodowany.pesel?.trim()) errors.push('Podaj PESEL poszkodowanego');
+    if (!poszkodowany.dokument.rodzaj?.trim()) errors.push('Podaj rodzaj dokumentu tożsamości');
+    if (!poszkodowany.dokument.seria?.trim()) errors.push('Podaj serię dokumentu');
+    if (!poszkodowany.dokument.numer?.trim()) errors.push('Podaj numer dokumentu');
+    if (!poszkodowany.imie?.trim()) errors.push('Podaj imię poszkodowanego');
+    if (!poszkodowany.nazwisko?.trim()) errors.push('Podaj nazwisko poszkodowanego');
+    if (!poszkodowany.dataUrodzenia?.trim()) errors.push('Podaj datę urodzenia');
+    if (!poszkodowany.plec?.trim()) errors.push('Wybierz płeć');
+    
+    // Adres zamieszkania
+    if (!poszkodowany.adresZamieszkania.ulica?.trim()) errors.push('Podaj ulicę zamieszkania');
+    if (!poszkodowany.adresZamieszkania.numerDomu?.trim()) errors.push('Podaj numer domu');
+    if (!poszkodowany.adresZamieszkania.kodPocztowy?.trim()) errors.push('Podaj kod pocztowy');
+    if (!poszkodowany.adresZamieszkania.miejscowosc?.trim()) errors.push('Podaj miejscowość zamieszkania');
+    if (!poszkodowany.adresZamieszkania.gmina?.trim()) errors.push('Podaj gminę');
+    
+    // Adres korespondencji
+    if (!poszkodowany.adresKorespondencji.ulica?.trim()) errors.push('Podaj ulicę do korespondencji');
+    if (!poszkodowany.adresKorespondencji.numerDomu?.trim()) errors.push('Podaj numer domu do korespondencji');
+    if (!poszkodowany.adresKorespondencji.kodPocztowy?.trim()) errors.push('Podaj kod pocztowy do korespondencji');
+    if (!poszkodowany.adresKorespondencji.miejscowosc?.trim()) errors.push('Podaj miejscowość do korespondencji');
+    if (!poszkodowany.adresKorespondencji.gmina?.trim()) errors.push('Podaj gminę do korespondencji');
+    
+    // Miejsce pracy
+    if (!miejscaDzialalnosci.ulica?.trim()) errors.push('Podaj ulicę miejsca pracy');
+    if (!miejscaDzialalnosci.numerDomu?.trim()) errors.push('Podaj numer domu miejsca pracy');
+    if (!miejscaDzialalnosci.kodPocztowy?.trim()) errors.push('Podaj kod pocztowy miejsca pracy');
+    if (!miejscaDzialalnosci.miejscowosc?.trim()) errors.push('Podaj miejscowość pracy');
+    if (!miejscaDzialalnosci.gmina?.trim()) errors.push('Podaj gminę pracy');
+    if (!miejscaDzialalnosci.numerTelefonu?.trim()) errors.push('Podaj numer telefonu miejsca pracy');
+    
+    // Opieka
+    if (!opieka.ulica?.trim()) errors.push('Podaj ulicę opieki');
+    if (!opieka.numerDomu?.trim()) errors.push('Podaj numer domu opieki');
+    if (!opieka.kodPocztowy?.trim()) errors.push('Podaj kod pocztowy opieki');
+    if (!opieka.miejscowosc?.trim()) errors.push('Podaj miejscowość opieki');
+    if (!opieka.gmina?.trim()) errors.push('Podaj gminę opieki');
+    
+    // Zawiadamiający
+    if (!zawiadamiajacy.pesel?.trim()) errors.push('Podaj PESEL zawiadamiającego');
+    if (!zawiadamiajacy.dokument.rodzaj?.trim()) errors.push('Podaj rodzaj dokumentu zawiadamiającego');
+    if (!zawiadamiajacy.dokument.seria?.trim()) errors.push('Podaj serię dokumentu zawiadamiającego');
+    if (!zawiadamiajacy.dokument.numer?.trim()) errors.push('Podaj numer dokumentu zawiadamiającego');
+    if (!zawiadamiajacy.imie?.trim()) errors.push('Podaj imię zawiadamiającego');
+    if (!zawiadamiajacy.nazwisko?.trim()) errors.push('Podaj nazwisko zawiadamiającego');
+    if (!zawiadamiajacy.dzienUrodzenia?.trim()) errors.push('Podaj dzień urodzenia zawiadamiającego');
+    if (!zawiadamiajacy.miesiacUrodzenia?.trim()) errors.push('Podaj miesiąc urodzenia zawiadamiającego');
+    if (!zawiadamiajacy.rokUrodzenia?.trim()) errors.push('Podaj rok urodzenia zawiadamiającego');
+    if (!zawiadamiajacy.plec?.trim()) errors.push('Wybierz płeć zawiadamiającego');
+    if (!zawiadamiajacy.adresZamieszkania.ulica?.trim()) errors.push('Podaj ulicę zawiadamiającego');
+    if (!zawiadamiajacy.adresZamieszkania.numerDomu?.trim()) errors.push('Podaj numer domu zawiadamiającego');
+    if (!zawiadamiajacy.adresZamieszkania.kodPocztowy?.trim()) errors.push('Podaj kod pocztowy zawiadamiającego');
+    if (!zawiadamiajacy.adresZamieszkania.miejscowosc?.trim()) errors.push('Podaj miejscowość zawiadamiającego');
+    if (!zawiadamiajacy.adresZamieszkania.gmina?.trim()) errors.push('Podaj gminę zawiadamiającego');
+
+    return errors;
+  };
+
+  const validatePage2 = () => {
+    const { organy } = formData;
+    const errors = [];
+
+    if (!organy.organPostepowanie?.trim()) errors.push('Podaj nazwę organu prowadzącego postępowanie');
+    if (organy.maszynaWypadek === null) errors.push('Zaznacz czy wypadek powstał podczas obsługi maszyn lub urządzeń');
+
+    return errors;
+  };
+
+  const validatePage3 = () => {
+    const errors = [];
+    // Strona 3 uses local state, validation can be added when migrating to formData
+    return errors;
+  };
+
+  const validatePage4 = () => {
+    const errors = [];
+    // Strona 4 uses local state, validation can be added when migrating to formData
+    return errors;
+  };
+
+  const validatePage5 = () => {
+    const errors = [];
+    // Strona 5 uses local state, validation can be added when migrating to formData
+    return errors;
+  };
+
+  const handleNextPage = () => {
+    let errors = [];
+    if (page === 1) errors = validatePage1();
+    else if (page === 2) errors = validatePage2();
+    else if (page === 3) errors = validatePage3();
+    else if (page === 4) errors = validatePage4();
+    else if (page === 5) errors = validatePage5();
+
+    if (errors.length > 0) {
+      alert('Proszę uzupełnić następujące pola:\n\n' + errors.join('\n'));
+      return;
+    }
+
+    setPage((p) => Math.min(6, p + 1));
+  };
 
   const renderPage = () => {
     switch (page) {
       case 1:
-        return <Strona1 formData={formData} setFormData={setFormData} />;
+        return <Strona1 formData={formData} setFormData={setFormData} alertContent={alertContent} />;
       case 2:
-        return <Strona2 formData={formData} setFormData={setFormData} />;
+        return <Strona2 formData={formData} setFormData={setFormData} alertContent={alertContentPage2} />;
       case 3:
-        return <Strona3 formData={formData} setFormData={setFormData} />;
+        return <Strona3 formData={formData} setFormData={setFormData} alertContent={alertContentPage3} />;
       case 4:
-        return <Strona4 formData={formData} setFormData={setFormData} />;
+        return <Strona4 formData={formData} setFormData={setFormData} alertContent={alertContentPage4} />;
       case 5:
-        return <Strona5 formData={formData} setFormData={setFormData} />;
+        return <Strona5 formData={formData} setFormData={setFormData} alertContent={alertContentPage5} />;
       case 6:
-        return <Strona6 formData={formData} setFormData={setFormData} />;
+        return <Strona6 formData={formData} setFormData={setFormData} alertContent={alertContentPage6} />;
       default:
-        return <Strona1 formData={formData} setFormData={setFormData} />;
+        return <Strona1 formData={formData} setFormData={setFormData} alertContent={alertContent} />;
     }
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Validate all pages before submission
+    let errors = [];
+    errors = errors.concat(validatePage1());
+    errors = errors.concat(validatePage2());
+    errors = errors.concat(validatePage3());
+    errors = errors.concat(validatePage4());
+    errors = errors.concat(validatePage5());
+
+    if (errors.length > 0) {
+      alert('Proszę uzupełnić następujące pola:\n\n' + errors.join('\n'));
+      return;
+    }
+
     console.log('Form submitted with data:', formData);
     // Add form submission logic here
   }
@@ -137,8 +372,8 @@ export default function Zawiadomienie() {
             </button>
           ) : (
             <button
-              type="submit"
-              onClick={() => setPage((p) => Math.min(6, p + 1))}
+              type="button"
+              onClick={handleNextPage}
               className="px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer"
             >
               Dalej

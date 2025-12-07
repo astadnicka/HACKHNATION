@@ -14,7 +14,7 @@ export default function Home() {
         id="label"
         style={{
           position: "fixed",
-          height: "70px",
+          height: "80px",
           left: "calc(50vw - 150px)",
           top: "calc(50vh - 28px)",
           zIndex: -1,
@@ -38,9 +38,10 @@ export default function Home() {
           </g>
         </svg>
       </div>
-
-      <h1 className="DashBoardTitle">Wybierz akcję</h1>
-      <RoleButtons></RoleButtons>
+      <div className="center">
+        <h1 className="DashBoardTitle">Wybierz akcję</h1>
+        <RoleButtons></RoleButtons>
+      </div>
     </div>
   );
 }

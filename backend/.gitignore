@@ -20,3 +20,7 @@ build/
 ZUS_ACCIDENT_NOTIFICATION_TOOL.pdf
 dataset/
 model_zus/
+
+validation_model/training_model/logi
+validation_model/training_model/wyniki
+validation_model/training_model/model_zus

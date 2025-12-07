@@ -15,7 +15,9 @@ register_error_handlers(app)
 
 # Register blueprints
 from routes.assist import assistant
+from routes.pdf import pdf
 app.register_blueprint(assistant, url_prefix="/api/assistant")
+app.register_blueprint(pdf, url_prefix="/api/pdf")
 
 @app.route("/")
 def home():
@@ -31,5 +33,5 @@ def health():
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 8000))
     print(f"Działa na {port}")
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(host="0.0.0.0", port=port, debug=True, use_reloader=False)
 

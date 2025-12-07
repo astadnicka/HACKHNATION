@@ -2,47 +2,66 @@
 
 import { useState } from 'react';
 
-export default function Strona5() {
-  // Świadek 1
-  const [imieSwiadek1, setImieSwiadek1] = useState('');
-  const [nazwiskoSwiadek1, setNazwiskoSwiadek1] = useState('');
-  const [numerDomuSwiadek1, setNumerDomuSwiadek1] = useState('');
-  const [numerLokaluSwiadek1, setNumerLokaluSwiadek1] = useState('');
-  const [kodPocztowySwiadek1, setKodPocztowySwiadek1] = useState('');
-  const [miejscowoscSwiadek1, setMiejscowoscSwiadek1] = useState('');
-  const [gminaSwiadek1, setGminaSwiadek1] = useState('');
-  const [panstwoSwiadek1, setPanstwoSwiadek1] = useState('');
-  
-  // Świadek 2
-  const [imieSwiadek2, setImieSwiadek2] = useState('');
-  const [nazwiskoSwiadek2, setNazwiskoSwiadek2] = useState('');
-  const [numerDomuSwiadek2, setNumerDomuSwiadek2] = useState('');
-  const [numerLokaluSwiadek2, setNumerLokaluSwiadek2] = useState('');
-  const [kodPocztowySwiadek2, setKodPocztowySwiadek2] = useState('');
-  const [miejscowoscSwiadek2, setMiejscowoscSwiadek2] = useState('');
-  const [gminaSwiadek2, setGminaSwiadek2] = useState('');
-  const [panstwoSwiadek2, setPanstwoSwiadek2] = useState('');
-  
-  // Świadek 3
-  const [imieSwiadek3, setImieSwiadek3] = useState('');
-  const [nazwiskoSwiadek3, setNazwiskoSwiadek3] = useState('');
-  const [numerDomuSwiadek3, setNumerDomuSwiadek3] = useState('');
-  const [numerLokaluSwiadek3, setNumerLokaluSwiadek3] = useState('');
-  const [kodPocztowySwiadek3, setKodPocztowySwiadek3] = useState('');
-  const [miejscowoscSwiadek3, setMiejscowoscSwiadek3] = useState('');
-  const [gminaSwiadek3, setGminaSwiadek3] = useState('');
-  const [panstwoSwiadek3, setPanstwoSwiadek3] = useState('');
-  
-  // Załączniki (checkboxes)
-  const [kartaInformacyjna, setKartaInformacyjna] = useState(false);
-  const [postanowienieProkuratury, setPostanowienieProkuratury] = useState(false);
-  const [aktZgonu, setAktZgonu] = useState(false);
+export default function Strona5({ formData, setFormData, alertContent = {} }) {
+  const [activeAlert, setActiveAlert] = useState(null);
+
+  const toggleAlert = (key) => {
+    setActiveAlert(prev => (prev === key ? null : key));
+  };
+
+  const alertButtonClass = `absolute top-0 right-0 px-3 py-1 bg-red-500 text-white rounded shadow border border-red-600 cursor-pointer hover:bg-red-100 hover:text-red-700 hover:border-red-200`;
+  const activeAlertContent = activeAlert ? alertContent[activeAlert] : null;
+  // Helpers for updating formData
+  const handleChange = (section, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [field]: value
+      }
+    }));
+  };
+  const handleNestedChange = (section, subsection, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [subsection]: {
+          ...prev[section][subsection],
+          [field]: value
+        }
+      }
+    }));
+  };
+  // Destructure needed data from formData
+  const swiadkowie = formData.swiadkowie;
+  const zalaczniki = formData.zalaczniki;
+  // ...existing code...
   return (
-    <div className="bg-gray-50/60 w-full max-w-2xl p-4 rounded-xl flex flex-col space-y-4 mb-4">
+    <div className="bg-gray-50/60 w-full max-w-2xl p-4 rounded-xl flex flex-col space-y-4 mb-4 relative">
+      {activeAlertContent && (
+        <div className="fixed inset-x-0 top-4 z-50 flex justify-center pointer-events-none">
+          <div className="w-[min(90%,28rem)] max-w-xl bg-white border border-red-200 rounded-lg shadow-lg p-4 flex items-start gap-3 pointer-events-auto">
+            <div className="text-red-600 font-bold text-lg">!</div>
+            <div className="space-y-1">
+              <div className="font-semibold text-gray-900">{activeAlertContent.title}</div>
+              <div className="text-sm text-gray-700">{activeAlertContent.body}</div>
+            </div>
+            <button
+              className="ml-auto text-sm text-red-700 hover:text-red-900 cursor-pointer"
+              onClick={() => setActiveAlert(null)}
+              aria-label="Zamknij alert"
+            >
+              Zamknij
+            </button>
+          </div>
+        </div>
+      )}
       {/* ŚWIADEK 1 */}
-      <div>
+      <div className="relative">
         <h1 className="font-semibold mb-2">DANE ŚWIADKA 1</h1>
         <hr className="bg-gray-100 mb-2"></hr>
+        {alertContent['swiadek1']?.changed && <button className={alertButtonClass} type='button' onClick={() => toggleAlert('swiadek1')}>!</button>}
       </div>
       <div className="grid grid-cols-2 gap-2">
         <label className="col-span-2 block text-sm font-medium text-gray-700">Imię i nazwisko:</label>
@@ -118,9 +137,10 @@ export default function Strona5() {
       </div>
 
 {/* ŚWIADEK 2 */}
-      <div>
+      <div className="relative">
         <h1 className="font-semibold mb-2">DANE ŚWIADKA 2</h1>
         <hr className="bg-gray-100 mb-2"></hr>
+        {alertContent['swiadek2']?.changed && <button className={alertButtonClass} type='button' onClick={() => toggleAlert('swiadek2')}>!</button>}
       </div>
       <div className="grid grid-cols-2 gap-2">
         <label className="col-span-2 block text-sm font-medium text-gray-700">Imię i nazwisko:</label>
@@ -196,9 +216,10 @@ export default function Strona5() {
       </div>
 
 {/* ŚWIADEK 3 */}
-      <div>
+      <div className="relative">
         <h1 className="font-semibold mb-2">DANE ŚWIADKA 3</h1>
         <hr className="bg-gray-100 mb-2"></hr>
+        {alertContent['swiadek3']?.changed && <button className={alertButtonClass} type='button' onClick={() => toggleAlert('swiadek3')}>!</button>}
       </div>
       <div className="grid grid-cols-2 gap-2">
         <label className="col-span-2 block text-sm font-medium text-gray-700">Imię i nazwisko:</label>
@@ -272,9 +293,10 @@ export default function Strona5() {
           onChange={(e) => setPanstwoSwiadek3(e.target.value)}
         />
       </div>
-      <div>
+      <div className="relative">
         <h1 className="font-semibold mb-2">ZAŁĄCZNIKI</h1>
         <hr className="bg-gray-100 mb-2"></hr>
+        {alertContent['zalaczniki']?.changed && <button className={alertButtonClass} type='button' onClick={() => toggleAlert('zalaczniki')}>!</button>}
       </div>
       <div className="flex items-center justify-center gap-3">
         <input className="h-6 w-6 rounded border-gray-300 text-cyan-500 focus:ring-cyan-500 shrink-0" type="checkbox" checked={kartaInformacyjna} onChange={(e) => setKartaInformacyjna(e.target.checked)} />
