@@ -83,6 +83,80 @@ export default function Zawiadomienie() {
       kodPocztowy: "",
       miejscowosc: "",
     },
+    korespondencja: {
+      ulica: "",
+      numerDomu: "",
+      numerLokalu: "",
+      kodPocztowy: "",
+      miejscowosc: "",
+      gmina: "",
+      panstwo: "",
+    },
+    wypadek: {
+      dataWypadku: "",
+      godzinaWypadku: "",
+      miejsceWypadku: "",
+      godzinaPoczatkuPracy: "",
+      godzinaKoncaPracy: "",
+      rodzajUrazow: "",
+      opisOkolicznosci: "",
+      pierwszaPomoc: null,
+      opisPierwszejPomocy: "",
+    },
+    organy: {
+      organPostepowanie: "",
+      maszynaWypadek: null,
+      opisMaszyny: "",
+      atest: null,
+      ewidencjaSrodkowTrwalych: null,
+    },
+    swiadkowie: {
+      swiadek1: {
+        imie: "",
+        nazwisko: "",
+        numerDomu: "",
+        numerLokalu: "",
+        kodPocztowy: "",
+        miejscowosc: "",
+        gmina: "",
+        panstwo: "",
+      },
+      swiadek2: {
+        imie: "",
+        nazwisko: "",
+        numerDomu: "",
+        numerLokalu: "",
+        kodPocztowy: "",
+        miejscowosc: "",
+        gmina: "",
+        panstwo: "",
+      },
+      swiadek3: {
+        imie: "",
+        nazwisko: "",
+        numerDomu: "",
+        numerLokalu: "",
+        kodPocztowy: "",
+        miejscowosc: "",
+        gmina: "",
+        panstwo: "",
+      },
+    },
+    zalaczniki: {
+      kartaInformacyjna: false,
+      postanowienieProkuratury: false,
+      aktZgonu: false,
+      dokumentyPrawo: false,
+      inneDokumenty: false,
+      opisInnychDokumentow: "",
+      dataDostarczenia: "",
+      dokumenty: ["", "", "", "", "", "", "", ""],
+      odbiorPlacowka: false,
+      odbiorPoczta: false,
+      odbiorPUE: false,
+      dataPodpisu: "",
+      podpis: "",
+    },
   });
 
   const renderPage = () => {
@@ -137,7 +211,7 @@ export default function Zawiadomienie() {
             </button>
           ) : (
             <button
-              type="submit"
+              type="button"
               onClick={() => setPage((p) => Math.min(6, p + 1))}
               className="px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer"
             >

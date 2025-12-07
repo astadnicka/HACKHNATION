@@ -1,42 +1,32 @@
 'use client';
 
-import { useState } from 'react';
-
-export default function Strona5() {
-  // Świadek 1
-  const [imieSwiadek1, setImieSwiadek1] = useState('');
-  const [nazwiskoSwiadek1, setNazwiskoSwiadek1] = useState('');
-  const [numerDomuSwiadek1, setNumerDomuSwiadek1] = useState('');
-  const [numerLokaluSwiadek1, setNumerLokaluSwiadek1] = useState('');
-  const [kodPocztowySwiadek1, setKodPocztowySwiadek1] = useState('');
-  const [miejscowoscSwiadek1, setMiejscowoscSwiadek1] = useState('');
-  const [gminaSwiadek1, setGminaSwiadek1] = useState('');
-  const [panstwoSwiadek1, setPanstwoSwiadek1] = useState('');
-  
-  // Świadek 2
-  const [imieSwiadek2, setImieSwiadek2] = useState('');
-  const [nazwiskoSwiadek2, setNazwiskoSwiadek2] = useState('');
-  const [numerDomuSwiadek2, setNumerDomuSwiadek2] = useState('');
-  const [numerLokaluSwiadek2, setNumerLokaluSwiadek2] = useState('');
-  const [kodPocztowySwiadek2, setKodPocztowySwiadek2] = useState('');
-  const [miejscowoscSwiadek2, setMiejscowoscSwiadek2] = useState('');
-  const [gminaSwiadek2, setGminaSwiadek2] = useState('');
-  const [panstwoSwiadek2, setPanstwoSwiadek2] = useState('');
-  
-  // Świadek 3
-  const [imieSwiadek3, setImieSwiadek3] = useState('');
-  const [nazwiskoSwiadek3, setNazwiskoSwiadek3] = useState('');
-  const [numerDomuSwiadek3, setNumerDomuSwiadek3] = useState('');
-  const [numerLokaluSwiadek3, setNumerLokaluSwiadek3] = useState('');
-  const [kodPocztowySwiadek3, setKodPocztowySwiadek3] = useState('');
-  const [miejscowoscSwiadek3, setMiejscowoscSwiadek3] = useState('');
-  const [gminaSwiadek3, setGminaSwiadek3] = useState('');
-  const [panstwoSwiadek3, setPanstwoSwiadek3] = useState('');
-  
-  // Załączniki (checkboxes)
-  const [kartaInformacyjna, setKartaInformacyjna] = useState(false);
-  const [postanowienieProkuratury, setPostanowienieProkuratury] = useState(false);
-  const [aktZgonu, setAktZgonu] = useState(false);
+export default function Strona5({ formData, setFormData }) {
+  // Helpers for updating formData
+  const handleChange = (section, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [field]: value
+      }
+    }));
+  };
+  const handleNestedChange = (section, subsection, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [subsection]: {
+          ...prev[section][subsection],
+          [field]: value
+        }
+      }
+    }));
+  };
+  // Destructure needed data from formData
+  const swiadkowie = formData.swiadkowie;
+  const zalaczniki = formData.zalaczniki;
+  // ...existing code...
   return (
     <div className="bg-gray-50/60 w-full max-w-2xl p-4 rounded-xl flex flex-col space-y-4 mb-4">
       {/* ŚWIADEK 1 */}

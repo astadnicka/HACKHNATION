@@ -1,19 +1,30 @@
 'use client';
 
-import { useState } from 'react';
 import Link from "next/link";
 
-export default function Strona6() {
-  const [dokumentyPrawo, setDokumentyPrawo] = useState(false);
-  const [inneDokumenty, setInneDokumenty] = useState(false);
-  const [opisInnychDokumentow, setOpisInnychDokumentow] = useState('');
-  const [dataDostarczenia, setDataDostarczenia] = useState('');
-  const [dokumenty, setDokumenty] = useState(['', '', '', '', '', '', '', '']);
-  const [odbiorPlacowka, setOdbiorPlacowka] = useState(false);
-  const [odbiorPoczta, setOdbiorPoczta] = useState(false);
-  const [odbiorPUE, setOdbiorPUE] = useState(false);
-  const [dataPodpisu, setDataPodpisu] = useState('');
-  const [podpis, setPodpis] = useState('');
+export default function Strona6({ formData, setFormData }) {
+  // Helpers for updating formData
+  const handleChange = (section, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [field]: value
+      }
+    }));
+  };
+  const handleArrayChange = (section, field, index, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [field]: prev[section][field].map((item, i) => i === index ? value : item)
+      }
+    }));
+  };
+  // Destructure needed data from formData
+  const zalaczniki = formData.zalaczniki;
+  // ...existing code...
   return (
     <div className="relative bg-gray-50/60 w-full max-w-2xl p-4 pb-6 rounded-xl flex flex-col space-y-4 mb-4">
       <div className="flex items-center justify-center gap-3">
