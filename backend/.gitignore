@@ -1,6 +1,4 @@
 .env
-node_modules
-dataset/karty wypadku*
 # Python
 __pycache__/
 *.py[cod]
@@ -19,9 +17,5 @@ htmlcov/
 dist/
 build/
 *.egg-info/
-.idea/
-
-validation_model/training_model/logi
-validation_model/training_model/wyniki
-validation_model/training_model/model_zus
-validation_model/training_model/visualizations
+ZUS_ACCIDENT_NOTIFICATION_TOOL.pdf
+dataset/
