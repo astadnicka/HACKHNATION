@@ -1,0 +1,102 @@
+import Link from "next/link";
+import Strona1 from "./Strona1";
+import Strona2 from "./Strona2";
+import SubmitButton from "../../SubmitButton";
+
+import { useState } from "react";
+
+export default function Opinia() {
+  const [page, setPage] = useState(1);
+  const [formData, setFormData] = useState({
+    podstawowe: {
+      znakSrawy: "",
+      imieNazwiskoPoszkodowanego: "",
+      kwestiaDoRozstrzygniecza: "",
+    },
+    zdarzenie: {
+      dataZdarzenia: "",
+      typyZdarzen: {
+        czywiklychCzynnosci: false,
+        czyWspolpraca: false,
+        czyUmowaAktywizujaca: false,
+        czyWDrodze: false,
+        czyWDrozePozarolnicza: false,
+        czyWDrozeWspolpraca: false,
+        czyWDrozeUmowaAktywizujaca: false,
+      },
+    },
+    opinia: {
+      opiniaOUznaniu: "",
+      uzasadnienie: "",
+      dataPieczatkaOpisyPodpis: "",
+    },
+    zatwierdzenie: {
+      opiniaUprawnionegoDoAproby: "",
+      dataPieczatkaAproby: "",
+      uzasadnienieAproby: "",
+      dataPieczatkaSuperaproby: "",
+      opiniaSuperaproby: "",
+      dataPieczatkaSuperaprobyOsoba: "",
+      opiniaKonsultanta: "",
+      dataPieczatkaKonsultanta: "",
+      opiniaZcyDyrektora: "",
+      dataPieczatkaZcyDyrektora: "",
+      decyzjaSuperaproby: "",
+      dataPieczatkaDecyzja: "",
+    },
+  });
+
+  const renderPage = () => {
+    switch (page) {
+      case 1:
+        return <Strona1 formData={formData} setFormData={setFormData} />;
+      case 2:
+        return <Strona2 formData={formData} setFormData={setFormData} />;
+      default:
+        return <Strona1 formData={formData} setFormData={setFormData} />;
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-center min-h-screen pt-16 m-4">
+      <h1 className="text-4xl font-bold mb-4">Opinia w sprawie wypadku</h1>
+
+      {renderPage()}
+
+      <div className="absolute top-4 left-4">
+        <Link href="/">
+          <button className="px-2 py-1 bg-[#00923f] cursor-pointer rounded-md hover:bg-[#007a33] transition-colors text-white">
+            Wróć
+          </button>
+        </Link>
+      </div>
+
+      <div className="w-full max-w-2xl">
+        <div className="flex justify-between mt-4 gap-4">
+          {page === 2 && (
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              className="px-2 py-1 bg-gray-300 rounded-md hover:bg-gray-400"
+            >
+              Cofnij
+            </button>
+          )}
+
+          <div className="flex justify-end w-full gap-2">
+            {page === 1 && (
+              <button
+                onClick={() => setPage((p) => Math.min(2, p + 1))}
+                className="px-2 py-1 bg-gray-300 rounded-md hover:bg-gray-400"
+              >
+                Następna
+              </button>
+            )}
+            {page === 2 && (
+              <SubmitButton formData={formData} formType="Opinia" />
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
