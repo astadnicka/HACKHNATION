@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from services.llm_client import llm
 from services.llm_admin import llm_admin
+from services.classifier import classifier
 from utils.validators import validate_batch_check_request
 from middleware.error_handler import ValidationError
 
@@ -162,6 +163,102 @@ def analyze_acceptance():
         
     except Exception as e:
         print(f"Error analyzing acceptance for form {form_id}: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "form_id": form_id,
+            "error": str(e)
+        }), 500
+
+
+@assistant.route("/classify-and-analyze", methods=["POST"])
+def classify_and_analyze():
+    """
+    Classify form using RoBERTa model and analyze with LLM admin.
+    
+    Expected JSON format:
+    {
+        "form_id": "form-123",
+        "text": "W dniu 12.03.2025 przedsiębiorca...",
+        "fields": {
+            "field_name": "field_value",
+            ...
+        }
+    }
+    
+    Returns:
+    {
+        "status": "success",
+        "form_id": "form-123",
+        "classification": {
+            "label": "LABEL_1",
+            "score": 0.9958978295326233
+        },
+        "opinion": {
+            "classifier_decision": "UZNAĆ",
+            "classifier_confidence": 0.9958978295326233,
+            "analysis": "...",
+            "model_used": "Gemma-2-2B-IT-GGUF"
+        }
+    }
+    """
+    if classifier is None:
+        return jsonify({
+            "status": "error",
+            "message": "RoBERTa classifier is not initialized"
+        }), 503
+    
+    if llm_admin is None:
+        return jsonify({
+            "status": "error",
+            "message": "LLM admin model is not initialized"
+        }), 503
+
+    data = request.get_json()
+    
+    if not data:
+        return jsonify({
+            "status": "error",
+            "message": "Request body is empty"
+        }), 400
+    
+    form_id = data.get("form_id")
+    text = data.get("text")
+    fields = data.get("fields")
+    
+    if not text:
+        return jsonify({
+            "status": "error",
+            "message": "Missing 'text' in request body"
+        }), 400
+    
+    if not fields:
+        return jsonify({
+            "status": "error",
+            "message": "Missing 'fields' in request body"
+        }), 400
+    
+    try:
+        print(f"Classifying and analyzing form {form_id}")
+        
+        # Step 1: Classify with RoBERTa
+        classification_result = classifier.classify_form(text)
+        print(f"Classification result: {classification_result}")
+        
+        # Step 2: Analyze with LLM admin
+        llm_result = llm_admin.analyze_classifier_prediction(
+            fields=fields,
+            classifier_prediction=classification_result
+        )
+        
+        return jsonify({
+            "status": "success",
+            "form_id": form_id,
+            "classification": classification_result,
+            "opinion": llm_result
+        }), 200
+        
+    except Exception as e:
+        print(f"Error processing form {form_id}: {str(e)}")
         return jsonify({
             "status": "error",
             "form_id": form_id,
