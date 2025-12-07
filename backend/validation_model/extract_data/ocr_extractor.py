@@ -3,9 +3,9 @@ import numpy as np
 import cv2
 from pdf2image import convert_from_path
 from paddleocr import PaddleOCR
-from extract_data.ner_extractor import NERExtractor
+from validation_model.extract_data.ner_extractor import NERExtractor
 
-ocr_engine = PaddleOCR(use_angle_cls=True, lang='pl')
+ocr_engine = PaddleOCR(use_angle_cls=False, lang='pl')
 
 DATASET_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../dataset/karty wypadku - zanonimizowane"))
 

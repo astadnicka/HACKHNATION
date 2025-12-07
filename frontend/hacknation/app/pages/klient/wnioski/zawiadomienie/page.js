@@ -14,6 +14,38 @@ import { useState } from 'react';
 export default function Zawiadomienie() {
   const [mode, setMode] = useState(null); // null (choose), 'conditional', 'traditional'
   const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+
+  function handleDownload() {
+    setIsLoading(true);
+    fetch('/zawiadomienie', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('Failed to download PDF');
+      return response.blob();
+    })
+    .then(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'ZUS_EWYP_wypelniony.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      setIsLoading(false);
+    })
+    .catch(error => {
+      console.error('Error downloading PDF:', error);
+      alert('Błąd przy pobieraniu PDF');
+      setIsLoading(false);
+    });
+  }
 
   const [formData, setFormData] = useState({
     poszkodowany: {
@@ -67,9 +99,7 @@ export default function Zawiadomienie() {
       pesel: "",
       imie: "",
       nazwisko: "",
-      dzienUrodzenia: "",
-      miesiacUrodzenia: "",
-      rokUrodzenia: "",
+      dataUrodzenia: "",
       plec: "",
       dokument: {
         rodzaj: "",
@@ -321,6 +351,16 @@ export default function Zawiadomienie() {
       errors.push('Podaj PESEL poszkodowanego lub dokument potwierdzający tożsamość (rodzaj, seria, numer)');
     }
 
+    if (!zawiadamiajacy.imie?.trim()) errors.push('Podaj imię zawiadamiającego');
+    if (!zawiadamiajacy.nazwisko?.trim()) errors.push('Podaj nazwisko zawiadamiającego');
+    if (!zawiadamiajacy.dataUrodzenia?.trim()) errors.push('Podaj datę urodzenia zawiadamiającego');
+    if (!zawiadamiajacy.plec?.trim()) errors.push('Wybierz płeć zawiadamiającego');
+
+    if (!zawiadamiajacy.adresZamieszkania.ulica?.trim()) errors.push('Podaj ulicę zawiadamiającego');
+    if (!zawiadamiajacy.adresZamieszkania.numerDomu?.trim()) errors.push('Podaj numer domu zawiadamiającego');
+    if (!zawiadamiajacy.adresZamieszkania.kodPocztowy?.trim()) errors.push('Podaj kod pocztowy zawiadamiającego');
+    if (!zawiadamiajacy.adresZamieszkania.miejscowosc?.trim()) errors.push('Podaj miejscowość zawiadamiającego');
+    if (!zawiadamiajacy.adresZamieszkania.gmina?.trim()) errors.push('Podaj gminę zawiadamiającego');
 
     return errors;
   };
@@ -351,9 +391,7 @@ export default function Zawiadomienie() {
   }
     if (!zawiadamiajacy.imie?.trim()) errors.push('Podaj imię zawiadamiającego');
     if (!zawiadamiajacy.nazwisko?.trim()) errors.push('Podaj nazwisko zawiadamiającego');
-    if (!zawiadamiajacy.dzienUrodzenia?.trim()) errors.push('Podaj dzień urodzenia zawiadamiającego');
-    if (!zawiadamiajacy.miesiacUrodzenia?.trim()) errors.push('Podaj miesiąc urodzenia zawiadamiającego');
-    if (!zawiadamiajacy.rokUrodzenia?.trim()) errors.push('Podaj rok urodzenia zawiadamiającego');
+    if (!zawiadamiajacy.dataUrodzenia?.trim()) errors.push('Podaj datę urodzenia zawiadamiającego');
     if (!zawiadamiajacy.plec?.trim()) errors.push('Wybierz płeć zawiadamiającego');
     if (!zawiadamiajacy.adresZamieszkania.ulica?.trim()) errors.push('Podaj ulicę zawiadamiającego');
     if (!zawiadamiajacy.adresZamieszkania.numerDomu?.trim()) errors.push('Podaj numer domu zawiadamiającego');
@@ -449,7 +487,6 @@ export default function Zawiadomienie() {
     }
 
     console.log('Form submitted with data:', formData);
-    // Add form submission logic here
   }
 
   // Tryb warunkowy - ConversationForm
@@ -525,6 +562,17 @@ export default function Zawiadomienie() {
           </button>
         </div>
       </form>
+      {page === 6 && (
+      <div className="absolute top-4 right-4">
+        <button className='px-2 py-1 bg-white cursor-pointer rounded-md hover:bg-gray-100' type="button" onClick={handleDownload} disabled={isLoading}>Pobierz jako PDF</button>
+        {isLoading && (
+          <div className="mt-4 flex items-center justify-center">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
+            <span className="ml-2 text-sm text-gray-700">Generowanie PDF...</span>
+          </div>
+        )}
+      </div>
+      )}
     </div>
   );
 }
