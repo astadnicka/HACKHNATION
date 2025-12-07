@@ -14,6 +14,7 @@ export default function Strona1({ formData, setFormData }) {
       return updated;
     });
   };
+  
 
   return (
     <div className="bg-gray-50/60 w-full max-w-2xl p-4 rounded-xl flex flex-col space-y-4 mb-4">
