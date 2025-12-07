@@ -29,7 +29,7 @@ def health():
     })
 
 if __name__ == "__main__":
-    port = int(os.getenv("PORT", 3000))
+    port = int(os.getenv("PORT", 8000))
     print(f"Działa na {port}")
     app.run(host="0.0.0.0", port=port, debug=True)
 
