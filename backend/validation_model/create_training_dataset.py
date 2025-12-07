@@ -59,8 +59,28 @@ def create_dataset():
         opinia_text = extract_text_from_pdf(files['opinia'])
         if not opinia_text: continue
         opinia_data = extractor.extract_fields(opinia_text, document_type="opinia")
-        wniosek_text = opinia_data["fields"]["wniosek"]["value"]
-        label = get_label_from_opinion(wniosek_text)
+        
+        fields = opinia_data.get("fields", {})
+        label = None
+        
+        if "czy_uznany" in fields:
+            val = fields["czy_uznany"]
+            if isinstance(val, bool):
+                label = 1 if val else 0
+            elif isinstance(val, str):
+                if val.lower() == "true": label = 1
+                elif val.lower() == "false": label = 0
+        
+        if label is None:
+            wniosek_val = fields.get("wniosek")
+            wniosek_text = None
+            if isinstance(wniosek_val, dict) and "value" in wniosek_val:
+                wniosek_text = wniosek_val["value"]
+            elif isinstance(wniosek_val, str):
+                wniosek_text = wniosek_val
+            
+            if wniosek_text:
+                label = get_label_from_opinion(wniosek_text)
         
         if label is None:
             print(f"   ! Nie ustalono labela (wniosek niejasny)")
@@ -69,7 +89,19 @@ def create_dataset():
         zawiad_text = extract_text_from_pdf(files['zawiadomienie'])
         if not zawiad_text: continue
         zawiad_data = extractor.extract_fields(zawiad_text, document_type="zawiadomienie")
-        opis_input = zawiad_data["fields"]["opis"]["value"]
+        
+        z_fields = zawiad_data.get("fields", {})
+        opis_input = None
+        
+        if "opis_zdarzenia" in z_fields:
+            opis_input = z_fields["opis_zdarzenia"]
+        
+        if not opis_input:
+            val = z_fields.get("opis")
+            if isinstance(val, dict) and "value" in val:
+                opis_input = val["value"]
+            elif isinstance(val, str):
+                opis_input = val
 
         if not opis_input or len(opis_input) < 20:
             print(f"   ! Opis za krótki lub pusty (śmieci OCR)")
