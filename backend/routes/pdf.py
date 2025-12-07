@@ -1,10 +1,11 @@
 from flask import Blueprint, request, jsonify, send_file
 import sys
 import os
+import uuid
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
-from backend.pdf_uzupelnianie import convertJsonToPdf
+from backend.pdf_uzupelnianie import convertJsonToPdf, validate_pesel
 
 pdf = Blueprint("pdf", __name__)
 
@@ -22,8 +23,23 @@ def getZawiadomienieData():
             dokument_obj.get("numer", "")
         ])).strip()
 
+    # Waliduj PESEL przed utworzeniem słownika
+    pesel_poszkodowany = frontend_data.get("poszkodowany", {}).get("pesel", "")
+    pesel_zawiadamiajacy = frontend_data.get("zawiadamiajacy", {}).get("pesel", "")
+    
+    # Oczyszcz i waliduj PESEL
+    pesel_poszkodowany_clean = validate_pesel(pesel_poszkodowany)
+    pesel_zawiadamiajacy_clean = validate_pesel(pesel_zawiadamiajacy)
+    
+    # Zwróć błąd tylko jeśli PESEL był podany ale niepoprawny
+    if pesel_poszkodowany and not pesel_poszkodowany_clean:
+        return jsonify({"error": "Niepoprawny PESEL poszkodowanego. Wymagane 11 cyfr."}), 400
+    
+    if pesel_zawiadamiajacy and not pesel_zawiadamiajacy_clean:
+        return jsonify({"error": "Niepoprawny PESEL zawiadamiającego. Wymagane 11 cyfr."}), 400
+
     data = {
-        "pesel": frontend_data["poszkodowany"].get("pesel", ""),
+        "pesel": pesel_poszkodowany,
         "dokument": format_dokument(frontend_data["poszkodowany"].get("dokument", {})),
         "imie": frontend_data["poszkodowany"].get("imie", ""),
         "nazwisko": frontend_data["poszkodowany"].get("nazwisko", ""),
@@ -46,7 +62,7 @@ def getZawiadomienieData():
         "gmina_kor": frontend_data["poszkodowany"]["adresKorespondencji"].get("gmina", ""),
         "panstwo_kor": frontend_data["poszkodowany"]["adresKorespondencji"].get("panstwo", ""),
         
-        "pesel_zawiadamiajacy": frontend_data["zawiadamiajacy"].get("pesel", ""),
+        "pesel_zawiadamiajacy": pesel_zawiadamiajacy,
         "dokument_zawiadamiajacy": format_dokument(frontend_data["zawiadamiajacy"].get("dokument", {})),
         "imie_zawiadamiajacy": frontend_data["zawiadamiajacy"].get("imie", ""),
         "nazwisko_zawiadamiajacy": frontend_data["zawiadamiajacy"].get("nazwisko", ""),
@@ -158,9 +174,11 @@ def getZawiadomienieData():
     }
 
     try:
-        import uuid
         filename = f"ZUS_EWYP_{uuid.uuid4().hex[:8]}.pdf"
         pdf_path = convertJsonToPdf(data, filename)
+        
+        if not pdf_path:
+            return jsonify({"error": "Nie udało się utworzyć PDF"}), 500
         
         return send_file(
             pdf_path,
@@ -171,90 +189,4 @@ def getZawiadomienieData():
     
     except Exception as e:
         print(f"Błąd: {str(e)}")
-        return jsonify({"error": str(e)}), 500
-    
-
-
-# @pdf.route("/zapis_wyjasnien", methods=["POST"])
-# def getZapisWyjasnienData():
-#     """
-#     Endpoint do generowania PDF 'Zapis wyjaśnień poszkodowanego'
-#     """
-#     frontend_data = request.get_json()
-
-#     if not frontend_data:
-#         return jsonify({"error": "No data provided"}), 400
-
-#     required_sections = ["osoba", "wypadek", "maszyny", "pomoc"]
-#     missing_sections = [sec for sec in required_sections if sec not in frontend_data]
-    
-#     if missing_sections:
-#         return jsonify({
-#             "error": f"Missing required sections: {', '.join(missing_sections)}"
-#         }), 400
-
-#     data = {
-#         "imie1": frontend_data["osoba"].get("imie1", ""),
-#         "imie2": frontend_data["osoba"].get("imie2", ""),
-#         "data_urodzenia": frontend_data["osoba"].get("dataUrodzenia", "").replace("-", ""),
-#         "miejsce_urodzenia": frontend_data["osoba"].get("miejsceUrodzenia", ""),
-#         "miejsce_zamieszkania": frontend_data["osoba"].get("miejsceZamieszkania", ""),
-#         "ulica": frontend_data["osoba"].get("ulica", ""),
-#         "zatrudniony_w": frontend_data["osoba"].get("zatrudnionyW", ""),
-        
-#         "data_wypadku": frontend_data["wypadek"].get("dataWypadku", "").replace("-", ""),
-#         "data_wypadku_szczegoly": frontend_data["wypadek"].get("dataWypadkuSzczegoly", ""),
-#         "miejsce_wypadku": frontend_data["wypadek"].get("miejsceWypadku", ""),
-#         "godzina_wypadku": frontend_data["wypadek"].get("godzinaWypadku", ""),
-#         "godzina_rozpoczecia": frontend_data["wypadek"].get("godzinaRozpoczecia", ""),
-#         "godzina_zakonczenia": frontend_data["wypadek"].get("godzinaZakonczenia", ""),
-#         "rodzaj_czynnosci": frontend_data["wypadek"].get("rodzajCzynnosci", ""),
-#         "opis_okolicznosci": frontend_data["wypadek"].get("opisOkolicznosci", ""),
-        
-#         "wypadek_maszyna": frontend_data["maszyny"].get("wypadekMaszyna", ""),
-#         "nazwa_maszyny": frontend_data["maszyny"].get("nazwaMaszyny", ""),
-#         "sprawnosc": frontend_data["maszyny"].get("sprawnosc", ""),
-#         "zabezpieczenia": frontend_data["maszyny"].get("zabezpieczenia", ""),
-#         "rodzaj_srodkow": frontend_data["maszyny"].get("rodzajSrodkow", ""),
-#         "sprawnosc_srodkow": frontend_data["maszyny"].get("sprawnoscSrodkow", ""),
-#         "asekuracja": frontend_data["maszyny"].get("asekuracja", ""),
-#         "obowiazek_dwoch_osob": frontend_data["maszyny"].get("obowiazekDwochOsob", ""),
-#         "bhp": frontend_data["maszyny"].get("bhp", ""),
-#         "przygotowanie": frontend_data["maszyny"].get("przygotowanie", ""),
-#         "szkolenie": frontend_data["maszyny"].get("szkolenie", ""),
-#         "ocena_ryzyka": frontend_data["maszyny"].get("ocenaRyzyka", ""),
-#         "srodki_zmniejszenia": frontend_data["maszyny"].get("srodkiZmniejszenia", ""),
-#         "stan_nietrzezwosci": frontend_data["maszyny"].get("stanNietrzezwosci", ""),
-#         "badanie_trzezwosci": frontend_data["maszyny"].get("badanieTrzezwosci", ""),
-#         "czynnosci_wyjasniajace": frontend_data["maszyny"].get("czynnosciWyjasniajace", ""),
-#         "opis_czynnosci": frontend_data["maszyny"].get("opisCzynnosci", ""),
-        
-#         # ========== POMOC MEDYCZNA ==========
-#         "data_pomoc": frontend_data["pomoc"].get("dataPomoc", "").replace("-", ""),
-#         "nazwa_placowki": frontend_data["pomoc"].get("nazwaPlacowki", ""),
-#         "okres_hospitalizacji": frontend_data["pomoc"].get("okresHospitalizacji", ""),
-#         "rozpoznany_uraz": frontend_data["pomoc"].get("rozpoznanyUraz", ""),
-#         "niezdolnosc_od": frontend_data["pomoc"].get("niezdolnoscOd", "").replace("-", ""),
-#         "niezdolnosc_do": frontend_data["pomoc"].get("niezdolnoscDo", "").replace("-", ""),
-#         "zwolnienie_lekarskie": frontend_data["pomoc"].get("zwolnienieLekarskie", ""),
-#         "miejscowosc": frontend_data["pomoc"].get("miejscowosc", ""),
-#         "data_podpisu": frontend_data["pomoc"].get("dataPodpisu", "").replace("-", ""),
-#         "podpis_poszkodowanego": frontend_data["pomoc"].get("podpisPoszkodowanego", ""),
-#         "protokolanci": frontend_data["pomoc"].get("protokolanci", ""),
-#     }
-
-#     try:
-#         import uuid
-#         filename = f"ZUS_EWYP_{uuid.uuid4().hex[:8]}.pdf"
-#         pdf_path = convertJsonToPdf(data, filename, "WYJASNIENIE")
-        
-#         return send_file(
-#             pdf_path,
-#             mimetype='application/pdf',
-#             as_attachment=True,
-#             download_name='ZUS_EWYP_wypelniony.pdf'
-#         )
-    
-#     except Exception as e:
-#         print(f"Błąd: {str(e)}")
-#         return jsonify({"error": str(e)}), 500
+        return jsonify({"error": f"Błąd przy przetwarzaniu: {str(e)}"}), 500

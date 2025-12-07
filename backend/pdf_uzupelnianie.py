@@ -4,8 +4,29 @@ import json, os
 PDF_TEMPLATE = "EWYP_wypelnij_i_wydrukuj.pdf"
 OUTPUT_PDF = "EWYP_WYPELNIONY_I_SPLASZCZONY.pdf"  # Bezpośrednio spłaszczony plik
 
+def validate_pesel(pesel):
+    """Waliduje PESEL i zwraca oczyszczony PESEL lub None"""
+    if not pesel:
+        return None
+    
+    pesel_clean = str(pesel).strip().replace(" ", "").replace("-", "").replace(".", "")
 
+    if len(pesel_clean) == 11 and pesel_clean.isdigit():
+        return pesel_clean
+    
+    return None
 
+def sanitize_data(data):
+    """Oczyszcza i waliduje dane przed wypełnieniem PDF"""
+    sanitized = {}
+    for key, value in data.items():
+        if value is None or value == "":
+            sanitized[key] = ""
+        elif key == "pesel" or key == "pesel_zawiadamiajacy":
+            sanitized[key] = validate_pesel(value) or ""
+        else:
+            sanitized[key] = str(value).strip()
+    return sanitized
 
 MAPPING = {
     "pesel": "topmostSubform[0].Page1[0].PESEL[0]",
@@ -156,46 +177,47 @@ CHECKBOXY = {
 
 
 def convertJsonToPdf(data, filename):
-    doc = fitz.open(PDF_TEMPLATE)
+    try:
+        # Oczyszcz i zwaliduj dane
+        data = sanitize_data(data)
+        
+        doc = fitz.open(PDF_TEMPLATE)
 
-    filled_count = 0
-    for page in doc:
-        widgets = page.widgets()
-        for widget in widgets:
-            field_name = widget.field_name
-            
-            if field_name in MAPPING.values():
-                json_key = next((k for k, v in MAPPING.items() if v == field_name), None)
-                if json_key and json_key in data and data[json_key]:
-                    widget.field_value = str(data[json_key])
-                    widget.update()
-                    filled_count += 1
-            
-            for json_key, tak_field in CHECKBOXY.items():
-                if field_name == tak_field:
-                    if data.get(json_key):
-                        widget.field_value = widget.on_state()
-                    else:
-                        widget.field_value = False
-                    widget.update()
-    
-    print(f"ypełniono {filled_count} pól")
-    
-    doc.bake()  
+        filled_count = 0
+        for page in doc:
+            widgets = page.widgets()
+            for widget in widgets:
+                field_name = widget.field_name
+                
+                if field_name in MAPPING.values():
+                    json_key = next((k for k, v in MAPPING.items() if v == field_name), None)
+                    if json_key and json_key in data and data[json_key]:
+                        widget.field_value = str(data[json_key])
+                        widget.update()
+                        filled_count += 1
+                
+                for json_key, tak_field in CHECKBOXY.items():
+                    if field_name == tak_field:
+                        if data.get(json_key):
+                            widget.field_value = widget.on_state()
+                        else:
+                            widget.field_value = False
+                        widget.update()
+        
+        print(f"Wypełniono {filled_count} pól")
+        
+        doc.bake()  
 
-    backend_dir = os.path.join(os.path.dirname(__file__), "backend")
-    output_dir = os.path.join(backend_dir, "generated_pdfs")
-    os.makedirs(output_dir, exist_ok=True)
-    
-    output_path = os.path.join(output_dir, filename)
-    doc.save(output_path, garbage=4, deflate=True, clean=True)
-    doc.close()
-    
-    print(f" PDF zapisany: {output_path}")
-    return output_path
-
-
-
-
-
-
+        backend_dir = os.path.join(os.path.dirname(__file__), "backend")
+        output_dir = os.path.join(backend_dir, "generated_pdfs")
+        os.makedirs(output_dir, exist_ok=True)
+        
+        output_path = os.path.join(output_dir, filename)
+        doc.save(output_path, garbage=4, deflate=True, clean=True)
+        doc.close()
+        
+        print(f"PDF zapisany: {output_path}")
+        return output_path
+    except Exception as e:
+        print(f"Błąd przy wypełnianiu PDF: {str(e)}")
+        return None
