@@ -1,4 +1,6 @@
-"use client";
+'use client';
+
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -35,6 +37,11 @@ export default function KlientWniosek() {
           Zawiadomienie
         </button>
       </div>
+      {uploadedFile && (
+        <div className="WniosekButtonsWrapper">
+          <p className="text-sm">File Uploaded!</p>
+        </div>
+      )}
     </div>
     </main>
   );

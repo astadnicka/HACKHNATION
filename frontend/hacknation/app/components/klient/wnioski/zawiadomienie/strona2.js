@@ -182,6 +182,8 @@ export default function Strona2({ formData, setFormData, alertContent = {} }) {
         <input
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          value={opieka.gmina}
+          onChange={(e) => handleChange('opieka', 'gmina', e.target.value)}
           placeholder="Wprowadź nazwę gminy lub dzielnicy"
         />
       </div>
