@@ -1,6 +1,7 @@
 'use client'
 
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 import Strona1 from "@/app/components/klient/wnioski/zapis_wyjasnien/strona1";
 import Strona2 from "@/app/components/klient/wnioski/zapis_wyjasnien/strona2";
 import Strona3 from "@/app/components/klient/wnioski/zapis_wyjasnien/strona3";
@@ -8,6 +9,7 @@ import Strona3 from "@/app/components/klient/wnioski/zapis_wyjasnien/strona3";
 import { useState } from 'react';
 
 export default function zapis_wyjasnien() {
+  const router = useRouter();
   const [page, setPage] = useState(1);
 
   const [formData, setFormData] = useState({
@@ -344,7 +346,8 @@ export default function zapis_wyjasnien() {
     }
 
     console.log('Form submitted with data:', formData);
-    // Add form submission logic here
+    localStorage.setItem('zapisWyjasnienData', JSON.stringify(formData));
+    router.push('/pages/klient/wnioski/zapis_wyjasnien/success');
   }
 
   return (

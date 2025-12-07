@@ -1,7 +1,8 @@
 import fitz  # PyMuPDF
 import json, os
 
-PDF_TEMPLATE = "EWYP_wypelnij_i_wydrukuj.pdf"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PDF_TEMPLATE = os.path.join(BASE_DIR, "EWYP_wypelnij_i_wydrukuj.pdf")
 OUTPUT_PDF = "EWYP_WYPELNIONY_I_SPLASZCZONY.pdf"  # Bezpośrednio spłaszczony plik
 
 
@@ -155,7 +156,7 @@ CHECKBOXY = {
 
 
 
-def convertJsonToPdf(data, filename):
+def convertJsonToPdf(data, filename, type="ZAWIADOMIENIE"):
     doc = fitz.open(PDF_TEMPLATE)
 
     filled_count = 0
