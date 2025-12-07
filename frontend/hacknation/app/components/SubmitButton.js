@@ -1,10 +1,15 @@
 "use client";
 import { useState } from "react";
 
-export default function SubmitButton({ formData, formType }) {
+export default function SubmitButton({ formData, formType, onValidate }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async () => {
+    if (onValidate && !onValidate()) {
+      console.log("Walidacja nie powiodła się - blokowanie wysyłki");
+      return; 
+    }
+
     setIsLoading(true);
 
     let dataWithPieczatka = { ...formData };
