@@ -1,10 +1,11 @@
 from flask import Blueprint, request, jsonify, send_file
 import sys
 import os
+import uuid
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
-from backend.pdf_uzupelnianie import convertJsonToPdf
+from backend.pdf_uzupelnianie import convertJsonToPdf, validate_pesel
 
 pdf = Blueprint("pdf", __name__)
 
@@ -22,8 +23,23 @@ def getZawiadomienieData():
             dokument_obj.get("numer", "")
         ])).strip()
 
+    # Waliduj PESEL przed utworzeniem słownika
+    pesel_poszkodowany = frontend_data.get("poszkodowany", {}).get("pesel", "")
+    pesel_zawiadamiajacy = frontend_data.get("zawiadamiajacy", {}).get("pesel", "")
+    
+    # Oczyszcz i waliduj PESEL
+    pesel_poszkodowany_clean = validate_pesel(pesel_poszkodowany)
+    pesel_zawiadamiajacy_clean = validate_pesel(pesel_zawiadamiajacy)
+    
+    # Zwróć błąd tylko jeśli PESEL był podany ale niepoprawny
+    if pesel_poszkodowany and not pesel_poszkodowany_clean:
+        return jsonify({"error": "Niepoprawny PESEL poszkodowanego. Wymagane 11 cyfr."}), 400
+    
+    if pesel_zawiadamiajacy and not pesel_zawiadamiajacy_clean:
+        return jsonify({"error": "Niepoprawny PESEL zawiadamiającego. Wymagane 11 cyfr."}), 400
+
     data = {
-        "pesel": frontend_data["poszkodowany"].get("pesel", ""),
+        "pesel": pesel_poszkodowany,
         "dokument": format_dokument(frontend_data["poszkodowany"].get("dokument", {})),
         "imie": frontend_data["poszkodowany"].get("imie", ""),
         "nazwisko": frontend_data["poszkodowany"].get("nazwisko", ""),
@@ -46,7 +62,7 @@ def getZawiadomienieData():
         "gmina_kor": frontend_data["poszkodowany"]["adresKorespondencji"].get("gmina", ""),
         "panstwo_kor": frontend_data["poszkodowany"]["adresKorespondencji"].get("panstwo", ""),
         
-        "pesel_zawiadamiajacy": frontend_data["zawiadamiajacy"].get("pesel", ""),
+        "pesel_zawiadamiajacy": pesel_zawiadamiajacy,
         "dokument_zawiadamiajacy": format_dokument(frontend_data["zawiadamiajacy"].get("dokument", {})),
         "imie_zawiadamiajacy": frontend_data["zawiadamiajacy"].get("imie", ""),
         "nazwisko_zawiadamiajacy": frontend_data["zawiadamiajacy"].get("nazwisko", ""),
@@ -158,9 +174,11 @@ def getZawiadomienieData():
     }
 
     try:
-        import uuid
         filename = f"ZUS_EWYP_{uuid.uuid4().hex[:8]}.pdf"
         pdf_path = convertJsonToPdf(data, filename)
+        
+        if not pdf_path:
+            return jsonify({"error": "Nie udało się utworzyć PDF"}), 500
         
         return send_file(
             pdf_path,

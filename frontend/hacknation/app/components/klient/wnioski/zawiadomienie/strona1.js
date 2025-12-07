@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-export default function Strona1({ formData, setFormData, alertContent = {} }) {
+export default function Strona1({ formData, setFormData, alertContent = {}, onConversationMode = null }) {
   const [activeAlert, setActiveAlert] = useState(null);
 
   const toggleAlert = (key) => {
@@ -295,7 +295,19 @@ export default function Strona1({ formData, setFormData, alertContent = {} }) {
           value={poszkodowany.adresKorespondencji.panstwo}
           onChange={(e) => handleNestedChange('poszkodowany', 'adresKorespondencji', 'panstwo', e.target.value)}
         />
-      </div>   
+      </div>
+      
+      {onConversationMode && (
+        <div className="mt-6 p-4 border-t border-gray-300 flex gap-2 justify-center">
+          <button
+            type="button"
+            onClick={() => onConversationMode('conditional')}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors text-sm font-medium"
+          >
+            Asystent Warunkowy
+          </button>
+        </div>
+      )}
     </div>
   );
 }

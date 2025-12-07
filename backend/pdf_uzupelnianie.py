@@ -5,8 +5,29 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PDF_TEMPLATE = os.path.join(BASE_DIR, "EWYP_wypelnij_i_wydrukuj.pdf")
 OUTPUT_PDF = "EWYP_WYPELNIONY_I_SPLASZCZONY.pdf"  # Bezpośrednio spłaszczony plik
 
+def validate_pesel(pesel):
+    """Waliduje PESEL i zwraca oczyszczony PESEL lub None"""
+    if not pesel:
+        return None
+    
+    pesel_clean = str(pesel).strip().replace(" ", "").replace("-", "").replace(".", "")
 
+    if len(pesel_clean) == 11 and pesel_clean.isdigit():
+        return pesel_clean
+    
+    return None
 
+def sanitize_data(data):
+    """Oczyszcza i waliduje dane przed wypełnieniem PDF"""
+    sanitized = {}
+    for key, value in data.items():
+        if value is None or value == "":
+            sanitized[key] = ""
+        elif key == "pesel" or key == "pesel_zawiadamiajacy":
+            sanitized[key] = validate_pesel(value) or ""
+        else:
+            sanitized[key] = str(value).strip()
+    return sanitized
 
 MAPPING = {
     "pesel": "topmostSubform[0].Page1[0].PESEL[0]",

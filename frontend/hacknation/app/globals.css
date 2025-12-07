@@ -100,10 +100,13 @@ body {
 
 .WniosekButton{
   height:60px;
-  width: 200px;
+  width: 100%;
   padding:20px;
   background: rgb(42, 143, 220);
   border-radius: 30px;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
   cursor: pointer;
 }
 
@@ -113,25 +116,13 @@ body {
 
 .WniosekButtonsWrapper{
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
   width: 100%;
-  margin: 0 auto;
-  gap: 30px;
-  padding: 20px 0;
-  width: 100%;
-  padding: 18px 28px;
-  background: linear-gradient(135deg, #2b8be0, #1f6bbf);
-  border-radius: 28px;
-  border: none;
-  color: #ffffff;
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: 0.4px;
-  box-shadow: 0 12px 22px rgba(34, 126, 214, 0.28);
-  cursor: pointer;
-  transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+  max-width: 520px;
+  margin: 40px auto 0;
+  gap: 18px;
 }
 
 .WniosekButton:hover{

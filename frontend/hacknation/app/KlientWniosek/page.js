@@ -6,6 +6,8 @@ import Link from "next/link";
 
 export default function KlientWniosek() {
   const router = useRouter();
+  const [uploadedFile, setUploadedFile] = useState(null);
+  
   const handleClick = (route) => {
     router.push(route);
   };
