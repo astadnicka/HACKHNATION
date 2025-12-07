@@ -1,117 +1,79 @@
-import os
-import json
-from typing import Dict, Any, Optional
+from typing import Dict, Any
+from llama_cpp import Llama
+from huggingface_hub import hf_hub_download
+from dotenv import load_dotenv
 
+load_dotenv()
 
 class LLMClient:
-    """
-    Basic LLM Client for form analysis.
-    The actual LLM implementation will be added by the team.
-    """
-    
-    def __init__(self, api_key: Optional[str] = None):
-        """
-        Initialize the LLM client.
+    def __init__(self):
+        self.repo_id = "bartowski/gemma-2-2b-it-GGUF"
+        self.filename = "gemma-2-2b-it-Q4_K_M.gguf"
         
-        Args:
-            api_key: API key for the LLM service (optional, can be set via environment)
-        """
-        self.api_key = api_key or os.getenv("LLM_API_KEY")
-        self.base_url = os.getenv("LLM_BASE_URL", "https://api.example.com")
-        self.model = os.getenv("LLM_MODEL", "default-model")
-        
-    def _send(self, prompt: str) -> Dict[str, Any]:
-        """
-        Send a prompt to the LLM service.
-        This method should be implemented by the team with actual LLM API calls.
-        
-        Args:
-            prompt: The prompt to send to the LLM
+        print(f"Initializing Creative Local LLM: {self.filename}...")
+
+        try:
+            model_path = hf_hub_download(
+                repo_id=self.repo_id, 
+                filename=self.filename
+            )
             
-        Returns:
-            Dict containing the LLM response
-        """
-        # TODO: Implement actual LLM API call here
-        # Example implementation structure:
-        # headers = {
-        #     "Authorization": f"Bearer {self.api_key}",
-        #     "Content-Type": "application/json"
-        # }
-        # payload = {
-        #     "model": self.model,
-        #     "prompt": prompt,
-        #     "temperature": 0.7,
-        #     "max_tokens": 500
-        # }
-        # response = requests.post(f"{self.base_url}/completions", 
-        #                         headers=headers, 
-        #                         json=payload)
-        # return response.json()
-        
-        # Placeholder response for development
-        return {
-            "status": "success",
-            "message": "LLM processing complete",
-            "analysis": "Form validation pending - LLM not yet configured"
-        }
-    
+            self.llm_engine = Llama(
+                model_path=model_path,
+                n_ctx=4096,
+                n_gpu_layers=0,
+                verbose=False
+            )
+            print("Gemma 2 Loaded. Ready.")
+            
+        except Exception as e:
+            print(f"Failed to load local model: {e}")
+            raise e
+
     def analyze_form(self, fields: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Analyze form fields using the LLM.
+        fields_text = "\n".join([f"- {k}: {v}" for k, v in fields.items()])
+        system_instruction = (
+            "Jesteś inteligentnym asystentem ubezpieczeniowym. "
+            "Analizujesz dane ze zgłoszenia wypadku. "
+            "Bądź konkretny, szukaj niespójności i podsumuj zdarzenie po polsku. "
+            "Nie wymądrzaj się tylko daj konkretny opis. \n\n"
+        )
         
-        Args:
-            fields: Dictionary containing form field data
-            
-        Returns:
-            Dict containing the analysis results
-        """
-        # Construct a prompt for form analysis
-        prompt = self._construct_form_prompt(fields)
-        
-        # Send to LLM
-        response = self._send(prompt)
-        
-        # Parse and return results
-        return self._parse_response(response)
-    
-    def _construct_form_prompt(self, fields: Dict[str, Any]) -> str:
-        """
-        Construct a prompt for form field analysis.
-        
-        Args:
-            fields: Dictionary containing form field data
-            
-        Returns:
-            Formatted prompt string
-        """
-        prompt = "Analyze the following form fields:\n\n"
-        
-        for field_name, field_value in fields.items():
-            prompt += f"- {field_name}: {field_value}\n"
-        
-        prompt += "\nProvide validation results and suggestions."
-        
-        return prompt
-    
-    def _parse_response(self, response: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Parse the LLM response into a structured format.
-        
-        Args:
-            response: Raw response from the LLM
-            
-        Returns:
-            Parsed and structured response
-        """
-        # TODO: Customize parsing based on actual LLM response format
-        return {
-            "valid": True,
-            "suggestions": [],
-            "analysis": response.get("analysis", "No analysis available"),
-            "raw_response": response
-        }
+        user_message = f"{system_instruction}Oto dane z formularza:\n{fields_text}\n\nDokonaj walidacji i podsumowania."
 
-
-# Global instance to be used across the application
-llm = LLMClient()
-
+        messages = [
+            {
+                "role": "user",
+                "content": user_message
+            }
+        ]
+        
+        try:
+            output = self.llm_engine.create_chat_completion(
+                messages=messages,
+                max_tokens=512,
+                temperature=0.3,
+                stop=["<end_of_turn>", "<eos>"]
+            )
+            
+            response_text = output['choices'][0]['message']['content']
+            
+            return {
+                "valid": True,
+                "suggestions": [],
+                "analysis": response_text.strip(),
+                "model_used": "Gemma-2-2B-IT-GGUF"
+            }
+            
+        except Exception as e:
+            print(f"LLM Inference Error: {e}")
+            return {
+                "valid": False,
+                "error": str(e),
+                "analysis": "Błąd analizy modelu lokalnego."
+            }
+try:
+    llm = LLMClient()
+except Exception as e:
+    print("Warning: LLM failed to initialize.")
+    llm = None
