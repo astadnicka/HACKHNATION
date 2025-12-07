@@ -3,6 +3,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -31,3 +32,4 @@ if __name__ == "__main__":
     port = int(os.getenv("PORT", 3000))
     print(f"Działa na {port}")
     app.run(host="0.0.0.0", port=port, debug=True)
+

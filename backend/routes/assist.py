@@ -71,3 +71,18 @@ def health_check():
         "status": "healthy",
         "service": "assistant"
     }), 200
+
+
+@assistant.route("/demo", methods=["GET"])
+def demo_llm():
+    """Quick manual check to see if the Hugging Face client responds."""
+    try:
+        sample_fields = {
+            "name": "Jan Kowalski",
+            "age": "34",
+            "description": "Rear-end collision, minor damage"
+        }
+        result = llm.analyze_form(sample_fields)
+        return jsonify({"status": "success", "result": result}), 200
+    except Exception as exc:  # surface errors to help debugging
+        return jsonify({"status": "error", "error": str(exc)}), 500
