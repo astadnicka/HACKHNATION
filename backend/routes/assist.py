@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from services.llm_client import llm
 from services.llm_admin import llm_admin
 from services.classifier import classifier
+from services.conversation_manager import conversation_manager
 from utils.validators import validate_batch_check_request
 from middleware.error_handler import ValidationError
 
@@ -262,5 +263,135 @@ def classify_and_analyze():
         return jsonify({
             "status": "error",
             "form_id": form_id,
+            "error": str(e)
+        }), 500
+
+
+@assistant.route("/start-conversation", methods=["POST"])
+def start_conversation():
+    """
+    Rozpoczyna nową sesję warunkowego dialogu
+    
+    Expected JSON:
+    {
+        "session_id": "user-123",
+        "form_type": "accident_report" | "explanation" | "opinion"
+    }
+    """
+    data = request.get_json()
+    
+    if not data or not data.get("session_id") or not data.get("form_type"):
+        return jsonify({
+            "status": "error",
+            "message": "Missing session_id or form_type"
+        }), 400
+    
+    try:
+        result = conversation_manager.start_conversation(
+            session_id=data["session_id"],
+            form_type=data["form_type"]
+        )
+        
+        return jsonify({
+            "status": "success",
+            "data": result
+        }), 200
+        
+    except Exception as e:
+        print(f"Error starting conversation: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "error": str(e)
+        }), 500
+
+
+@assistant.route("/answer", methods=["POST"])
+def process_answer():
+    """
+    Przetwarza odpowiedź użytkownika i zwraca następne pytanie
+    
+    Expected JSON:
+    {
+        "session_id": "user-123",
+        "field_name": "full_name",
+        "answer": "Jan Kowalski"
+    }
+    """
+    data = request.get_json()
+    
+    if not data or not data.get("session_id") or not data.get("field_name") or not data.get("answer"):
+        return jsonify({
+            "status": "error",
+            "message": "Missing session_id, field_name, or answer"
+        }), 400
+    
+    try:
+        result = conversation_manager.process_answer(
+            session_id=data["session_id"],
+            field_name=data["field_name"],
+            answer=data["answer"]
+        )
+        
+        return jsonify({
+            "status": "success",
+            "data": result
+        }), 200
+        
+    except Exception as e:
+        print(f"Error processing answer: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "error": str(e)
+        }), 500
+
+
+@assistant.route("/get-conversation", methods=["GET"])
+def get_conversation():
+    """Pobiera historię konwersacji"""
+    session_id = request.args.get("session_id")
+    
+    if not session_id:
+        return jsonify({
+            "status": "error",
+            "message": "Missing session_id"
+        }), 400
+    
+    conversation = conversation_manager.get_conversation(session_id)
+    
+    if not conversation:
+        return jsonify({
+            "status": "error",
+            "message": "Conversation not found"
+        }), 404
+    
+    return jsonify({
+        "status": "success",
+        "data": conversation
+    }), 200
+
+
+@assistant.route("/end-conversation", methods=["POST"])
+def end_conversation():
+    """Kończy konwersację"""
+    data = request.get_json()
+    
+    if not data or not data.get("session_id"):
+        return jsonify({
+            "status": "error",
+            "message": "Missing session_id"
+        }), 400
+    
+    try:
+        result = conversation_manager.end_conversation(session_id=data["session_id"])
+        
+        return jsonify({
+            "status": "success",
+            "data": result
+        }), 200
+        
+    except Exception as e:
+        print(f"Error ending conversation: {str(e)}")
+        return jsonify({
+            "status": "error",
             "error": str(e)
         }), 500

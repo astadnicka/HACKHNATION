@@ -72,6 +72,55 @@ class LLMClient:
                 "error": str(e),
                 "analysis": "Błąd analizy modelu lokalnego."
             }
+
+    def analyze_answer(self, field_name: str, answer: str, previous_responses: Dict[str, str], form_type: str) -> Dict[str, Any]:
+        """
+        Analizuje odpowiedź użytkownika w kontekście poprzednich odpowiedzi
+        Zwraca analizę pomagającą zdecydować następne pytanie
+        """
+        context = "\n".join([f"- {k}: {v}" for k, v in previous_responses.items()])
+        
+        system_instruction = (
+            "Jesteś asystentem ubezpieczeniowym. Analizujesz odpowiedź użytkownika w formularzu dotyczącym wypadku. "
+            "Czy odpowiedź jest kompletna? Czy potrzebujesz więcej szczegółów? "
+            "Zidentyfikuj brakujące informacje po polsku. Bądź konkretny i pomocny. Odpowiadaj krótko.\n\n"
+        )
+        
+        user_message = f"""{system_instruction}Poprzednie odpowiedzi:
+{context if context else 'Brak'}
+
+Typ formularza: {form_type}
+Pytanie: {field_name}
+Odpowiedź: {answer}
+
+Czy ta odpowiedź wymaga uzupełnienia? Odpowiedź tak/nie i wyjaśnij dlaczego."""
+
+        messages = [{"role": "user", "content": user_message}]
+        
+        try:
+            output = self.llm_engine.create_chat_completion(
+                messages=messages,
+                max_tokens=256,
+                temperature=0.3,
+                stop=["<end_of_turn>", "<eos>"]
+            )
+            
+            response_text = output['choices'][0]['message']['content']
+            
+            return {
+                "valid": True,
+                "analysis": response_text.strip(),
+                "needs_clarification": "tak" in response_text.lower()
+            }
+            
+        except Exception as e:
+            print(f"LLM Inference Error: {e}")
+            return {
+                "valid": False,
+                "error": str(e),
+                "needs_clarification": False
+            }
+
 try:
     llm = LLMClient()
 except Exception as e:
