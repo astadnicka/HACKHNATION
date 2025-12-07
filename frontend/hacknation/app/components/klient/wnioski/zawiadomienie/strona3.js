@@ -92,11 +92,8 @@ export default function Strona3() {
           value={panstwoKorespondencji}
           onChange={(e) => setPanstwoKorespondencji(e.target.value)}
         />
-      </div>  
-      <div>
-        <h1 className="font-semibold mb-2">INFORMACJE O WYPADKU</h1>
-        <hr className="bg-gray-100 mb-2"></hr>
-        </div>
+      </div>
+
       <div className="grid grid-cols-3 gap-2">
         <label className="col-span-3 block text-sm font-medium text-gray-700">Data wypadku</label>
         <input
