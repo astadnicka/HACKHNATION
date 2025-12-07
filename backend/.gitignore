@@ -19,3 +19,4 @@ build/
 *.egg-info/
 ZUS_ACCIDENT_NOTIFICATION_TOOL.pdf
 dataset/
+model_zus/
