@@ -38,9 +38,10 @@ export default function Home() {
           </g>
         </svg>
       </div>
-
-      <h1 className="DashBoardTitle">Wybierz akcję</h1>
-      <RoleButtons></RoleButtons>
+      <div className="center">
+        <h1 className="DashBoardTitle">Wybierz akcję</h1>
+        <RoleButtons></RoleButtons>
+      </div>
     </div>
   );
 }

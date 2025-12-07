@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Strona2({ formData, setFormData }) {
+export default function Strona2({ formData, setFormData, errors }) {
   const handleInputChange = (path, value) => {
     setFormData((prev) => {
       const updated = JSON.parse(JSON.stringify(prev));
@@ -66,6 +66,11 @@ export default function Strona2({ formData, setFormData }) {
             handleInputChange("swiadkowie.imieNazwisko", e.target.value)
           }
         />
+        {errors.swiadkowieImieNazwisko && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.swiadkowieImieNazwisko}
+          </p>
+        )}
         <input
           type="text"
           disabled={getBoolean("swiadkowie.brak")}
@@ -78,6 +83,11 @@ export default function Strona2({ formData, setFormData }) {
             handleInputChange("swiadkowie.miejsceZamieszkania", e.target.value)
           }
         />
+        {errors.swiadkowieMiejsceZamieszkania && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.swiadkowieMiejsceZamieszkania}
+          </p>
+        )}
       </div>
 
       <div>
@@ -122,6 +132,9 @@ export default function Strona2({ formData, setFormData }) {
             </span>
           </label>
         </div>
+        {errors.czyWypadek && (
+          <p className="text-red-500 text-sm mt-1">{errors.czyWypadek}</p>
+        )}
 
         <input
           type="text"
@@ -135,6 +148,11 @@ export default function Strona2({ formData, setFormData }) {
             handleInputChange("status.uzasadnienie", e.target.value)
           }
         />
+        {errors.statusUzasadnienie && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.statusUzasadnienie}
+          </p>
+        )}
       </div>
 
       <div>
@@ -167,6 +185,9 @@ export default function Strona2({ formData, setFormData }) {
             handleInputChange("status.powodyNaruszenia", e.target.value)
           }
         />
+        {errors.powodyNaruszenia && (
+          <p className="text-red-500 text-sm mt-1">{errors.powodyNaruszenia}</p>
+        )}
       </div>
 
       <div>
@@ -201,6 +222,11 @@ export default function Strona2({ formData, setFormData }) {
             handleInputChange("status.uzasadnienieBadania", e.target.value)
           }
         />
+        {errors.uzasadnienieBadania && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.uzasadnienieBadania}
+          </p>
+        )}
       </div>
 
       <h1 className="font-semibold mb-2">IV. POZOSTAŁE INFORMACJE</h1>
@@ -220,6 +246,11 @@ export default function Strona2({ formData, setFormData }) {
             handleInputChange("pozostale.zapoznanoImieNazwisko", e.target.value)
           }
         />
+        {errors.zapoznanoImieNazwisko && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.zapoznanoImieNazwisko}
+          </p>
+        )}
         <input
           type="date"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
@@ -228,6 +259,9 @@ export default function Strona2({ formData, setFormData }) {
             handleInputChange("pozostale.zapoznanoData", e.target.value)
           }
         />
+        {errors.zapoznanoData && (
+          <p className="text-red-500 text-sm mt-1">{errors.zapoznanoData}</p>
+        )}
         <input
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
@@ -237,6 +271,9 @@ export default function Strona2({ formData, setFormData }) {
             handleInputChange("pozostale.zapoznanoPodpis", e.target.value)
           }
         />
+        {errors.zapoznanoPodpis && (
+          <p className="text-red-500 text-sm mt-1">{errors.zapoznanoPodpis}</p>
+        )}
       </div>
 
       <div>
@@ -251,6 +288,9 @@ export default function Strona2({ formData, setFormData }) {
             handleInputChange("pozostale.kartaSporządzona", e.target.value)
           }
         />
+        {errors.kartaSporządzona && (
+          <p className="text-red-500 text-sm mt-1">{errors.kartaSporządzona}</p>
+        )}
       </div>
 
       <div>
@@ -267,6 +307,9 @@ export default function Strona2({ formData, setFormData }) {
           value={getNested("pozostale.zus")}
           onChange={(e) => handleInputChange("pozostale.zus", e.target.value)}
         />
+        {errors.zus && (
+          <p className="text-red-500 text-sm mt-1">{errors.zus}</p>
+        )}
       </div>
 
       <div>
@@ -282,6 +325,9 @@ export default function Strona2({ formData, setFormData }) {
             handleInputChange("pozostale.sporadzajacy", e.target.value)
           }
         />
+        {errors.sporadzajacy && (
+          <p className="text-red-500 text-sm mt-1">{errors.sporadzajacy}</p>
+        )}
       </div>
 
       <div>
@@ -312,6 +358,9 @@ export default function Strona2({ formData, setFormData }) {
             handleInputChange("pozostale.opisPrzeszkod", e.target.value)
           }
         />
+        {errors.opisPrzeszkod && (
+          <p className="text-red-500 text-sm mt-1">{errors.opisPrzeszkod}</p>
+        )}
       </div>
 
       <div>
@@ -326,6 +375,9 @@ export default function Strona2({ formData, setFormData }) {
             handleInputChange("pozostale.kartaOdebrana", e.target.value)
           }
         />
+        {errors.kartaOdebrana && (
+          <p className="text-red-500 text-sm mt-1">{errors.kartaOdebrana}</p>
+        )}
         <input
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
@@ -335,6 +387,11 @@ export default function Strona2({ formData, setFormData }) {
             handleInputChange("pozostale.podpisPrzyjmujacego", e.target.value)
           }
         />
+        {errors.podpisPrzyjmujacego && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.podpisPrzyjmujacego}
+          </p>
+        )}
       </div>
 
       <div>

@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function KlientWniosek() {
   const router = useRouter();
@@ -8,6 +9,13 @@ export default function KlientWniosek() {
   };
 
   return (
+        <main className="m-4">
+
+     <Link href="/">
+          <button className="px-2 py-1 bg-[#00923f] cursor-pointer rounded-md hover:bg-[#007a33] transition-colors text-white">
+            Wróć
+          </button>
+       </Link>
     <div className="KlientWniosek Wnioski">
               <h2 className="WniosekHeading">Który wniosek chcesz złożyć?</h2>
 
@@ -28,5 +36,6 @@ export default function KlientWniosek() {
         </button>
       </div>
     </div>
+    </main>
   );
 }

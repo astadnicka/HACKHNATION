@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Strona1({ formData, setFormData }) {
+export default function Strona1({ formData, setFormData, errors }) {
   const handleInputChange = (path, value) => {
     setFormData((prev) => {
       const updated = JSON.parse(JSON.stringify(prev));
@@ -52,6 +52,11 @@ export default function Strona1({ formData, setFormData }) {
             )
           }
         />
+        {errors.imieNazwiskoPoszkodowanego && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.imieNazwiskoPoszkodowanego}
+          </p>
+        )}
       </div>
 
       <div>
@@ -70,6 +75,11 @@ export default function Strona1({ formData, setFormData }) {
             )
           }
         />
+        {errors.kwestiaDoRozstrzygniecza && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.kwestiaDoRozstrzygniecza}
+          </p>
+        )}
       </div>
 
       <div>
@@ -84,6 +94,9 @@ export default function Strona1({ formData, setFormData }) {
             handleInputChange("zdarzenie.dataZdarzenia", e.target.value)
           }
         />
+        {errors.dataZdarzenia && (
+          <p className="text-red-500 text-sm mt-1">{errors.dataZdarzenia}</p>
+        )}
         <p className="text-sm text-gray-600 mt-2">za wypadek podczas:</p>
 
         <div className="flex items-center space-x-2 mt-1">
@@ -197,6 +210,9 @@ export default function Strona1({ formData, setFormData }) {
             w ustawie o opiece nad dziećmi w wieku do lat 3
           </label>
         </div>
+        {errors.typyZdarzen && (
+          <p className="text-red-500 text-sm mt-1">{errors.typyZdarzen}</p>
+        )}
       </div>
 
       <div>
@@ -212,6 +228,9 @@ export default function Strona1({ formData, setFormData }) {
             handleInputChange("opinia.opiniaOUznaniu", e.target.value)
           }
         />
+        {errors.opiniaOUznaniu && (
+          <p className="text-red-500 text-sm mt-1">{errors.opiniaOUznaniu}</p>
+        )}
       </div>
 
       <div>
@@ -227,21 +246,66 @@ export default function Strona1({ formData, setFormData }) {
             handleInputChange("opinia.uzasadnienie", e.target.value)
           }
         />
+        {errors.uzasadnienie && (
+          <p className="text-red-500 text-sm mt-1">{errors.uzasadnienie}</p>
+        )}
       </div>
 
-      <div className="flex items-center space-x-2 mt-1">
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          Data opracowania
+        </label>
         <input
-          type="text"
-          className="h-24 mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          placeholder="Data, pieczątka i podpis osoby opracowującej"
-          value={getNested("opinia.dataPieczatkaOpisyPodpis")}
+          type="date"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          value={getNested("opinia.dataOpracowania")}
           onChange={(e) =>
-            handleInputChange("opinia.dataPieczatkaOpisyPodpis", e.target.value)
+            handleInputChange("opinia.dataOpracowania", e.target.value)
           }
         />
-        <label className="block text-xs font-medium text-gray-700">
-          (Data, pieczątka i podpis osoby opracowującej)
+        {errors.dataOpracowania && (
+          <p className="text-red-500 text-sm mt-1">{errors.dataOpracowania}</p>
+        )}
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          Pieczątka osoby opracowującej
         </label>
+        <input
+          type="text"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          placeholder="Pieczątka"
+          value={getNested("opinia.pieczatkaOpracowania")}
+          onChange={(e) =>
+            handleInputChange("opinia.pieczatkaOpracowania", e.target.value)
+          }
+        />
+        {errors.pieczatkaOpracowania && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.pieczatkaOpracowania}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          Podpis osoby opracowującej
+        </label>
+        <input
+          type="text"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          placeholder="Podpis"
+          value={getNested("opinia.podpisOpracowania")}
+          onChange={(e) =>
+            handleInputChange("opinia.podpisOpracowania", e.target.value)
+          }
+        />
+        {errors.podpisOpracowania && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.podpisOpracowania}
+          </p>
+        )}
       </div>
     </div>
   );
