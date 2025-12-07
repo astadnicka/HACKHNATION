@@ -49,18 +49,120 @@ export default function zapis_wyjasnien() {
       czynnosciWyjasniajace: "",
       opisCzynnosci: "",
     },
+    pomoc: {
+      dataPomoc: "",
+      nazwaPlacowki: "",
+      okresHospitalizacji: "",
+      rozpoznanyUraz: "",
+      niezdolnoscOd: "",
+      niezdolnoscDo: "",
+      zwolnienieLekarskie: "",
+      miejscowosc: "",
+      dataPodpisu: "",
+      podpisPoszkodowanego: "",
+      protokolanci: "",
+    },
   });
+
+  const alertContent = {
+    osobaImiona: {
+      title: 'Dane personalne',
+      body: 'Uzupełnij oba imiona zgodnie z dokumentem tożsamości.'
+    },
+    osobaUrodzenie: {
+      title: 'Data i miejsce urodzenia',
+      body: 'Podaj pełną datę urodzenia oraz miejscowość.'
+    },
+    osobaAdres: {
+      title: 'Adres zamieszkania',
+      body: 'Adres musi zawierać miejscowość i ulicę wraz z numerem.'
+    },
+    osobaZatrudnienie: {
+      title: 'Miejsce zatrudnienia',
+      body: 'Wpisz nazwę firmy lub pełną nazwę prowadzonej działalności.'
+    },
+    wypadekData: {
+      title: 'Data wypadku',
+      body: 'Data powinna odpowiadać dacie z oficjalnego zgłoszenia.'
+    },
+    wypadekSzczegoly: {
+      title: 'Okoliczności wypadku',
+      body: 'Uzupełnij datę, miejsce i dokładną godzinę zdarzenia.'
+    },
+    wypadekStart: {
+      title: 'Planowana godzina rozpoczęcia',
+      body: 'Podaj godzinę rozpoczęcia pracy w dniu zdarzenia.'
+    },
+    wypadekEnd: {
+      title: 'Planowana godzina zakończenia',
+      body: 'Podaj planowaną godzinę zakończenia pracy w tym dniu.'
+    },
+    wypadekCzynnosci: {
+      title: 'Wykonywane czynności',
+      body: 'Opisz czynności wykonywane tuż przed wypadkiem.'
+    },
+    wypadekOkolicznosci: {
+      title: 'Opis okoliczności',
+      body: 'Podaj szczegółowy opis przyczyn i przebiegu wypadku.'
+    }
+  };
+
+  const alertContentPage2 = {
+    wypadekMaszyna: {
+      title: 'Obsługa maszyn',
+      body: 'Wskaż czy wypadek powstał podczas obsługi urządzenia.'
+    },
+    zabezpieczenia: {
+      title: 'Zabezpieczenia',
+      body: 'Oznacz czy były stosowane zabezpieczenia przed wypadkiem.'
+    },
+    asekuracja: {
+      title: 'Asekuracja',
+      body: 'Wskaż czy stosowana była asekuracja podczas pracy.'
+    },
+    bhp: {
+      title: 'Zasady BHP',
+      body: 'Potwierdź czy przestrzegałeś/aś zasad bezpieczeństwa i higieny pracy.'
+    },
+    przygotowanie: {
+      title: 'Przygotowanie',
+      body: 'Wskaż czy posiadasz przygotowanie do wykonywania swoich zadań.'
+    },
+    szkolenie: {
+      title: 'Szkolenie z BHP',
+      body: 'Potwierdź czy odbyłeś/aś obowiązkowe szkolenie z BHP.'
+    },
+    stanNietrzezwosci: {
+      title: 'Stan trzeźwości',
+      body: 'Wskaż czy w chwili wypadku byłeś/aś w stanie trzeźwości.'
+    },
+    badanieTrzezwosci: {
+      title: 'Badanie trzeźwości',
+      body: 'Wskaż czy badanie stanu trzeźwości zostało przeprowadzone.'
+    },
+    czynnosciWyjasniajace: {
+      title: 'Czynności wyjaśniające',
+      body: 'Wskaż czy były podjęte czynności wyjaśniające przez organy.'
+    }
+  };
+
+  const alertContentPage3 = {
+    zwolnienieLekarskie: {
+      title: 'Zwolnienie lekarskie',
+      body: 'Wskaż czy w dacie wypadku przebywałeś/aś na zwolnieniu lekarskim.'
+    }
+  };
 
   const renderPage = () => {
     switch (page) {
       case 1:
-        return <Strona1 formData={formData} setFormData={setFormData} />;
+        return <Strona1 formData={formData} setFormData={setFormData} alertContent={alertContent} />;
       case 2:
-        return <Strona2 formData={formData} setFormData={setFormData} />;
+        return <Strona2 formData={formData} setFormData={setFormData} alertContent={alertContentPage2} />;
       case 3:
-        return <Strona3 formData={formData} setFormData={setFormData} />;
+        return <Strona3 formData={formData} setFormData={setFormData} alertContent={alertContentPage3} />;
       default:
-        return <Strona1 formData={formData} setFormData={setFormData} />;
+        return <Strona1 formData={formData} setFormData={setFormData} alertContent={alertContent} />;
     }
   }
 
@@ -97,7 +199,7 @@ export default function zapis_wyjasnien() {
             </button>
           ) : (
             <button
-              type="submit"
+              type="button"
               onClick={() => setPage((p) => Math.min(3, p + 1))}
               className="px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer"
             >

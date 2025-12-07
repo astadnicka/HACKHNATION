@@ -1,44 +1,32 @@
 'use client';
 
-import { useState } from 'react';
+export default function Strona2({ formData, setFormData }) {
+  const handleChange = (section, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [field]: value
+      }
+    }));
+  };
 
-export default function Strona2() {
-  // Adres działalności
-  const [ulicaDzialalnosci, setUlicaDzialalnosci] = useState('');
-  const [numerDomuDzialalnosci, setNumerDomuDzialalnosci] = useState('');
-  const [numerLokaluDzialalnosci, setNumerLokaluDzialalnosci] = useState('');
-  const [kodPocztowyDzialalnosci, setKodPocztowyDzialalnosci] = useState('');
-  const [miejscowoscDzialalnosci, setMiejscowoscDzialalnosci] = useState('');
-  const [gminaDzialalnosci, setGminaDzialalnosci] = useState('');
-  const [numerTelefonu, setNumerTelefonu] = useState('');
-  
-  // Adres opieki nad dzieckiem
-  const [ulicaOpieka, setUlicaOpieka] = useState('');
-  const [numerDomuOpieka, setNumerDomuOpieka] = useState('');
-  const [numerLokaluOpieka, setNumerLokaluOpieka] = useState('');
-  const [kodPocztowyOpieka, setKodPocztowyOpieka] = useState('');
-  const [miejscowoscOpieka, setMiejscowoscOpieka] = useState('');
-  
-  // Dane osoby zawiadamiającej
-  const [peselZawiadamiajacy, setPeselZawiadamiajacy] = useState('');
-  const [dokumentRodzajZawiadamiajacy, setDokumentRodzajZawiadamiajacy] = useState('');
-  const [dokumentSeriaZawiadamiajacy, setDokumentSeriaZawiadamiajacy] = useState('');
-  const [dokumentNumerZawiadamiajacy, setDokumentNumerZawiadamiajacy] = useState('');
-  const [imieZawiadamiajacy, setImieZawiadamiajacy] = useState('');
-  const [nazwiskoZawiadamiajacy, setNazwiskoZawiadamiajacy] = useState('');
-  const [dzienUrodzenia, setDzienUrodzenia] = useState('');
-  const [miesiacUrodzenia, setMiesiacUrodzenia] = useState('');
-  const [rokUrodzenia, setRokUrodzenia] = useState('');
-  const [plec, setPlec] = useState('');
-  
-  // Adres zamieszkania zawiadamiającego
-  const [ulicaZamieszkania, setUlicaZamieszkania] = useState('');
-  const [numerDomuZamieszkania, setNumerDomuZamieszkania] = useState('');
-  const [numerLokaluZamieszkania, setNumerLokaluZamieszkania] = useState('');
-  const [kodPocztowyZamieszkania, setKodPocztowyZamieszkania] = useState('');
-  const [miejscowoscZamieszkania, setMiejscowoscZamieszkania] = useState('');
-  const [gminaZamieszkania, setGminaZamieszkania] = useState('');
-  const [panstwoZamieszkania, setPanstwoZamieszkania] = useState('');
+  const handleNestedChange = (section, subsection, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [subsection]: {
+          ...prev[section][subsection],
+          [field]: value
+        }
+      }
+    }));
+  };
+
+  const miejscaDzialalnosci = formData.miejscaDzialalnosci;
+  const opieka = formData.opieka;
+  const zawiadamiajacy = formData.zawiadamiajacy;
 
   return (
     <div className="bg-gray-50/60 w-full max-w-2xl p-4 rounded-xl flex flex-col space-y-4 mb-4">
@@ -51,8 +39,8 @@ export default function Strona2() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź nazwę ulicy"
-          value={ulicaDzialalnosci}
-          onChange={(e) => setUlicaDzialalnosci(e.target.value)}
+          value={miejscaDzialalnosci.ulica}
+          onChange={(e) => handleChange('miejscaDzialalnosci', 'ulica', e.target.value)}
         />
       </div>
       <div className="grid grid-cols-2 gap-2">
@@ -61,15 +49,15 @@ export default function Strona2() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź numer domu"
-          value={numerDomuDzialalnosci}
-          onChange={(e) => setNumerDomuDzialalnosci(e.target.value)}
+          value={miejscaDzialalnosci.numerDomu}
+          onChange={(e) => handleChange('miejscaDzialalnosci', 'numerDomu', e.target.value)}
         /> 
         <input
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź numer lokalu"
-          value={numerLokaluDzialalnosci}
-          onChange={(e) => setNumerLokaluDzialalnosci(e.target.value)}
+          value={miejscaDzialalnosci.numerLokalu}
+          onChange={(e) => handleChange('miejscaDzialalnosci', 'numerLokalu', e.target.value)}
         />
       </div>
       <div className="grid grid-cols-2 gap-2">
@@ -78,15 +66,15 @@ export default function Strona2() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź kod pocztowy"
-          value={kodPocztowyDzialalnosci}
-          onChange={(e) => setKodPocztowyDzialalnosci(e.target.value)}
+          value={miejscaDzialalnosci.kodPocztowy}
+          onChange={(e) => handleChange('miejscaDzialalnosci', 'kodPocztowy', e.target.value)}
         /> 
         <input
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź miejscowość"
-          value={miejscowoscDzialalnosci}
-          onChange={(e) => setMiejscowoscDzialalnosci(e.target.value)}
+          value={miejscaDzialalnosci.miejscowosc}
+          onChange={(e) => handleChange('miejscaDzialalnosci', 'miejscowosc', e.target.value)}
         />
       </div>
       <div>
@@ -95,8 +83,8 @@ export default function Strona2() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź nazwę gminy lub dzielnicy"
-          value={gminaDzialalnosci}
-          onChange={(e) => setGminaDzialalnosci(e.target.value)}
+          value={miejscaDzialalnosci.gmina}
+          onChange={(e) => handleChange('miejscaDzialalnosci', 'gmina', e.target.value)}
         />
       </div>
       <div>
@@ -106,8 +94,8 @@ export default function Strona2() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź numer telefonu"
-          value={numerTelefonu}
-          onChange={(e) => setNumerTelefonu(e.target.value)}
+          value={miejscaDzialalnosci.numerTelefonu}
+          onChange={(e) => handleChange('miejscaDzialalnosci', 'numerTelefonu', e.target.value)}
         />
       </div>
             <div>
@@ -119,8 +107,8 @@ export default function Strona2() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź nazwę ulicy"
-          value={ulicaOpieka}
-          onChange={(e) => setUlicaOpieka(e.target.value)}
+          value={opieka.ulica}
+          onChange={(e) => handleChange('opieka', 'ulica', e.target.value)}
         />
       </div>
       <div className="grid grid-cols-2 gap-2">
@@ -129,15 +117,15 @@ export default function Strona2() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź numer domu"
-          value={numerDomuOpieka}
-          onChange={(e) => setNumerDomuOpieka(e.target.value)}
+          value={opieka.numerDomu}
+          onChange={(e) => handleChange('opieka', 'numerDomu', e.target.value)}
         /> 
         <input
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź numer lokalu"
-          value={numerLokaluOpieka}
-          onChange={(e) => setNumerLokaluOpieka(e.target.value)}
+          value={opieka.numerLokalu}
+          onChange={(e) => handleChange('opieka', 'numerLokalu', e.target.value)}
         />
       </div>
       <div className="grid grid-cols-2 gap-2">
@@ -146,15 +134,15 @@ export default function Strona2() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź kod pocztowy"
-          value={kodPocztowyOpieka}
-          onChange={(e) => setKodPocztowyOpieka(e.target.value)}
+          value={opieka.kodPocztowy}
+          onChange={(e) => handleChange('opieka', 'kodPocztowy', e.target.value)}
         /> 
         <input
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź miejscowość"
-          value={miejscowoscOpieka}
-          onChange={(e) => setMiejscowoscOpieka(e.target.value)}
+          value={opieka.miejscowosc}
+          onChange={(e) => handleChange('opieka', 'miejscowosc', e.target.value)}
         />
       </div>
       <div>
@@ -173,8 +161,8 @@ export default function Strona2() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź PESEL"
-          value={peselZawiadamiajacy}
-          onChange={(e) => setPeselZawiadamiajacy(e.target.value)}
+          value={zawiadamiajacy.pesel}
+          onChange={(e) => handleChange('zawiadamiajacy', 'pesel', e.target.value)}
         />
       </div>    
       <div className="grid grid-cols-3 gap-2">
@@ -184,22 +172,22 @@ export default function Strona2() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Rodzaj"
-          value={dokumentRodzajZawiadamiajacy}
-          onChange={(e) => setDokumentRodzajZawiadamiajacy(e.target.value)}
+          value={zawiadamiajacy.dokument.rodzaj}
+          onChange={(e) => handleNestedChange('zawiadamiajacy', 'dokument', 'rodzaj', e.target.value)}
         />
         <input
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Seria"
-          value={dokumentSeriaZawiadamiajacy}
-          onChange={(e) => setDokumentSeriaZawiadamiajacy(e.target.value)}
+          value={zawiadamiajacy.dokument.seria}
+          onChange={(e) => handleNestedChange('zawiadamiajacy', 'dokument', 'seria', e.target.value)}
         />      
         <input
           type="number"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Numer"
-          value={dokumentNumerZawiadamiajacy}
-          onChange={(e) => setDokumentNumerZawiadamiajacy(e.target.value)}
+          value={zawiadamiajacy.dokument.numer}
+          onChange={(e) => handleNestedChange('zawiadamiajacy', 'dokument', 'numer', e.target.value)}
         />
       </div>
       <div className="grid grid-cols-2 gap-2">
@@ -208,15 +196,15 @@ export default function Strona2() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź imię"
-          value={imieZawiadamiajacy}
-          onChange={(e) => setImieZawiadamiajacy(e.target.value)}
+          value={zawiadamiajacy.imie}
+          onChange={(e) => handleChange('zawiadamiajacy', 'imie', e.target.value)}
         /> 
         <input
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź nazwisko"
-          value={nazwiskoZawiadamiajacy}
-          onChange={(e) => setNazwiskoZawiadamiajacy(e.target.value)}
+          value={zawiadamiajacy.nazwisko}
+          onChange={(e) => handleChange('zawiadamiajacy', 'nazwisko', e.target.value)}
         />
       </div>
         <div className="grid grid-cols-3 gap-2">
@@ -225,22 +213,22 @@ export default function Strona2() {
           type="number"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Dzień"
-          value={dzienUrodzenia}
-          onChange={(e) => setDzienUrodzenia(e.target.value)}
+          value={zawiadamiajacy.dzienUrodzenia}
+          onChange={(e) => handleChange('zawiadamiajacy', 'dzienUrodzenia', e.target.value)}
         />
         <input
           type="number"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Miesiąc"
-          value={miesiacUrodzenia}
-          onChange={(e) => setMiesiacUrodzenia(e.target.value)}
+          value={zawiadamiajacy.miesiacUrodzenia}
+          onChange={(e) => handleChange('zawiadamiajacy', 'miesiacUrodzenia', e.target.value)}
         />      
         <input
           type="number"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Rok"
-          value={rokUrodzenia}
-          onChange={(e) => setRokUrodzenia(e.target.value)}
+          value={zawiadamiajacy.rokUrodzenia}
+          onChange={(e) => handleChange('zawiadamiajacy', 'rokUrodzenia', e.target.value)}
         />
       </div>
         <div className="grid grid-cols-2 gap-2">
@@ -251,8 +239,8 @@ export default function Strona2() {
             id="mezczyzna"
             name="plec"
             value="mezczyzna"
-            checked={plec === 'mezczyzna'}
-            onChange={(e) => setPlec(e.target.value)}
+            checked={zawiadamiajacy.plec === 'mezczyzna'}
+            onChange={(e) => handleChange('zawiadamiajacy', 'plec', e.target.value)}
             className="w-4 h-4 text-cyan-500 focus:ring-cyan-500 cursor-pointer"
           />
           <label htmlFor="mezczyzna" className="ml-2 text-sm text-gray-700 cursor-pointer">
@@ -265,8 +253,8 @@ export default function Strona2() {
             id="kobieta"
             name="plec"
             value="kobieta"
-            checked={plec === 'kobieta'}
-            onChange={(e) => setPlec(e.target.value)}
+            checked={zawiadamiajacy.plec === 'kobieta'}
+            onChange={(e) => handleChange('zawiadamiajacy', 'plec', e.target.value)}
             className="w-4 h-4 text-cyan-500 focus:ring-cyan-500 cursor-pointer"
           />
           <label htmlFor="kobieta" className="ml-2 text-sm text-gray-700 cursor-pointer">
@@ -282,8 +270,8 @@ export default function Strona2() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź nazwę ulicy"
-          value={ulicaZamieszkania}
-          onChange={(e) => setUlicaZamieszkania(e.target.value)}
+          value={zawiadamiajacy.adresZamieszkania.ulica}
+          onChange={(e) => handleNestedChange('zawiadamiajacy', 'adresZamieszkania', 'ulica', e.target.value)}
         />
       </div>
       <div className="grid grid-cols-2 gap-2">
@@ -292,15 +280,15 @@ export default function Strona2() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź domu"
-          value={numerDomuZamieszkania}
-          onChange={(e) => setNumerDomuZamieszkania(e.target.value)}
+          value={zawiadamiajacy.adresZamieszkania.numerDomu}
+          onChange={(e) => handleNestedChange('zawiadamiajacy', 'adresZamieszkania', 'numerDomu', e.target.value)}
         /> 
         <input
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź lokalu"
-          value={numerLokaluZamieszkania}
-          onChange={(e) => setNumerLokaluZamieszkania(e.target.value)}
+          value={zawiadamiajacy.adresZamieszkania.numerLokalu}
+          onChange={(e) => handleNestedChange('zawiadamiajacy', 'adresZamieszkania', 'numerLokalu', e.target.value)}
         />
       </div>
       <div className="grid grid-cols-2 gap-2">
@@ -309,15 +297,15 @@ export default function Strona2() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź kod pocztowy"
-          value={kodPocztowyZamieszkania}
-          onChange={(e) => setKodPocztowyZamieszkania(e.target.value)}
+          value={zawiadamiajacy.adresZamieszkania.kodPocztowy}
+          onChange={(e) => handleNestedChange('zawiadamiajacy', 'adresZamieszkania', 'kodPocztowy', e.target.value)}
         /> 
         <input
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź miejscowość"
-          value={miejscowoscZamieszkania}
-          onChange={(e) => setMiejscowoscZamieszkania(e.target.value)}
+          value={zawiadamiajacy.adresZamieszkania.miejscowosc}
+          onChange={(e) => handleNestedChange('zawiadamiajacy', 'adresZamieszkania', 'miejscowosc', e.target.value)}
         />
       </div>
       <div>
@@ -326,8 +314,8 @@ export default function Strona2() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź nazwę ulicy"
-          value={gminaZamieszkania}
-          onChange={(e) => setGminaZamieszkania(e.target.value)}
+          value={zawiadamiajacy.adresZamieszkania.gmina}
+          onChange={(e) => handleNestedChange('zawiadamiajacy', 'adresZamieszkania', 'gmina', e.target.value)}
         />
       </div>
       <div>
@@ -337,8 +325,8 @@ export default function Strona2() {
           type="text"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź państwo"
-          value={panstwoZamieszkania}
-          onChange={(e) => setPanstwoZamieszkania(e.target.value)}
+          value={zawiadamiajacy.adresZamieszkania.panstwo}
+          onChange={(e) => handleNestedChange('zawiadamiajacy', 'adresZamieszkania', 'panstwo', e.target.value)}
         />
       </div>   
     </div>
