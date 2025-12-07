@@ -37,11 +37,6 @@ export default function KlientWniosek() {
           Zawiadomienie
         </button>
       </div>
-      {uploadedFile && (
-        <div className="WniosekButtonsWrapper">
-          <p className="text-sm">File Uploaded!</p>
-        </div>
-      )}
     </div>
     </main>
   );
