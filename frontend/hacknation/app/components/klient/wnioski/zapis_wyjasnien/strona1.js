@@ -57,7 +57,7 @@ export default function Strona1({ formData, setFormData, alertContent = {} }) {
             <input className={inputSmallClassName} placeholder='........' value={osoba.imie1} onChange={(e) => handleChange('osoba', 'imie1', e.target.value)}></input>
             <input className={inputSmallClassName} placeholder='........' value={osoba.imie2} onChange={(e) => handleChange('osoba', 'imie2', e.target.value)}></input>
             </div>
-            <button className={alertButtonClass} onClick={() => toggleAlert('osobaImiona')}>!</button>
+            {alertContent['osobaImiona']?.changed && <button className={alertButtonClass} type='button' onClick={() => toggleAlert('osobaImiona')}>!</button>}
           </div>
           <div className='relative'>
             <div className='inline-flex items-center gap-1 flex-wrap'>
@@ -66,7 +66,7 @@ export default function Strona1({ formData, setFormData, alertContent = {} }) {
               <label>w...</label>
               <input className={inputSmallClassName} placeholder='........' value={osoba.miejsceUrodzenia} onChange={(e) => handleChange('osoba', 'miejsceUrodzenia', e.target.value)}></input>
             </div>
-            <button className={alertButtonClass} onClick={() => toggleAlert('osobaUrodzenie')}>!</button>
+            {alertContent['osobaUrodzenie']?.changed && <button className={alertButtonClass} type='button' onClick={() => toggleAlert('osobaUrodzenie')}>!</button>}
           </div>
           <div className='relative'>
             <div className='inline-flex items-center gap-1 flex-wrap'>
@@ -75,51 +75,51 @@ export default function Strona1({ formData, setFormData, alertContent = {} }) {
               <label>ul.</label>
               <input className={inputSmallClassName} placeholder='........' value={osoba.ulica} onChange={(e) => handleChange('osoba', 'ulica', e.target.value)}></input>
             </div>
-            <button className={alertButtonClass} onClick={() => toggleAlert('osobaAdres')}>!</button>
+            {alertContent['osobaAdres']?.changed && <button className={alertButtonClass} type='button' onClick={() => toggleAlert('osobaAdres')}>!</button>}
           </div>
           <div className='relative'>
             <div className='inline-flex items-center gap-1 flex-wrap'>
               <label>zatrudniony/a w...</label>
               <input className={inputSmallClassName} placeholder='........' value={osoba.zatrudnionyW} onChange={(e) => handleChange('osoba', 'zatrudnionyW', e.target.value)}></input>
             </div>
-            <button className={alertButtonClass} onClick={() => toggleAlert('osobaZatrudnienie')}>!</button>
+            {alertContent['osobaZatrudnienie']?.changed && <button className={alertButtonClass} type='button' onClick={() => toggleAlert('osobaZatrudnienie')}>!</button>}
           </div>
         </div>
         <div className='space-y-2'>
           <div className='relative space-y-1'>
             <label className='block'>W związku z wypadkiem jakiemu uległem/am w dniu</label>
             <input className={simpleClassName} type='date' value={wypadek.dataWypadku} onChange={(e) => handleChange('wypadek', 'dataWypadku', e.target.value)}></input>
-            <button className={alertButtonClass} onClick={() => toggleAlert('wypadekData')}>!</button>
+            {alertContent['wypadekData']?.changed && <button className={alertButtonClass} type='button' onClick={() => toggleAlert('wypadekData')}>!</button>}
           </div>
           <label className='block text-sm'>uprzedzony/a o odpowiedzialności karnej za składanie fałszywych zeznać oświadczam, co następuje:</label>
           <div className='relative space-y-2 mt-3'>
             <label className='block font-medium'>1. Data, miejsce i godzina wypadku...</label>
             <div className='flex gap-2 flex-wrap'>
               <input className={simpleClassName} type='date' value={wypadek.dataWypadkuSzczegoly} onChange={(e) => handleChange('wypadek', 'dataWypadkuSzczegoly', e.target.value)}></input>
-              <input className={simpleClassName} placeholder='........' value={wypadek.miejsceWypadku} onChange={(e) => handleChange('wypadek', 'miejsceWypadku', e.target.value)}></input>
-              <input className={simpleClassName} placeholder='........' value={wypadek.godzinaWypadku} onChange={(e) => handleChange('wypadek', 'godzinaWypadku', e.target.value)}></input>
+              <input className={simpleClassName} placeholder='........' value={wypadek.miejsceWypadku} type='text' onChange={(e) => handleChange('wypadek', 'miejsceWypadku', e.target.value)}></input>
+              <input className={simpleClassName} placeholder='........' value={wypadek.godzinaWypadku} type='text ' onChange={(e) => handleChange('wypadek', 'godzinaWypadku', e.target.value)}></input>
             </div>
-            <button className={alertButtonClass} onClick={() => toggleAlert('wypadekSzczegoly')}>!</button>
+            {alertContent['wypadekSzczegoly']?.changed && <button className={alertButtonClass} type='button' onClick={() => toggleAlert('wypadekSzczegoly')}>!</button>}
           </div>
           <div className='relative space-y-1'>
             <label className='block text-sm'>2. Planowana godzina rozpoczęcia pracy w dniu wypadku</label>
             <input className={simpleClassName} placeholder='........' value={wypadek.godzinaRozpoczecia} onChange={(e) => handleChange('wypadek', 'godzinaRozpoczecia', e.target.value)}></input>
-            <button className={alertButtonClass} onClick={() => toggleAlert('wypadekStart')}>!</button>
+            {alertContent['wypadekStart']?.changed && <button className={alertButtonClass} type='button' onClick={() => toggleAlert('wypadekStart')}>!</button>}
           </div>
           <div className='relative space-y-1'>
             <label className='block text-sm'>Planowana godzina zakończenia pracy w dniu wypadku</label>
             <input className={simpleClassName} placeholder='........' value={wypadek.godzinaZakonczenia} onChange={(e) => handleChange('wypadek', 'godzinaZakonczenia', e.target.value)}></input>
-            <button className={alertButtonClass} onClick={() => toggleAlert('wypadekEnd')}>!</button>
+            {alertContent['wypadekEnd']?.changed && <button className={alertButtonClass} type='button' onClick={() => toggleAlert('wypadekEnd')}>!</button>}
           </div>
           <div className='relative space-y-1'>
             <label className='block text-sm'>Rodzaj czynności wykonywanych do momentu wypadku (zwykle czynności związane z charakterem prowadzonej działalności gospodarczej)</label>
             <input className={simpleClassName} placeholder='........' value={wypadek.rodzajCzynnosci} onChange={(e) => handleChange('wypadek', 'rodzajCzynnosci', e.target.value)}></input>
-            <button className={alertButtonClass} onClick={() => toggleAlert('wypadekCzynnosci')}>!</button>
+            {alertContent['wypadekCzynnosci']?.changed && <button className={alertButtonClass} type='button' onClick={() => toggleAlert('wypadekCzynnosci')}>!</button>}
           </div>
           <div className='relative space-y-2'>
             <label className='block font-medium'>3. Podanie okoliczności i przyczyn wypadku (opis. przyczyny techniczne, ludzkie, organizacyjne) - należy uzupełnić, jeżeli w zawiadomieniu o wypadku nie zostały szczegółowo opisane okoliczności i przyczyny wypadku:</label>
             <textarea className="w-full border border-gray-300 rounded p-2" placeholder='........' value={wypadek.opisOkolicznosci} onChange={(e) => handleChange('wypadek', 'opisOkolicznosci', e.target.value)}></textarea>
-            <button className={alertButtonClass} onClick={() => toggleAlert('wypadekOkolicznosci')}>!</button>
+            {alertContent['wypadekOkolicznosci']?.changed && <button className={alertButtonClass} type='button' onClick={() => toggleAlert('wypadekOkolicznosci')}>!</button>}
           </div>
         </div>
         <div className='mt-8'>
