@@ -1,53 +1,30 @@
-from transformers import pipeline
 import os
+from transformers import pipeline
 
-class RobertaClassifier:
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.abspath(os.path.join(BASE_DIR, "../validation_model/training_model/model_zus"))
+
+class Classifier:
     def __init__(self):
-        """Initialize RoBERTa classifier with the trained model"""
-        self.model_path = os.path.join(
-            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-            "validation_model",
-            "training_model",
-            "model_zus"
-        )
-        
-        print(f"Loading RoBERTa model from: {self.model_path}")
-        
+        self.pipeline = None
         try:
-            self.classifier = pipeline(
-                "text-classification",
-                model=self.model_path,
-                tokenizer=self.model_path
-            )
-            print("RoBERTa classifier loaded successfully.")
+            if os.path.exists(MODEL_PATH):
+                self.pipeline = pipeline("text-classification", model=MODEL_PATH, tokenizer=MODEL_PATH)
+                print(f"Model loaded from {MODEL_PATH}")
+            else:
+                print(f"Model not found at {MODEL_PATH}")
         except Exception as e:
-            print(f"Failed to load RoBERTa classifier: {e}")
-            raise e
-    
-    def classify_form(self, text: str) -> dict:
-        """
-        Classify form text and return prediction
+            print(f"Error loading model from {MODEL_PATH}: {e}")
+
+    def classify_form(self, text):
+        if not self.pipeline:
+            return None
         
-        Args:
-            text: Text to classify
-            
-        Returns:
-            dict with 'label' and 'score' keys
-            Example: {'label': 'LABEL_1', 'score': 0.9958978295326233}
-        """
         try:
-            result = self.classifier(text)[0]
-            return {
-                "label": result["label"],
-                "score": result["score"]
-            }
+            result = self.pipeline(text, truncation=True, max_length=512)
+            return result
         except Exception as e:
             print(f"Classification error: {e}")
-            raise e
+            return None
 
-# Initialize classifier instance
-try:
-    classifier = RobertaClassifier()
-except Exception as e:
-    print("Warning: RoBERTa classifier failed to initialize.")
-    classifier = None
+classifier = Classifier()
