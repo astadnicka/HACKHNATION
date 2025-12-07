@@ -1,5 +1,5 @@
-from extract_data.ocr_extractor import extract_text_from_pdf
-from extract_data.ner_extractor import NERExtractor
+from validation_model.extract_data.ocr_extractor import extract_text_from_pdf
+from validation_model.extract_data.ner_extractor import NERExtractor
 from services.classifier import classifier
 
 class ScanService:
@@ -57,7 +57,8 @@ class ScanService:
             "wypadek": {
                 "dataWypadku": data_wypadku,
                 "opisOkolicznosci": fields.get("opis_zdarzenia", ""),
-                "rodzajUrazow": fields.get("uraz", "")
+                "rodzajUrazow": fields.get("uraz", ""),
+                "uzasadnienie": fields.get("uzasadnienie", "")
             },
             "suggested_decision": extraction_result.get("classification")
         }

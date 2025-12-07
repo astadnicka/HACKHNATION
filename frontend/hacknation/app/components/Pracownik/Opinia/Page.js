@@ -113,15 +113,76 @@ export default function Opinia() {
     setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleAskAssistant = () => {
+  const handleAskAssistant = async () => {
     if (selectedFiles.length === 0) {
       alert("Proszę najpierw dodać pliki PDF");
       return;
     }
 
-    // Tutaj będzie logika wysyłania do backendu
-    console.log("Wysyłanie plików do asystenta:", selectedFiles);
-    alert(`Wysłano ${selectedFiles.length} plik(ów) do asystenta AI`);
+    const file = selectedFiles[0];
+    const formDataToSend = new FormData();
+    formDataToSend.append("file", file);
+
+    try {
+      const response = await fetch("http://localhost:8000/api/upload/analyze", {
+        method: "POST",
+        body: formDataToSend,
+      });
+
+      if (!response.ok) {
+        throw new Error("Błąd podczas analizy pliku");
+      }
+
+      const result = await response.json();
+      console.log("Wynik analizy:", result);
+
+      if (result.status === "success" && result.data) {
+        const data = result.data;
+        
+        setFormData((prev) => {
+          const newData = { ...prev };
+          
+          if (data.poszkodowany) {
+             const imieNazwisko = `${data.poszkodowany.imie || ""} ${data.poszkodowany.nazwisko || ""}`.trim();
+             if (imieNazwisko) {
+                newData.podstawowe.imieNazwiskoPoszkodowanego = imieNazwisko;
+             }
+          }
+          if (data.wypadek) {
+            if (data.wypadek.dataWypadku) {
+               newData.zdarzenie.dataZdarzenia = data.wypadek.dataWypadku;
+            }
+            if (data.wypadek.opisOkolicznosci) {
+               newData.podstawowe.kwestiaDoRozstrzygniecza = data.wypadek.opisOkolicznosci;
+            }
+            if (data.wypadek.uzasadnienie) {
+               newData.opinia.uzasadnienie = data.wypadek.uzasadnienie;
+            }
+          }
+
+          if (data.suggested_decision) {
+             const decision = Array.isArray(data.suggested_decision) ? data.suggested_decision[0] : data.suggested_decision;
+             let label = decision.label || "";
+             
+             if (label === "LABEL_1") {
+                label = "UZNANO";
+             } else if (label === "LABEL_0") {
+                label = "ODMÓWIONO";
+             }
+             
+             newData.opinia.opiniaOUznaniu = label;
+          }
+
+          return newData;
+        });
+        
+        alert("Dane zostały uzupełnione na podstawie analizy dokumentu.");
+      }
+
+    } catch (error) {
+      console.error("Błąd:", error);
+      alert("Wystąpił błąd podczas analizy dokumentu: " + error.message);
+    }
   };
 
   const validatePage1 = () => {
