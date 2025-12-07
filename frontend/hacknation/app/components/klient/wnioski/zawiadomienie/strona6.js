@@ -55,17 +55,19 @@ export default function Strona6({ formData, setFormData, alertContent = {} }) {
         </div>
       )}
       <div className="flex items-center justify-center gap-3">
-        <input className="h-4 w-4 rounded border-gray-300 text-cyan-500 focus:ring-cyan-500 shrink-0" type="checkbox" />
+        <input className="h-4 w-4 rounded border-gray-300 text-cyan-500 focus:ring-cyan-500 shrink-0" checked={zalaczniki.kartaInformacyjna} type="checkbox" onChange={(e) => handleChange('zalaczniki', 'kartaInformacyjna', e.target.checked)} />
         <label className="text-sm">dokumenty potwierdzające prawo do wydania karty wypadku osobie innej niż poszkodowany (m.in. skrócony odpis aktu urodzenia, skrócony odpis aktu małżeństwa, pełnomocnictwo)</label>
       </div>
       <div className="flex items-center justify-center gap-3">
-        <input className="h-4 w-4 rounded border-gray-300 text-cyan-500 focus:ring-cyan-500 shrink-0" type="checkbox" />
+        <input className="h-4 w-4 rounded border-gray-300 text-cyan-500 focus:ring-cyan-500 shrink-0" type="checkbox" checked={zalaczniki.inne} onChange={(e) => handleChange('zalaczniki', 'inne', e.target.checked)} />
         <label className="text-sm">Inne dokumenty:</label>
       </div>
       <div>
         <textarea
           className="mt-1 block w-full min-h-20 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Wprowadź inne dokumenty"
+          value={zalaczniki.inne}
+          onChange={(e) => handleChange('zalaczniki', 'inne', e.target.value)}
         />
         <label className="col-span-3 block text-xs font-medium text-gray-500 mb-1">Podaj jakie, np. dokumenty dotyczące udzielonej pomocy medycznej, umowa na wykonywaną usługę, faktura, rachunek, notatka z policji, ksero mandatu karnego itp.</label>
         <div className="flex items-center gap-2">
@@ -73,6 +75,8 @@ export default function Strona6({ formData, setFormData, alertContent = {} }) {
             <input
               type="date"
               className="mt-1 block w-full max-w-xs p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              value={formData.zalaczniki.dataDostarczenia}
+              onChange={(e) => handleChange('zalaczniki', 'dataDostarczenia', e.target.value)}
             />
         </div>
         <label className="col-span-6">Zobowiązuję się dostarczyć następujące dokumenty:</label>
@@ -83,11 +87,11 @@ export default function Strona6({ formData, setFormData, alertContent = {} }) {
             <label className="block text-sm font-medium text-gray-700">{index + 1}.</label>
             <input
             className="mt-1 block w-full min-h-10 max-h-10 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-            value={dokumenty[index]}
+            value={zalaczniki.dokumenty[index]}
             onChange={(e) => {
-              const newDokumenty = [...dokumenty];
+              const newDokumenty = [...zalaczniki.dokumenty];
               newDokumenty[index] = e.target.value;
-              setDokumenty(newDokumenty);
+              handleChange('zalaczniki', 'dokumenty', newDokumenty);
             }}
             />
           </div>
@@ -99,15 +103,15 @@ export default function Strona6({ formData, setFormData, alertContent = {} }) {
         {alertContent['sposObOdbioru']?.changed && <button className={alertButtonClass} type='button' onClick={() => toggleAlert('sposObOdbioru')}>!</button>}
       </div>
       <div className="flex items-center justify-center gap-3">
-        <input className="h-4 w-4 rounded border-gray-300 text-cyan-500 focus:ring-cyan-500 shrink-0" type="checkbox" checked={odbiorPlacowka} onChange={(e) => setOdbiorPlacowka(e.target.checked)} />
+        <input className="h-4 w-4 rounded border-gray-300 text-cyan-500 focus:ring-cyan-500 shrink-0" type="checkbox" checked={zalaczniki.odbiorPlacowka} onChange={(e) => handleChange('zalaczniki', 'odbiorPlacowka', e.target.checked)} />
         <label className="text-sm">w placówce ZUS (osobiście lub przez osobę upoważnioną)</label>
       </div>
       <div className="flex items-center justify-center gap-3">
-        <input className="h-4 w-4 rounded border-gray-300 text-cyan-500 focus:ring-cyan-500 shrink-0" type="checkbox" checked={odbiorPoczta} onChange={(e) => setOdbiorPoczta(e.target.checked)} />
+        <input className="h-4 w-4 rounded border-gray-300 text-cyan-500 focus:ring-cyan-500 shrink-0" type="checkbox" checked={zalaczniki.odbiorPoczta} onChange={(e) => handleChange('zalaczniki', 'odbiorPoczta', e.target.checked)} />
         <label className="text-sm">pocztą na adres wskazany we wniosku</label>
       </div>
       <div className="flex items-center justify-center gap-3">
-        <input className="h-4 w-4 rounded border-gray-300 text-cyan-500 focus:ring-cyan-500 shrink-0" type="checkbox" checked={odbiorPUE} onChange={(e) => setOdbiorPUE(e.target.checked)} />
+        <input className="h-4 w-4 rounded border-gray-300 text-cyan-500 focus:ring-cyan-500 shrink-0" type="checkbox" checked={zalaczniki.odbiorPUE} onChange={(e) => handleChange('zalaczniki', 'odbiorPUE', e.target.checked)} />
         <label className="text-sm">na moim koncie na Platformie Usług Elektronicznych (PUE ZUS)</label>
       </div>
       <label className="block text-sm font-medium text-gray-700">Oświadczam, że dane zawarte w zawiadomieniu podaję zgodnie z prawdą co potwierdzam złożonym podpisem</label>
@@ -117,11 +121,11 @@ export default function Strona6({ formData, setFormData, alertContent = {} }) {
             <input
               type="date"
               className="mt-1 block w-full max-w-xs p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-              value={dataPodpisu}
-              onChange={(e) => setDataPodpisu(e.target.value)}
+              value={zalaczniki.dataPodpisu}
+              onChange={(e) => handleChange('zalaczniki', 'dataPodpisu', e.target.value)}
             />
         </div>
-        <textarea className="mt-1 block w-full max-w-xs p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500" value={podpis} placeholder='Podpis' onChange={(e) => setPodpis(e.target.value)} />
+        <textarea className="mt-1 block w-full max-w-xs p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500" value={zalaczniki.podpis} placeholder='Podpis' onChange={(e) => handleChange('zalaczniki', 'podpis', e.target.value)} />
       </div>
       <div className="mt-4 text-xs leading-relaxed text-gray-600">
         Informacje, o których mowa w art. 13 ust. 1 i 2 Rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. w sprawie ochrony osób fizycznych w związku z przetwarzaniem danych osobowych i w sprawie swobodnego przepływu takich danych oraz uchylenia dyrektyw 95/46/WE (RODO), są dostępne w centrali lub terenowych jednostkach organizacyjnych ZUS oraz na stronie internetowej ZUS pod adresem: <Link className="hover:underline" href={"https://bip.zus.pl/rodo"}>https://bip.zus.pl/rodo</Link>

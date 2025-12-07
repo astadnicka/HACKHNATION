@@ -82,17 +82,80 @@ export default function Zawiadomienie() {
         miejscowosc: "",
         gmina: "",
         panstwo: "",
+      },      
+      adresKorespondencji: {
+        ulica: "",
+        numerDomu: "",
+        numerLokalu: "",
+        kodPocztowy: "",
+        miejscowosc: "",
+        gmina: "",
+        panstwo: "",
       },
     },
     organy: {
       organPostepowanie: "",
       maszynaWypadek: null,
+      opisMaszyny: "",
+      atest: null,
+      ewidencjaSrodkowTrwalych: null,
+    },
+    wypadek: {
+      dataWypadku: "",
+      godzinaWypadku: "",
+      miejsceWypadku: "",
+      godzinaPoczatkuPracy: "",
+      godzinaKoncaPracy: "",
+      rodzajUrazow: "",
+      opisOkolicznosci: "",
+      pierwszaPomoc: null,
+      opisPierwszejPomocy: "",
+    },
+    swiadkowie: {
+      swiadek1: {
+        imie: "",
+        nazwisko: "",
+        numerDomu: "",
+        numerLokalu: "",
+        kodPocztowy: "",
+        miejscowosc: "",
+        gmina: "",
+        panstwo: "",
+      },
+      swiadek2: {
+        imie: "",
+        nazwisko: "",
+        numerDomu: "",
+        numerLokalu: "",
+        kodPocztowy: "",
+        miejscowosc: "",
+        gmina: "",
+        panstwo: "",
+      },
+      swiadek3: {
+        imie: "",
+        nazwisko: "",
+        numerDomu: "",
+        numerLokalu: "",
+        kodPocztowy: "",
+        miejscowosc: "",
+        gmina: "",
+        panstwo: "",
+      },
     },
     zalaczniki: {
       dokumenty: Array(8).fill(""),
       inne: "",
       dataDostarczenia: "",
       sposobOdbioru: "",
+      kartaInformacyjna: false,
+      postanowienieProkuratury: false,
+      aktZgonu: false,
+      odbiorPlacowka: false,
+      odbiorPoczta: false,
+      odbiorPUE: false,
+      dataPodpisu: "",
+      podpis: "",
     },
   });
 
@@ -100,27 +163,27 @@ export default function Zawiadomienie() {
     poszkodowanyPesel: {
       title: 'Numer PESEL',
       body: 'Podaj PESEL poszkodowanego lub dokument potwierdzający tożsamość.',
-      changed: true
+      changed: false
     },
     poszkodowanyDokument: {
       title: 'Dokument tożsamości',
       body: 'Uzupełnij serię i numer dokumentu.',
-      changed: true
+      changed: false
     },
     miejscaPracy: {
       title: 'Miejsce pracy',
       body: 'Podaj nazwę, adres i rodzaj prowadzonej działalności.',
-      changed: true
+      changed: false
     },
     pracownikOpieka: {
       title: 'Osoba opiekująca się',
       body: 'Uzupełnij dane pracownika odpowiedzialnego za opiekę.',
-      changed: true
+      changed: false
     },
     zawiadamiajacy: {
       title: 'Zawiadamiający',
       body: 'Podaj dane osoby zawiadamiającej o wypadku.',
-      changed: true
+      changed: false
     },
   };
 
@@ -128,17 +191,17 @@ export default function Zawiadomienie() {
     organPostepowanie: {
       title: 'Organ prowadzący postępowanie',
       body: 'Wpisz nazwę i adres organu prowadzącego postępowanie w sprawie wypadku.',
-      changed: true
+      changed: false
     },
     maszyny: {
       title: 'Obsługa maszyn',
       body: 'Wskaż czy wypadek powstał podczas obsługi urządzenia i opisz stan maszyny.',
-      changed: true
+      changed: false
     },
     atest: {
       title: 'Atest maszyny',
       body: 'Wskaż czy maszyna posiada atest/deklarację zgodności.',
-      changed: true
+      changed: false
     },
   };
 
@@ -146,17 +209,17 @@ export default function Zawiadomienie() {
     korespondencja: {
       title: 'Adres korespondencji',
       body: 'Uzupełnij pełny adres do korespondencji.',
-      changed: true
+      changed: false
     },
     wypadek: {
       title: 'Dane wypadku',
       body: 'Podaj datę, godzinę, miejsce wypadku oraz godziny pracy.',
-      changed: true
+      changed: false
     },
     uraz: {
       title: 'Uraz i obrażenia',
       body: 'Opisz rodzaj urazów i okoliczności wypadku.',
-      changed: true
+      changed: false
     },
   };
 
@@ -164,12 +227,12 @@ export default function Zawiadomienie() {
     organPostepowanie: {
       title: 'Organ prowadzący postępowanie',
       body: 'Wpisz nazwę i adres organu prowadzącego postępowanie.',
-      changed: true
+      changed: false
     },
     maszyny: {
       title: 'Obsługa maszyn',
       body: 'Wskaż czy wypadek powstał podczas obsługi urządzenia.',
-      changed: true
+      changed: false
     },
   };
 
@@ -177,12 +240,12 @@ export default function Zawiadomienie() {
     swiadek1: {
       title: 'Świadek 1',
       body: 'Uzupełnij dane pierwszego świadka wypadku.',
-      changed: true
+      changed: false
     },
     swiadek2: {
       title: 'Świadek 2',
       body: 'Uzupełnij dane drugiego świadka wypadku.',
-      changed: true
+      changed: false
     },
   };
 
@@ -190,24 +253,28 @@ export default function Zawiadomienie() {
     zalaczniki: {
       title: 'Załączniki',
       body: 'Podaj listę dokumentów dołączanych do zawiadomienia.',
-      changed: true
+      changed: false
     },
     sposObOdbioru: {
       title: 'Sposób odbioru odpowiedzi',
       body: 'Wskaż preferowany sposób odbioru odpowiedzi.',
-      changed: true
+      changed: false
     },
   };
 
   const validatePage1 = () => {
-    const { poszkodowany, miejscaDzialalnosci, opieka, zawiadamiajacy } = formData;
+    const { poszkodowany } = formData;
     const errors = [];
 
-    // Dane poszkodowanego
-    if (!poszkodowany.pesel?.trim()) errors.push('Podaj PESEL poszkodowanego');
-    if (!poszkodowany.dokument.rodzaj?.trim()) errors.push('Podaj rodzaj dokumentu tożsamości');
-    if (!poszkodowany.dokument.seria?.trim()) errors.push('Podaj serię dokumentu');
-    if (!poszkodowany.dokument.numer?.trim()) errors.push('Podaj numer dokumentu');
+    // Dane poszkodowanego - PESEL lub dokument (przynajmniej jeden)
+    const hasPesel = poszkodowany.pesel?.trim();
+    const hasDocumentData = poszkodowany.dokument.rodzaj?.trim() && 
+                            poszkodowany.dokument.seria?.trim() && 
+                            poszkodowany.dokument.numer?.trim();
+    
+    if (!hasPesel && !hasDocumentData) {
+      errors.push('Podaj PESEL poszkodowanego lub dokument potwierdzający tożsamość (rodzaj, seria, numer)');
+    }
     if (!poszkodowany.imie?.trim()) errors.push('Podaj imię poszkodowanego');
     if (!poszkodowany.nazwisko?.trim()) errors.push('Podaj nazwisko poszkodowanego');
     if (!poszkodowany.dataUrodzenia?.trim()) errors.push('Podaj datę urodzenia');
@@ -219,34 +286,67 @@ export default function Zawiadomienie() {
     if (!poszkodowany.adresZamieszkania.kodPocztowy?.trim()) errors.push('Podaj kod pocztowy');
     if (!poszkodowany.adresZamieszkania.miejscowosc?.trim()) errors.push('Podaj miejscowość zamieszkania');
     if (!poszkodowany.adresZamieszkania.gmina?.trim()) errors.push('Podaj gminę');
+  
     
-    // Adres korespondencji
-    if (!poszkodowany.adresKorespondencji.ulica?.trim()) errors.push('Podaj ulicę do korespondencji');
-    if (!poszkodowany.adresKorespondencji.numerDomu?.trim()) errors.push('Podaj numer domu do korespondencji');
-    if (!poszkodowany.adresKorespondencji.kodPocztowy?.trim()) errors.push('Podaj kod pocztowy do korespondencji');
-    if (!poszkodowany.adresKorespondencji.miejscowosc?.trim()) errors.push('Podaj miejscowość do korespondencji');
-    if (!poszkodowany.adresKorespondencji.gmina?.trim()) errors.push('Podaj gminę do korespondencji');
+    // Sprawdzenie czy adresy się różnią
+    const addressesAreIdentical = 
+      poszkodowany.adresZamieszkania.ulica === poszkodowany.adresKorespondencji.ulica &&
+      poszkodowany.adresZamieszkania.numerDomu === poszkodowany.adresKorespondencji.numerDomu &&
+      poszkodowany.adresZamieszkania.numerLokalu === poszkodowany.adresKorespondencji.numerLokalu &&
+      poszkodowany.adresZamieszkania.kodPocztowy === poszkodowany.adresKorespondencji.kodPocztowy &&
+      poszkodowany.adresZamieszkania.miejscowosc === poszkodowany.adresKorespondencji.miejscowosc &&
+      poszkodowany.adresZamieszkania.gmina === poszkodowany.adresKorespondencji.gmina &&
+      poszkodowany.adresZamieszkania.panstwo === poszkodowany.adresKorespondencji.panstwo;
+    
+    if (addressesAreIdentical) {
+      errors.push('Adres zamieszkania i adres do korespondencji powinny być różne');
+    }
     
     // Miejsce pracy
-    if (!miejscaDzialalnosci.ulica?.trim()) errors.push('Podaj ulicę miejsca pracy');
-    if (!miejscaDzialalnosci.numerDomu?.trim()) errors.push('Podaj numer domu miejsca pracy');
-    if (!miejscaDzialalnosci.kodPocztowy?.trim()) errors.push('Podaj kod pocztowy miejsca pracy');
-    if (!miejscaDzialalnosci.miejscowosc?.trim()) errors.push('Podaj miejscowość pracy');
-    if (!miejscaDzialalnosci.gmina?.trim()) errors.push('Podaj gminę pracy');
-    if (!miejscaDzialalnosci.numerTelefonu?.trim()) errors.push('Podaj numer telefonu miejsca pracy');
+
+    return errors;
+  };
+
+  const validatePage2 = () => {
+    const { zawiadamiajacy } = formData;
+    const errors = [];
+
+    const hasPesel = zawiadamiajacy.pesel?.trim();
+    const hasDocumentData = zawiadamiajacy.dokument.rodzaj?.trim() && 
+                            zawiadamiajacy.dokument.seria?.trim() && 
+                            zawiadamiajacy.dokument.numer?.trim();
+    if (!hasPesel && !hasDocumentData) {
+      errors.push('Podaj PESEL poszkodowanego lub dokument potwierdzający tożsamość (rodzaj, seria, numer)');
+    }
+
+
+    return errors;
+  };
+
+  const validatePage3 = () => {
     
-    // Opieka
-    if (!opieka.ulica?.trim()) errors.push('Podaj ulicę opieki');
-    if (!opieka.numerDomu?.trim()) errors.push('Podaj numer domu opieki');
-    if (!opieka.kodPocztowy?.trim()) errors.push('Podaj kod pocztowy opieki');
-    if (!opieka.miejscowosc?.trim()) errors.push('Podaj miejscowość opieki');
-    if (!opieka.gmina?.trim()) errors.push('Podaj gminę opieki');
+    const { zawiadamiajacy } = formData;
+    
+    const errors = [];
+    const addressesAreIdentical = 
+      zawiadamiajacy.adresZamieszkania.ulica === zawiadamiajacy.adresKorespondencji.ulica &&
+      zawiadamiajacy.adresZamieszkania.numerDomu === zawiadamiajacy.adresKorespondencji.numerDomu &&
+      zawiadamiajacy.adresZamieszkania.numerLokalu === zawiadamiajacy.adresKorespondencji.numerLokalu &&
+      zawiadamiajacy.adresZamieszkania.kodPocztowy === zawiadamiajacy.adresKorespondencji.kodPocztowy &&
+      zawiadamiajacy.adresZamieszkania.miejscowosc === zawiadamiajacy.adresKorespondencji.miejscowosc &&
+      zawiadamiajacy.adresZamieszkania.gmina === zawiadamiajacy.adresKorespondencji.gmina &&
+      zawiadamiajacy.adresZamieszkania.panstwo === zawiadamiajacy.adresKorespondencji.panstwo;
+    
+    if (addressesAreIdentical) {
+      errors.push('Adres zamieszkania i adres do korespondencji powinny być różne');
+    }
     
     // Zawiadamiający
-    if (!zawiadamiajacy.pesel?.trim()) errors.push('Podaj PESEL zawiadamiającego');
-    if (!zawiadamiajacy.dokument.rodzaj?.trim()) errors.push('Podaj rodzaj dokumentu zawiadamiającego');
-    if (!zawiadamiajacy.dokument.seria?.trim()) errors.push('Podaj serię dokumentu zawiadamiającego');
-    if (!zawiadamiajacy.dokument.numer?.trim()) errors.push('Podaj numer dokumentu zawiadamiającego');
+  if (!zawiadamiajacy.pesel?.trim()) {
+    if (!zawiadamiajacy.dokument.rodzaj?.trim() || !zawiadamiajacy.dokument.seria?.trim() || !zawiadamiajacy.dokument.numer?.trim()) {
+      errors.push('Podaj PESEL lub komplet danych dokumentu zawiadamiającego');
+    }
+  }
     if (!zawiadamiajacy.imie?.trim()) errors.push('Podaj imię zawiadamiającego');
     if (!zawiadamiajacy.nazwisko?.trim()) errors.push('Podaj nazwisko zawiadamiającego');
     if (!zawiadamiajacy.dzienUrodzenia?.trim()) errors.push('Podaj dzień urodzenia zawiadamiającego');
@@ -258,37 +358,43 @@ export default function Zawiadomienie() {
     if (!zawiadamiajacy.adresZamieszkania.kodPocztowy?.trim()) errors.push('Podaj kod pocztowy zawiadamiającego');
     if (!zawiadamiajacy.adresZamieszkania.miejscowosc?.trim()) errors.push('Podaj miejscowość zawiadamiającego');
     if (!zawiadamiajacy.adresZamieszkania.gmina?.trim()) errors.push('Podaj gminę zawiadamiającego');
+    
+    // Organy   
 
-    return errors;
-  };
-
-  const validatePage2 = () => {
-    const { organy } = formData;
-    const errors = [];
-
-    if (!organy.organPostepowanie?.trim()) errors.push('Podaj nazwę organu prowadzącego postępowanie');
-    if (organy.maszynaWypadek === null) errors.push('Zaznacz czy wypadek powstał podczas obsługi maszyn lub urządzeń');
-
-    return errors;
-  };
-
-  const validatePage3 = () => {
-    const errors = [];
     // Strona 3 uses local state, validation can be added when migrating to formData
     return errors;
   };
 
   const validatePage4 = () => {
+    const { organy } = formData;
     const errors = [];
+
+    if (!organy.organPostepowanie?.trim()) errors.push('Podaj nazwę organu prowadzącego postępowanie');
+    if (organy.maszynaWypadek === null) errors.push('Zaznacz czy wypadek powstał podczas obsługi maszyn lub urządzeń');
+    if (organy.maszynaWypadek) {
+      if (!organy.opisMaszyny?.trim()) errors.push('Opisz stan techniczny maszyny lub urządzenia');
+      if (organy.atest === null) errors.push('Zaznacz czy maszyna posiada atest/deklarację zgodności');
+      if (organy.ewidencjaSrodkowTrwalych === null) errors.push('Zaznacz czy maszyna jest wpisana do ewidencji środków trwałych');
+    }
     // Strona 4 uses local state, validation can be added when migrating to formData
     return errors;
   };
 
   const validatePage5 = () => {
     const errors = [];
-    // Strona 5 uses local state, validation can be added when migrating to formData
+    
     return errors;
   };
+
+  const validatePage6 = () => {
+    const errors = [zalaczniki];
+    
+    if (!zalaczniki.sposobOdbioru?.trim()) errors.push('Wybierz sposób odbioru odpowiedzi');
+    if (!zalaczniki.dataPodpisu?.trim()) errors.push('Podaj datę podpisu');
+    if (!zalaczniki.podpis?.trim()) errors.push('Podaj podpis');
+
+    return errors;
+  }
 
   const handleNextPage = () => {
     let errors = [];
@@ -297,6 +403,7 @@ export default function Zawiadomienie() {
     else if (page === 3) errors = validatePage3();
     else if (page === 4) errors = validatePage4();
     else if (page === 5) errors = validatePage5();
+    else if (page === 6) errors = validatePage6();
 
     if (errors.length > 0) {
       alert('Proszę uzupełnić następujące pola:\n\n' + errors.join('\n'));
@@ -325,9 +432,7 @@ export default function Zawiadomienie() {
     }
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
+  const handleSubmit = () => {
     // Validate all pages before submission
     let errors = [];
     errors = errors.concat(validatePage1());
@@ -358,14 +463,15 @@ export default function Zawiadomienie() {
       {/* title */}
       <h1 className="text-4xl font-bold mb-4">Zawiadomienie o Wypadku</h1>
       {/* FORM */}
-      <form onSubmit={handleSubmit} className="w-full max-w-2xl">
+      <form onSubmit={(e) => e.preventDefault()} className="w-full max-w-2xl">
         {renderPage()}
         {/* BUTTONS: Cofnij (lewo), Dalej (prawo), Prześlij (prawo, tylko na ostatniej stronie) */}
         <div className="flex flex-row-reverse justify-between">
           {/* Dalej lub Prześlij po prawej */}
           {page === 6 ? (
             <button
-              type="submit"
+              type="button"
+              onClick={handleSubmit}
               className="px-4 py-1 bg-white rounded-md hover:bg-gray-100 mb-8 cursor-pointer"
             >
               Prześlij

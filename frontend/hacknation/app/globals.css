@@ -99,6 +99,27 @@ body {
 }
 
 .WniosekButton{
+  height:60px;
+  width: 200px;
+  padding:20px;
+  background: rgb(42, 143, 220);
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.WniosekButton:hover {
+  background: rgb(45, 132, 208);
+}
+
+.WniosekButtonsWrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 0 auto;
+  gap: 30px;
+  padding: 20px 0;
   width: 100%;
   padding: 18px 28px;
   background: linear-gradient(135deg, #2b8be0, #1f6bbf);
@@ -234,6 +255,9 @@ body {
   z-index: -1;
 }
 
+.KlientWniosekContainer {
+  margin-top: 250px;
+}
 .paper{
   height: 260px;
   width: auto;

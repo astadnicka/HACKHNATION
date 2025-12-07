@@ -3,12 +3,14 @@ import Link from "next/link";
 import Strona1 from "./Strona1";
 import Strona2 from "./Strona2";
 import SubmitButton from "../../SubmitButton";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function KartaWypadku() {
   const [page, setPage] = useState(1);
   const [errors, setErrors] = useState({});
-  const [formData, setFormData] = useState({
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const defaultFormData = {
     podmiot: {
       nazwaAdres: "",
     },
@@ -79,7 +81,42 @@ export default function KartaWypadku() {
       nazwaAdresPieczatka: "",
       adres: "",
     },
-  });
+  };
+
+  const [formData, setFormData] = useState(defaultFormData);
+
+  // Wczytanie danych z localStorage przy montowaniu komponentu
+  useEffect(() => {
+    const savedData = localStorage.getItem("kartaWypadkuFormData");
+    if (savedData) {
+      try {
+        setFormData(JSON.parse(savedData));
+      } catch (e) {
+        console.error("Błąd wczytywania danych z localStorage:", e);
+      }
+    }
+    setIsLoaded(true);
+  }, []);
+
+  // Zapisywanie danych do localStorage przy każdej zmianie
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem("kartaWypadkuFormData", JSON.stringify(formData));
+    }
+  }, [formData, isLoaded]);
+
+  const clearForm = () => {
+    if (
+      confirm(
+        "Czy na pewno chcesz wyczyścić cały formularz? Wszystkie dane zostaną usunięte."
+      )
+    ) {
+      setFormData(defaultFormData);
+      localStorage.removeItem("kartaWypadkuFormData");
+      setErrors({});
+      setPage(1);
+    }
+  };
 
   const validatePage1 = () => {
     const newErrors = {};
@@ -267,10 +304,10 @@ export default function KartaWypadku() {
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length > 0) {
-      return false; 
+      return false;
     }
 
-    return true; 
+    return true;
   };
 
   const renderPage = () => {
@@ -314,6 +351,15 @@ export default function KartaWypadku() {
             Wróć
           </button>
         </Link>
+      </div>
+
+      <div className="absolute top-4 right-4">
+        <button
+          onClick={clearForm}
+          className="px-2 py-1 bg-red-600 cursor-pointer rounded-md hover:bg-red-700 transition-colors text-white"
+        >
+          Wyczyść formularz
+        </button>
       </div>
 
       <div className="w-full max-w-2xl">
