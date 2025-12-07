@@ -245,28 +245,13 @@ export default function Strona2({ formData, setFormData, alertContent = {} }) {
         />
         {alertContent['zawiadamiajacyImieNazwisko']?.changed && <button className={alertButtonClass} type='button' onClick={() => toggleAlert('zawiadamiajacyImieNazwisko')}>!</button>}
       </div>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-1 gap-2">
         <label className="col-span-3 block text-sm font-medium text-gray-700">Data Urodzenia</label>
         <input
-          type="number"
+          type="date"
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          placeholder="Dzień"
-          value={zawiadamiajacy.dzienUrodzenia}
-          onChange={(e) => handleChange('zawiadamiajacy', 'dzienUrodzenia', e.target.value)}
-        />
-        <input
-          type="number"
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          placeholder="Miesiąc"
-          value={zawiadamiajacy.miesiacUrodzenia}
-          onChange={(e) => handleChange('zawiadamiajacy', 'miesiacUrodzenia', e.target.value)}
-        />      
-        <input
-          type="number"
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          placeholder="Rok"
-          value={zawiadamiajacy.rokUrodzenia}
-          onChange={(e) => handleChange('zawiadamiajacy', 'rokUrodzenia', e.target.value)}
+          value={zawiadamiajacy.dataUrodzenia}
+          onChange={(e) => handleChange('zawiadamiajacy', 'dataUrodzenia', e.target.value)}
         />
       </div>
         <div className="grid grid-cols-2 gap-2">
