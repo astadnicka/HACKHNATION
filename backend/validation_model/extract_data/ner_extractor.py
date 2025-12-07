@@ -33,6 +33,7 @@ class NERExtractor:
             "- poszkodowany (Imię i Nazwisko lub null)\n"
             "- uraz (krótki opis obrażeń ciała lub null)\n"
             "- opis_zdarzenia (zwięzłe podsumowanie co się stało, max 2 zdania)\n"
+            "- uzasadnienie (wygeneruj formalne uzasadnienie prawne/faktyczne dla opinii powypadkowej na podstawie opisu zdarzenia, styl urzędowy)\n"
             "- czy_uznany (true/false - czy z treści wynika, że wypadek został uznany, jeśli to opinia)\n\n"
             "TEKST DOKUMENTU:\n"
             f"{truncated_text}\n\n"

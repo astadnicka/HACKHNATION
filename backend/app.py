@@ -9,15 +9,15 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-# Register error handlers
 from middleware.error_handler import register_error_handlers
 register_error_handlers(app)
 
-# Register blueprints
 from routes.assist import assistant
 from routes.pdf import pdf
+from routes.upload import upload
 app.register_blueprint(assistant, url_prefix="/api/assistant")
 app.register_blueprint(pdf, url_prefix="/api/pdf")
+app.register_blueprint(upload, url_prefix="/api/upload")
 
 @app.route("/")
 def home():
