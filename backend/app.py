@@ -15,7 +15,9 @@ register_error_handlers(app)
 
 # Register blueprints
 from routes.assist import assistant
+from routes.pdf import pdf
 app.register_blueprint(assistant, url_prefix="/api/assistant")
+app.register_blueprint(pdf, url_prefix="/api/pdf")
 
 @app.route("/")
 def home():
