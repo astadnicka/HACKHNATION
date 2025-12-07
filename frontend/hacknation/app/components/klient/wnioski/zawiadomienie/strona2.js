@@ -1,6 +1,17 @@
 'use client';
 
-export default function Strona2({ formData, setFormData }) {
+import { useState } from 'react';
+
+export default function Strona2({ formData, setFormData, alertContent = {} }) {
+  const [activeAlert, setActiveAlert] = useState(null);
+
+  const toggleAlert = (key) => {
+    setActiveAlert(prev => (prev === key ? null : key));
+  };
+
+  const alertButtonClass = `absolute top-0 right-0 px-3 py-1 bg-red-500 text-white rounded shadow border border-red-600 cursor-pointer hover:bg-red-100 hover:text-red-700 hover:border-red-200`;
+  const activeAlertContent = activeAlert ? alertContent[activeAlert] : null;
+
   const handleChange = (section, field, value) => {
     setFormData(prev => ({
       ...prev,
@@ -29,19 +40,40 @@ export default function Strona2({ formData, setFormData }) {
   const zawiadamiajacy = formData.zawiadamiajacy;
 
   return (
-    <div className="bg-gray-50/60 w-full max-w-2xl p-4 rounded-xl flex flex-col space-y-4 mb-4">
+    <div className="bg-gray-50/60 w-full max-w-2xl p-4 rounded-xl flex flex-col space-y-4 mb-4 relative">
+      {activeAlertContent && (
+        <div className="fixed inset-x-0 top-4 z-50 flex justify-center pointer-events-none">
+          <div className="w-[min(90%,28rem)] max-w-xl bg-white border border-red-200 rounded-lg shadow-lg p-4 flex items-start gap-3 pointer-events-auto">
+            <div className="text-red-600 font-bold text-lg">!</div>
+            <div className="space-y-1">
+              <div className="font-semibold text-gray-900">{activeAlertContent.title}</div>
+              <div className="text-sm text-gray-700">{activeAlertContent.body}</div>
+            </div>
+            <button
+              className="ml-auto text-sm text-red-700 hover:text-red-900 cursor-pointer"
+              onClick={() => setActiveAlert(null)}
+              aria-label="Zamknij alert"
+            >
+              Zamknij
+            </button>
+          </div>
+        </div>
+      )}
       <div>
         <h1 className="font-semibold mb-2">ADRES MIEJSCA PROWADZENIA POZAROLNICZEJ DZIAŁALNOŚCI</h1>
         <hr className="bg-gray-100 mb-2"></hr>
         <label className="col-span-3 block text-xs font-medium text-gray-500 mb-1">Podaj, jeśli poszkodowany prowadzi albo współpracuje przy prowadzeniu pozarolniczej działalności</label>
-        <label className="block text-sm font-medium text-gray-700">Ulica:</label>
-        <input
-          type="text"
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          placeholder="Wprowadź nazwę ulicy"
-          value={miejscaDzialalnosci.ulica}
-          onChange={(e) => handleChange('miejscaDzialalnosci', 'ulica', e.target.value)}
-        />
+        <div className="relative mb-4">
+          <label className="block text-sm font-medium text-gray-700">Ulica:</label>
+          <input
+            type="text"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            placeholder="Wprowadź nazwę ulicy"
+            value={miejscaDzialalnosci.ulica}
+            onChange={(e) => handleChange('miejscaDzialalnosci', 'ulica', e.target.value)}
+          />
+          {alertContent['miejscaDzialalnosciUlica']?.changed && <button className={alertButtonClass} type='button' onClick={() => toggleAlert('miejscaDzialalnosciUlica')}>!</button>}
+        </div>
       </div>
       <div className="grid grid-cols-2 gap-2">
         <label className="col-span-2 block text-sm font-medium text-gray-700">Numer domu i lokalu</label>
@@ -156,14 +188,17 @@ export default function Strona2({ formData, setFormData }) {
             <div>
         <h1 className="font-semibold mb-2">DANE OSOBY, KTÓRA ZAWIADAMIA O WYPADKU</h1>
         <hr className="bg-gray-100 mb-2"></hr>
-        <label className="block text-sm font-medium text-gray-700">PESEL</label>
-        <input
-          type="text"
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          placeholder="Wprowadź PESEL"
-          value={zawiadamiajacy.pesel}
-          onChange={(e) => handleChange('zawiadamiajacy', 'pesel', e.target.value)}
-        />
+        <div className="relative mb-4">
+          <label className="block text-sm font-medium text-gray-700">PESEL</label>
+          <input
+            type="text"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            placeholder="Wprowadź PESEL"
+            value={zawiadamiajacy.pesel}
+            onChange={(e) => handleChange('zawiadamiajacy', 'pesel', e.target.value)}
+          />
+          {alertContent['zawiadamiajacyPesel']?.changed && <button className={alertButtonClass} type='button' onClick={() => toggleAlert('zawiadamiajacyPesel')}>!</button>}
+        </div>
       </div>    
       <div className="grid grid-cols-3 gap-2">
         <label className="col-span-3 block text-sm font-medium text-gray-700">Dokument Potwierdzający Tożsamość</label>
@@ -190,7 +225,7 @@ export default function Strona2({ formData, setFormData }) {
           onChange={(e) => handleNestedChange('zawiadamiajacy', 'dokument', 'numer', e.target.value)}
         />
       </div>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-2 relative">
         <label className="col-span-2 block text-sm font-medium text-gray-700">Imię i Nazwisko:</label>
         <input
           type="text"
@@ -206,6 +241,7 @@ export default function Strona2({ formData, setFormData }) {
           value={zawiadamiajacy.nazwisko}
           onChange={(e) => handleChange('zawiadamiajacy', 'nazwisko', e.target.value)}
         />
+        {alertContent['zawiadamiajacyImieNazwisko']?.changed && <button className={alertButtonClass} type='button' onClick={() => toggleAlert('zawiadamiajacyImieNazwisko')}>!</button>}
       </div>
         <div className="grid grid-cols-3 gap-2">
         <label className="col-span-3 block text-sm font-medium text-gray-700">Data Urodzenia</label>

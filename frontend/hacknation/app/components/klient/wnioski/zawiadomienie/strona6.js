@@ -1,8 +1,17 @@
 'use client';
 
+import { useState } from 'react';
 import Link from "next/link";
 
-export default function Strona6({ formData, setFormData }) {
+export default function Strona6({ formData, setFormData, alertContent = {} }) {
+  const [activeAlert, setActiveAlert] = useState(null);
+
+  const toggleAlert = (key) => {
+    setActiveAlert(prev => (prev === key ? null : key));
+  };
+
+  const alertButtonClass = `absolute top-0 right-0 px-3 py-1 bg-red-500 text-white rounded shadow border border-red-600 cursor-pointer hover:bg-red-100 hover:text-red-700 hover:border-red-200`;
+  const activeAlertContent = activeAlert ? alertContent[activeAlert] : null;
   // Helpers for updating formData
   const handleChange = (section, field, value) => {
     setFormData(prev => ({
@@ -27,6 +36,24 @@ export default function Strona6({ formData, setFormData }) {
   // ...existing code...
   return (
     <div className="relative bg-gray-50/60 w-full max-w-2xl p-4 pb-6 rounded-xl flex flex-col space-y-4 mb-4">
+      {activeAlertContent && (
+        <div className="fixed inset-x-0 top-4 z-50 flex justify-center pointer-events-none">
+          <div className="w-[min(90%,28rem)] max-w-xl bg-white border border-red-200 rounded-lg shadow-lg p-4 flex items-start gap-3 pointer-events-auto">
+            <div className="text-red-600 font-bold text-lg">!</div>
+            <div className="space-y-1">
+              <div className="font-semibold text-gray-900">{activeAlertContent.title}</div>
+              <div className="text-sm text-gray-700">{activeAlertContent.body}</div>
+            </div>
+            <button
+              className="ml-auto text-sm text-red-700 hover:text-red-900 cursor-pointer"
+              onClick={() => setActiveAlert(null)}
+              aria-label="Zamknij alert"
+            >
+              Zamknij
+            </button>
+          </div>
+        </div>
+      )}
       <div className="flex items-center justify-center gap-3">
         <input className="h-4 w-4 rounded border-gray-300 text-cyan-500 focus:ring-cyan-500 shrink-0" type="checkbox" />
         <label className="text-sm">dokumenty potwierdzające prawo do wydania karty wypadku osobie innej niż poszkodowany (m.in. skrócony odpis aktu urodzenia, skrócony odpis aktu małżeństwa, pełnomocnictwo)</label>
@@ -69,6 +96,7 @@ export default function Strona6({ formData, setFormData }) {
       <div>
         <h1 className="font-semibold mb-2">SPOSÓB ODBIORU ODPOWIEDZI</h1>
         <hr className="bg-gray-100 mb-2"></hr>
+        {alertContent['sposObOdbioru']?.changed && <button className={alertButtonClass} type='button' onClick={() => toggleAlert('sposObOdbioru')}>!</button>}
       </div>
       <div className="flex items-center justify-center gap-3">
         <input className="h-4 w-4 rounded border-gray-300 text-cyan-500 focus:ring-cyan-500 shrink-0" type="checkbox" checked={odbiorPlacowka} onChange={(e) => setOdbiorPlacowka(e.target.checked)} />
